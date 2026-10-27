@@ -1,0 +1,206 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/luhn/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 22 cases kept, 0 skipped
+text s0 "1"
+text c1 "valid: single digit strings can not be valid"
+text s2 "0"
+text c3 "valid: a single zero is invalid"
+text s4 "059"
+text c5 "valid: a simple valid SIN that remains valid if reversed"
+text s6 "59"
+text c7 "valid: a simple valid SIN that becomes invalid if reversed"
+text s8 "055 444 285"
+text c9 "valid: a valid Canadian SIN"
+text s10 "055 444 286"
+text c11 "valid: invalid Canadian SIN"
+text s12 "8273 1232 7352 0569"
+text c13 "valid: invalid credit card"
+text s14 "1 2345 6789 1234 5678 9012"
+text c15 "valid: invalid long number with an even remainder"
+text s16 "1 2345 6789 1234 5678 9013"
+text c17 "valid: invalid long number with a remainder divisible by 5"
+text s18 "095 245 88"
+text c19 "valid: valid number with an even number of digits"
+text s20 "234 567 891 234"
+text c21 "valid: valid number with an odd number of spaces"
+text s22 "059a"
+text c23 "valid: valid strings with a non-digit added at the end become invalid"
+text s24 "055-444-285"
+text c25 "valid: valid strings with punctuation included become invalid"
+text s26 "055# 444$ 285"
+text c27 "valid: valid strings with symbols included become invalid"
+text s28 " 0"
+text c29 "valid: single zero with space is invalid"
+text s30 "0000 0"
+text c31 "valid: more than a single zero is valid"
+text s32 "091"
+text c33 "valid: input digit 9 is correctly converted to output digit 9"
+text s34 "9999999999 9999999999 9999999999 9999999999"
+text c35 "valid: very long input is valid"
+text s36 "109"
+text c37 "valid: valid luhn with an odd number of digits and non zero first digit"
+text s38 "055b 444 285"
+text c39 "valid: using ascii value for non-doubled non-digit isn't allowed"
+text s40 ":9"
+text c41 "valid: using ascii value for doubled non-digit isn't allowed"
+text s42 "59%59"
+text c43 "valid: non-numeric, non-space char in the middle with a sum that's divisible by 10 isn't allowed"
+note canonical case 792a7082-feb7-48c7-b88b-bbfec160865e
+fn tc0 to bool
+ret eq valid s0 false
+end
+note canonical case 698a7924-64d4-4d89-8daa-32e1aadc271e
+fn tc1 to bool
+ret eq valid s2 false
+end
+note canonical case 73c2f62b-9b10-4c9f-9a04-83cee7367965
+fn tc2 to bool
+ret eq valid s4 true
+end
+note canonical case 9369092e-b095-439f-948d-498bd076be11
+fn tc3 to bool
+ret eq valid s6 true
+end
+note canonical case 8f9f2350-1faf-4008-ba84-85cbb93ffeca
+fn tc4 to bool
+ret eq valid s8 true
+end
+note canonical case 1cdcf269-6560-44fc-91f6-5819a7548737
+fn tc5 to bool
+ret eq valid s10 false
+end
+note canonical case 656c48c1-34e8-4e60-9a5a-aad8a367810a
+fn tc6 to bool
+ret eq valid s12 false
+end
+note canonical case 20e67fad-2121-43ed-99a8-14b5b856adb9
+fn tc7 to bool
+ret eq valid s14 false
+end
+note canonical case 7e7c9fc1-d994-457c-811e-d390d52fba5e
+fn tc8 to bool
+ret eq valid s16 false
+end
+note canonical case ad2a0c5f-84ed-4e5b-95da-6011d6f4f0aa
+fn tc9 to bool
+ret eq valid s18 true
+end
+note canonical case ef081c06-a41f-4761-8492-385e13c8202d
+fn tc10 to bool
+ret eq valid s20 true
+end
+note canonical case bef66f64-6100-4cbb-8f94-4c9713c5e5b2
+fn tc11 to bool
+ret eq valid s22 false
+end
+note canonical case 2177e225-9ce7-40f6-b55d-fa420e62938e
+fn tc12 to bool
+ret eq valid s24 false
+end
+note canonical case ebf04f27-9698-45e1-9afe-7e0851d0fe8d
+fn tc13 to bool
+ret eq valid s26 false
+end
+note canonical case 08195c5e-ce7f-422c-a5eb-3e45fece68ba
+fn tc14 to bool
+ret eq valid s28 false
+end
+note canonical case 12e63a3c-f866-4a79-8c14-b359fc386091
+fn tc15 to bool
+ret eq valid s30 true
+end
+note canonical case ab56fa80-5de8-4735-8a4a-14dae588663e
+fn tc16 to bool
+ret eq valid s32 true
+end
+note canonical case b9887ee8-8337-46c5-bc45-3bcab51bc36f
+fn tc17 to bool
+ret eq valid s34 true
+end
+note canonical case 8a7c0e24-85ea-4154-9cf1-c2db90eabc08
+fn tc18 to bool
+ret eq valid s36 true
+end
+note canonical case 39a06a5a-5bad-4e0f-b215-b042d46209b1
+fn tc19 to bool
+ret eq valid s38 false
+end
+note canonical case f94cf191-a62f-4868-bc72-7253114aa157
+fn tc20 to bool
+ret eq valid s40 false
+end
+note canonical case 8b72ad26-c8be-49a2-b99c-bcc3bf631b33
+fn tc21 to bool
+ret eq valid s42 false
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+tcheck tc7 c15
+tcheck tc8 c17
+tcheck tc9 c19
+tcheck tc10 c21
+tcheck tc11 c23
+tcheck tc12 c25
+tcheck tc13 c27
+tcheck tc14 c29
+tcheck tc15 c31
+tcheck tc16 c33
+tcheck tc17 c35
+tcheck tc18 c37
+tcheck tc19 c39
+tcheck tc20 c41
+tcheck tc21 c43
+ret int get tfails 0
+end

@@ -1,0 +1,10 @@
+note Exercism-style exercise "pascals-triangle": https://exercism.org/tracks/python/exercises/pascals-triangle
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note rows writes the first count rows of Pascal's triangle into o, row after row (1, 1 1, 1 2 1, ...),
+note and returns how many numbers it wrote.
+note Check it with: sh exercise.sh exercises/pascals-triangle
+om2
+fn rows count ulong o edit ulong * to ulong
+note replace this line with your solution
+trap 13
+end

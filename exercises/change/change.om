@@ -1,0 +1,11 @@
+note Exercism-style exercise "change": https://exercism.org/tracks/python/exercises/change
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note findfewestcoins writes the fewest coins from the denominations coins (each usable any number
+note of times) that add up to target (at most 1000) into o, in ascending order, and returns how many;
+note or -1 when target cannot be made, -2 when target is negative.
+note Check it with: sh exercise.sh exercises/change
+om2
+fn findfewestcoins coins view ulong * target long o edit ulong * to long
+note replace this line with your solution
+trap 13
+end

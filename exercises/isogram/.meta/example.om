@@ -1,0 +1,22 @@
+note Exercism-style exercise "isogram": https://exercism.org/tracks/python/exercises/isogram
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note isisogram is true when no letter occurs twice in s, ignoring case; spaces and hyphens may repeat.
+note Check it with: sh exercise.sh exercises/isogram
+om2
+fn isisogram s view uchar * to bool
+seen = new uchar 26 0
+for i ulong len s
+c = get s i
+if and ge c 65 le c 90
+c = add c 32
+end
+if and ge c 97 le c 122
+k = ulong sub c 97
+if ne get seen k 0
+ret false
+end
+put seen k 1
+end
+end
+ret true
+end

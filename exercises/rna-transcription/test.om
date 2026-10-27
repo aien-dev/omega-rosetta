@@ -1,0 +1,122 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/rna-transcription/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 6 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text z0 "z"
+text c1 "toRna: Empty RNA sequence"
+text s2 "C"
+text e3 "G"
+text c4 "toRna: RNA complement of cytosine is guanine"
+text s5 "G"
+text e6 "C"
+text c7 "toRna: RNA complement of guanine is cytosine"
+text s8 "T"
+text e9 "A"
+text c10 "toRna: RNA complement of thymine is adenine"
+text s11 "A"
+text e12 "U"
+text c13 "toRna: RNA complement of adenine is uracil"
+text s14 "ACGTGGTCTTAA"
+text e15 "UGCACCAGAAUU"
+text c16 "toRna: RNA complement"
+note canonical case b4631f82-c98c-4a2f-90b3-c5c2b6c6f661
+fn tc0 to bool
+o = new uchar 1024 0
+n = torna part z0 0 0 o
+ret eq n 0
+end
+note canonical case a9558a3c-318c-4240-9256-5d5ed47005a6
+fn tc1 to bool
+o = new uchar 1024 0
+n = torna s2 o
+ret tbeq part o 0 n e3
+end
+note canonical case 6eedbb5c-12cb-4c8b-9f51-f8320b4dc2e7
+fn tc2 to bool
+o = new uchar 1024 0
+n = torna s5 o
+ret tbeq part o 0 n e6
+end
+note canonical case 870bd3ec-8487-471d-8d9a-a25046488d3e
+fn tc3 to bool
+o = new uchar 1024 0
+n = torna s8 o
+ret tbeq part o 0 n e9
+end
+note canonical case aade8964-02e1-4073-872f-42d3ffd74c5f
+fn tc4 to bool
+o = new uchar 1024 0
+n = torna s11 o
+ret tbeq part o 0 n e12
+end
+note canonical case 79ed2757-f018-4f47-a1d7-34a559392dbf
+fn tc5 to bool
+o = new uchar 1024 0
+n = torna s14 o
+ret tbeq part o 0 n e15
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c4
+tcheck tc2 c7
+tcheck tc3 c10
+tcheck tc4 c13
+tcheck tc5 c16
+ret int get tfails 0
+end

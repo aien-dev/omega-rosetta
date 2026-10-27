@@ -1,0 +1,11 @@
+note Exercism-style exercise "series": https://exercism.org/tracks/python/exercises/series
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note slices writes every contiguous run of k bytes of s, in order, joined by commas, into o and
+note returns the number of bytes written; or -1 when s is empty, -2 when k is negative, -3 when k is
+note zero, -4 when k is longer than s.
+note Check it with: sh exercise.sh exercises/series
+om2
+fn slices s view uchar * k long o edit uchar * to long
+note replace this line with your solution
+trap 13
+end

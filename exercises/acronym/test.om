@@ -1,0 +1,153 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/acronym/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 9 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "Portable Network Graphics"
+text e1 "PNG"
+text c2 "abbreviate: basic"
+text s3 "Ruby on Rails"
+text e4 "ROR"
+text c5 "abbreviate: lowercase words"
+text s6 "First In, First Out"
+text e7 "FIFO"
+text c8 "abbreviate: punctuation"
+text s9 "GNU Image Manipulation Program"
+text e10 "GIMP"
+text c11 "abbreviate: all caps word"
+text s12 "Complementary metal-oxide semiconductor"
+text e13 "CMOS"
+text c14 "abbreviate: punctuation without whitespace"
+text s15 "Rolling On The Floor Laughing So Hard That My Dogs Came Over And Licked Me"
+text e16 "ROTFLSHTMDCOALM"
+text c17 "abbreviate: very long abbreviation"
+text s18 "Something - I made up from thin air"
+text e19 "SIMUFTA"
+text c20 "abbreviate: consecutive delimiters"
+text s21 "Halley's Comet"
+text e22 "HC"
+text c23 "abbreviate: apostrophes"
+text s24 "The Road _Not_ Taken"
+text e25 "TRNT"
+text c26 "abbreviate: underscore emphasis"
+note canonical case 1e22cceb-c5e4-4562-9afe-aef07ad1eaf4
+fn tc0 to bool
+o = new uchar 1024 0
+n = abbreviate s0 o
+ret tbeq part o 0 n e1
+end
+note canonical case 79ae3889-a5c0-4b01-baf0-232d31180c08
+fn tc1 to bool
+o = new uchar 1024 0
+n = abbreviate s3 o
+ret tbeq part o 0 n e4
+end
+note canonical case ec7000a7-3931-4a17-890e-33ca2073a548
+fn tc2 to bool
+o = new uchar 1024 0
+n = abbreviate s6 o
+ret tbeq part o 0 n e7
+end
+note canonical case 32dd261c-0c92-469a-9c5c-b192e94a63b0
+fn tc3 to bool
+o = new uchar 1024 0
+n = abbreviate s9 o
+ret tbeq part o 0 n e10
+end
+note canonical case ae2ac9fa-a606-4d05-8244-3bcc4659c1d4
+fn tc4 to bool
+o = new uchar 1024 0
+n = abbreviate s12 o
+ret tbeq part o 0 n e13
+end
+note canonical case 0e4b1e7c-1a6d-48fb-81a7-bf65eb9e69f9
+fn tc5 to bool
+o = new uchar 1024 0
+n = abbreviate s15 o
+ret tbeq part o 0 n e16
+end
+note canonical case 6a078f49-c68d-4b7b-89af-33a1a98c28cc
+fn tc6 to bool
+o = new uchar 1024 0
+n = abbreviate s18 o
+ret tbeq part o 0 n e19
+end
+note canonical case 5118b4b1-4572-434c-8d57-5b762e57973e
+fn tc7 to bool
+o = new uchar 1024 0
+n = abbreviate s21 o
+ret tbeq part o 0 n e22
+end
+note canonical case adc12eab-ec2d-414f-b48c-66a4fc06cdef
+fn tc8 to bool
+o = new uchar 1024 0
+n = abbreviate s24 o
+ret tbeq part o 0 n e25
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c20
+tcheck tc7 c23
+tcheck tc8 c26
+ret int get tfails 0
+end

@@ -1,0 +1,101 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/resistor-color-duo/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 7 cases kept, 0 skipped
+text s0 "brown,black"
+text c1 "value: Brown and black"
+text s2 "blue,grey"
+text c3 "value: Blue and grey"
+text s4 "yellow,violet"
+text c5 "value: Yellow and violet"
+text s6 "white,red"
+text c7 "value: White and red"
+text s8 "orange,orange"
+text c9 "value: Orange and orange"
+text s10 "green,brown,orange"
+text c11 "value: Ignore additional colors"
+text s12 "black,brown"
+text c13 "value: Black and brown, one-digit"
+note canonical case ce11995a-5b93-4950-a5e9-93423693b2fc
+fn tc0 to bool
+ret eq value s0 10
+end
+note canonical case 7bf82f7a-af23-48ba-a97d-38d59406a920
+fn tc1 to bool
+ret eq value s2 68
+end
+note canonical case f1886361-fdfd-4693-acf8-46726fe24e0c
+fn tc2 to bool
+ret eq value s4 47
+end
+note canonical case b7a6cbd2-ae3c-470a-93eb-56670b305640
+fn tc3 to bool
+ret eq value s6 92
+end
+note canonical case 77a8293d-2a83-4016-b1af-991acc12b9fe
+fn tc4 to bool
+ret eq value s8 33
+end
+note canonical case 0c4fb44f-db7c-4d03-afa8-054350f156a8
+fn tc5 to bool
+ret eq value s10 51
+end
+note canonical case 4a8ceec5-0ab4-4904-88a4-daf953a5e818
+fn tc6 to bool
+ret eq value s12 1
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+ret int get tfails 0
+end

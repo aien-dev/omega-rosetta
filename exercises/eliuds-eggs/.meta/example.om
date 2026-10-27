@@ -1,0 +1,14 @@
+note Exercism-style exercise "eliuds-eggs": https://exercism.org/tracks/python/exercises/eliuds-eggs
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note eggcount is the number of 1 bits in the binary representation of n.
+note Check it with: sh exercise.sh exercises/eliuds-eggs
+om2
+fn eggcount n ulong to ulong
+c = ulong 0
+v = n
+while ne v 0 bound 64
+c = add c and v 1
+v = shr v 1
+end
+ret c
+end

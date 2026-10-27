@@ -1,0 +1,160 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/secret-handshake/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 11 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text e0 "wink"
+text c1 "commands: wink for 1"
+text e2 "double blink"
+text c3 "commands: double blink for 10"
+text e4 "close your eyes"
+text c5 "commands: close your eyes for 100"
+text e6 "jump"
+text c7 "commands: jump for 1000"
+text e8 "wink,double blink"
+text c9 "commands: combine two actions"
+text e10 "double blink,wink"
+text c11 "commands: reverse two actions"
+text e12 "jump"
+text c13 "commands: reversing one action gives the same action"
+text c14 "commands: reversing no actions still gives no actions"
+text e15 "wink,double blink,close your eyes,jump"
+text c16 "commands: all possible actions"
+text e17 "jump,close your eyes,double blink,wink"
+text c18 "commands: reverse all possible actions"
+text c19 "commands: do nothing for zero"
+note canonical case b8496fbd-6778-468c-8054-648d03c4bb23
+fn tc0 to bool
+o = new uchar 1024 0
+n = commands 1 o
+ret tbeq part o 0 n e0
+end
+note canonical case 83ec6c58-81a9-4fd1-bfaf-0160514fc0e3
+fn tc1 to bool
+o = new uchar 1024 0
+n = commands 2 o
+ret tbeq part o 0 n e2
+end
+note canonical case 0e20e466-3519-4134-8082-5639d85fef71
+fn tc2 to bool
+o = new uchar 1024 0
+n = commands 4 o
+ret tbeq part o 0 n e4
+end
+note canonical case b339ddbb-88b7-4b7d-9b19-4134030d9ac0
+fn tc3 to bool
+o = new uchar 1024 0
+n = commands 8 o
+ret tbeq part o 0 n e6
+end
+note canonical case 40499fb4-e60c-43d7-8b98-0de3ca44e0eb
+fn tc4 to bool
+o = new uchar 1024 0
+n = commands 3 o
+ret tbeq part o 0 n e8
+end
+note canonical case 9730cdd5-ef27-494b-afd3-5c91ad6c3d9d
+fn tc5 to bool
+o = new uchar 1024 0
+n = commands 19 o
+ret tbeq part o 0 n e10
+end
+note canonical case 0b828205-51ca-45cd-90d5-f2506013f25f
+fn tc6 to bool
+o = new uchar 1024 0
+n = commands 24 o
+ret tbeq part o 0 n e12
+end
+note canonical case 9949e2ac-6c9c-4330-b685-2089ab28b05f
+fn tc7 to bool
+o = new uchar 1024 0
+n = commands 16 o
+ret eq n 0
+end
+note canonical case 23fdca98-676b-4848-970d-cfed7be39f81
+fn tc8 to bool
+o = new uchar 1024 0
+n = commands 15 o
+ret tbeq part o 0 n e15
+end
+note canonical case ae8fe006-d910-4d6f-be00-54b7c3799e79
+fn tc9 to bool
+o = new uchar 1024 0
+n = commands 31 o
+ret tbeq part o 0 n e17
+end
+note canonical case 3d36da37-b31f-4cdb-a396-d93a2ee1c4a5
+fn tc10 to bool
+o = new uchar 1024 0
+n = commands 0 o
+ret eq n 0
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+tcheck tc7 c14
+tcheck tc8 c16
+tcheck tc9 c18
+tcheck tc10 c19
+ret int get tfails 0
+end

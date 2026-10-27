@@ -1,0 +1,60 @@
+note Exercism-style exercise "bob": https://exercism.org/tracks/python/exercises/bob
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note response writes Bob's reply to s into o and returns its length. Silence (only spaces, tabs,
+note CR, LF): "Fine. Be that way!". A yelled question: "Calm down, I know what I'm doing!". Yelling
+note (some letter, no lower-case letter): "Whoa, chill out!". A question (last non-space byte is
+note "?"): "Sure.". Anything else: "Whatever.".
+note Check it with: sh exercise.sh exercises/bob
+om2
+text bfine "Fine. Be that way!"
+text bcalm "Calm down, I know what I'm doing!"
+text bwhoa "Whoa, chill out!"
+text bsure "Sure."
+text bwhat "Whatever."
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+fn lastbyte s view uchar * to uchar
+last = uchar 0
+for i ulong len s
+c = get s i
+if not or or or eq c 32 eq c 9 eq c 10 eq c 13
+last = c
+end
+end
+ret last
+end
+fn hasrange s view uchar * lo uchar hi uchar to bool
+for i ulong len s
+c = get s i
+if and ge c lo le c hi
+ret true
+end
+end
+ret false
+end
+fn response s view uchar * o edit uchar * to ulong
+last = lastbyte s
+up = hasrange s 65 90
+lo = hasrange s 97 122
+if eq last 0
+ret app o 0 bfine
+end
+yell = and up not lo
+q = eq last 63
+if and yell q
+ret app o 0 bcalm
+end
+if yell
+ret app o 0 bwhoa
+end
+if q
+ret app o 0 bsure
+end
+ret app o 0 bwhat
+end

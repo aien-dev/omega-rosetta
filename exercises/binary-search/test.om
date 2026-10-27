@@ -1,0 +1,199 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/binary-search/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 11 cases kept, 0 skipped
+text c0 "find: finds a value in an array with one element"
+text c1 "find: finds a value in the middle of an array"
+text c2 "find: finds a value at the beginning of an array"
+text c3 "find: finds a value at the end of an array"
+text c4 "find: finds a value in an array of odd length"
+text c5 "find: finds a value in an array of even length"
+text c6 "find: identifies that a value is not included in the array"
+text c7 "find: a value smaller than the array's smallest value is not found"
+text c8 "find: a value larger than the array's largest value is not found"
+text c9 "find: nothing is found in an empty array"
+text c10 "find: nothing is found when the left and right bounds cross"
+note canonical case b55c24a9-a98d-4379-a08c-2adcf8ebeee8
+fn tc0 to bool
+a0 = new ulong 1 0
+put a0 0 6
+ret eq find a0 6 0
+end
+note canonical case 73469346-b0a0-4011-89bf-989e443d503d
+fn tc1 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 3
+put a0 2 4
+put a0 3 6
+put a0 4 8
+put a0 5 9
+put a0 6 11
+ret eq find a0 6 3
+end
+note canonical case 327bc482-ab85-424e-a724-fb4658e66ddb
+fn tc2 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 3
+put a0 2 4
+put a0 3 6
+put a0 4 8
+put a0 5 9
+put a0 6 11
+ret eq find a0 1 0
+end
+note canonical case f9f94b16-fe5e-472c-85ea-c513804c7d59
+fn tc3 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 3
+put a0 2 4
+put a0 3 6
+put a0 4 8
+put a0 5 9
+put a0 6 11
+ret eq find a0 11 6
+end
+note canonical case f0068905-26e3-4342-856d-ad153cadb338
+fn tc4 to bool
+a0 = new ulong 13 0
+put a0 0 1
+put a0 1 3
+put a0 2 5
+put a0 3 8
+put a0 4 13
+put a0 5 21
+put a0 6 34
+put a0 7 55
+put a0 8 89
+put a0 9 144
+put a0 10 233
+put a0 11 377
+put a0 12 634
+ret eq find a0 144 9
+end
+note canonical case fc316b12-c8b3-4f5e-9e89-532b3389de8c
+fn tc5 to bool
+a0 = new ulong 12 0
+put a0 0 1
+put a0 1 3
+put a0 2 5
+put a0 3 8
+put a0 4 13
+put a0 5 21
+put a0 6 34
+put a0 7 55
+put a0 8 89
+put a0 9 144
+put a0 10 233
+put a0 11 377
+ret eq find a0 21 5
+end
+note canonical case da7db20a-354f-49f7-a6a1-650a54998aa6
+fn tc6 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 3
+put a0 2 4
+put a0 3 6
+put a0 4 8
+put a0 5 9
+put a0 6 11
+ret eq find a0 7 -1
+end
+note canonical case 95d869ff-3daf-4c79-b622-6e805c675f97
+fn tc7 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 3
+put a0 2 4
+put a0 3 6
+put a0 4 8
+put a0 5 9
+put a0 6 11
+ret eq find a0 0 -1
+end
+note canonical case 8b24ef45-6e51-4a94-9eac-c2bf38fdb0ba
+fn tc8 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 3
+put a0 2 4
+put a0 3 6
+put a0 4 8
+put a0 5 9
+put a0 6 11
+ret eq find a0 13 -1
+end
+note canonical case f439a0fa-cf42-4262-8ad1-64bf41ce566a
+fn tc9 to bool
+a0 = new ulong 1 0
+ret eq find part a0 0 0 1 -1
+end
+note canonical case 2c353967-b56d-40b8-acff-ce43115eed64
+fn tc10 to bool
+a0 = new ulong 2 0
+put a0 0 1
+put a0 1 2
+ret eq find a0 0 -1
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+tcheck tc9 c9
+tcheck tc10 c10
+ret int get tfails 0
+end

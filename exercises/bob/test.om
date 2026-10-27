@@ -1,0 +1,327 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/bob/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 26 cases kept, 0 skipped, 1 superseded (reimplemented) cases omitted
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "Does this cryogenic chamber make me look fat?"
+text e1 "Sure."
+text c2 "response: asking a question"
+text s3 "WATCH OUT!"
+text e4 "Whoa, chill out!"
+text c5 "response: shouting"
+text s6 "WHAT'S GOING ON?"
+text e7 "Calm down, I know what I'm doing!"
+text c8 "response: forceful question"
+text z9 "z"
+text e10 "Fine. Be that way!"
+text c11 "response: silence"
+text s12 "Tom-ay-to, tom-aaaah-to."
+text e13 "Whatever."
+text c14 "response: stating something"
+text s15 "You are, what, like 15?"
+text e16 "Sure."
+text c17 "response: asking a numeric question"
+text s18 "fffbbcbeab?"
+text e19 "Sure."
+text c20 "response: asking gibberish"
+text s21 "4?"
+text e22 "Sure."
+text c23 "response: question with no letters"
+text s24 ":) ?"
+text e25 "Sure."
+text c26 "response: non-letters with question"
+text s27 "Wait! Hang on. Are you going to be OK?"
+text e28 "Sure."
+text c29 "response: prattling on"
+text s30 "Okay if like my  spacebar  quite a bit?   "
+text e31 "Sure."
+text c32 "response: ending with whitespace"
+text s33 "\nDoes this cryogenic chamber make\n me look fat?"
+text e34 "Sure."
+text c35 "response: multiple line question"
+text s36 "FCECDFCAAB"
+text e37 "Whoa, chill out!"
+text c38 "response: shouting gibberish"
+text s39 "DO LIONS EAT PEOPLE? AHHHHH."
+text e40 "Whoa, chill out!"
+text c41 "response: shouting a statement containing a question mark"
+text s42 "1, 2, 3 GO!"
+text e43 "Whoa, chill out!"
+text c44 "response: shouting numbers"
+text s45 "ZOMG THE %^*@#$(*^ ZOMBIES ARE COMING!!11!!1!"
+text e46 "Whoa, chill out!"
+text c47 "response: shouting with special characters"
+text s48 "I HATE THE DENTIST"
+text e49 "Whoa, chill out!"
+text c50 "response: shouting with no exclamation mark"
+text s51 "          "
+text e52 "Fine. Be that way!"
+text c53 "response: prolonged silence"
+text s54 "\t\t\t\t\t\t\t\t\t\t"
+text e55 "Fine. Be that way!"
+text c56 "response: alternate silence"
+text e57 "Fine. Be that way!"
+text c58 "response: other whitespace"
+text s59 "Hi there!"
+text e60 "Whatever."
+text c61 "response: talking forcefully"
+text s62 "It's OK if you don't want to go work for NASA."
+text e63 "Whatever."
+text c64 "response: using acronyms in regular speech"
+text s65 "1, 2, 3"
+text e66 "Whatever."
+text c67 "response: no letters"
+text s68 "Ending with ? means a question."
+text e69 "Whatever."
+text c70 "response: statement containing question mark"
+text s71 "         hmmmmmmm..."
+text e72 "Whatever."
+text c73 "response: starting with whitespace"
+text s74 "This is a statement ending with whitespace      "
+text e75 "Whatever."
+text c76 "response: non-question ending with whitespace"
+note canonical case 8a2e771d-d6f1-4e3f-b6c6-b41495556e37
+fn tc0 to bool
+o = new uchar 1024 0
+n = response s0 o
+ret tbeq part o 0 n e1
+end
+note canonical case 73a966dc-8017-47d6-bb32-cf07d1a5fcd9
+fn tc1 to bool
+o = new uchar 1024 0
+n = response s3 o
+ret tbeq part o 0 n e4
+end
+note canonical case a5193c61-4a92-4f68-93e2-f554eb385ec6
+fn tc2 to bool
+o = new uchar 1024 0
+n = response s6 o
+ret tbeq part o 0 n e7
+end
+note canonical case bc39f7c6-f543-41be-9a43-fd1c2f753fc0
+fn tc3 to bool
+o = new uchar 1024 0
+n = response part z9 0 0 o
+ret tbeq part o 0 n e10
+end
+note canonical case e162fead-606f-437a-a166-d051915cea8e
+fn tc4 to bool
+o = new uchar 1024 0
+n = response s12 o
+ret tbeq part o 0 n e13
+end
+note canonical case 81080c62-4e4d-4066-b30a-48d8d76920d9
+fn tc5 to bool
+o = new uchar 1024 0
+n = response s15 o
+ret tbeq part o 0 n e16
+end
+note canonical case 2a02716d-685b-4e2e-a804-2adaf281c01e
+fn tc6 to bool
+o = new uchar 1024 0
+n = response s18 o
+ret tbeq part o 0 n e19
+end
+note canonical case bb0011c5-cd52-4a5b-8bfb-a87b6283b0e2
+fn tc7 to bool
+o = new uchar 1024 0
+n = response s21 o
+ret tbeq part o 0 n e22
+end
+note canonical case 9bfc677d-ea3a-45f2-be44-35bc8fa3753e
+fn tc8 to bool
+o = new uchar 1024 0
+n = response s24 o
+ret tbeq part o 0 n e25
+end
+note canonical case 8608c508-f7de-4b17-985b-811878b3cf45
+fn tc9 to bool
+o = new uchar 1024 0
+n = response s27 o
+ret tbeq part o 0 n e28
+end
+note canonical case 05b304d6-f83b-46e7-81e0-4cd3ca647900
+fn tc10 to bool
+o = new uchar 1024 0
+n = response s30 o
+ret tbeq part o 0 n e31
+end
+note canonical case 2c7278ac-f955-4eb4-bf8f-e33eb4116a15
+fn tc11 to bool
+o = new uchar 1024 0
+n = response s33 o
+ret tbeq part o 0 n e34
+end
+note canonical case d6c98afd-df35-4806-b55e-2c457c3ab748
+fn tc12 to bool
+o = new uchar 1024 0
+n = response s36 o
+ret tbeq part o 0 n e37
+end
+note canonical case 3c954328-86fb-4c71-8961-e18d6a5e2517
+fn tc13 to bool
+o = new uchar 1024 0
+n = response s39 o
+ret tbeq part o 0 n e40
+end
+note canonical case a20e0c54-2224-4dde-8b10-bd2cdd4f61bc
+fn tc14 to bool
+o = new uchar 1024 0
+n = response s42 o
+ret tbeq part o 0 n e43
+end
+note canonical case 496143c8-1c31-4c01-8a08-88427af85c66
+fn tc15 to bool
+o = new uchar 1024 0
+n = response s45 o
+ret tbeq part o 0 n e46
+end
+note canonical case e6793c1c-43bd-4b8d-bc11-499aea73925f
+fn tc16 to bool
+o = new uchar 1024 0
+n = response s48 o
+ret tbeq part o 0 n e49
+end
+note canonical case d6c47565-372b-4b09-b1dd-c40552b8378b
+fn tc17 to bool
+o = new uchar 1024 0
+n = response s51 o
+ret tbeq part o 0 n e52
+end
+note canonical case 4428f28d-4100-4d85-a902-e5a78cb0ecd3
+fn tc18 to bool
+o = new uchar 1024 0
+n = response s54 o
+ret tbeq part o 0 n e55
+end
+note canonical case 72bd5ad3-9b2f-4931-a988-dce1f5771de2
+fn tc19 to bool
+a0 = new uchar 4 0
+put a0 0 10
+put a0 1 13
+put a0 2 32
+put a0 3 9
+o = new uchar 1024 0
+n = response a0 o
+ret tbeq part o 0 n e57
+end
+note canonical case c02f9179-ab16-4aa7-a8dc-940145c385f7
+fn tc20 to bool
+o = new uchar 1024 0
+n = response s59 o
+ret tbeq part o 0 n e60
+end
+note canonical case 153c0e25-9bb5-4ec5-966e-598463658bcd
+fn tc21 to bool
+o = new uchar 1024 0
+n = response s62 o
+ret tbeq part o 0 n e63
+end
+note canonical case f7bc4b92-bdff-421e-a238-ae97f230ccac
+fn tc22 to bool
+o = new uchar 1024 0
+n = response s65 o
+ret tbeq part o 0 n e66
+end
+note canonical case aa8097cc-c548-4951-8856-14a404dd236a
+fn tc23 to bool
+o = new uchar 1024 0
+n = response s68 o
+ret tbeq part o 0 n e69
+end
+note canonical case 5371ef75-d9ea-4103-bcfa-2da973ddec1b
+fn tc24 to bool
+o = new uchar 1024 0
+n = response s71 o
+ret tbeq part o 0 n e72
+end
+note canonical case 12983553-8601-46a8-92fa-fcaa3bc4a2a0
+fn tc25 to bool
+o = new uchar 1024 0
+n = response s74 o
+ret tbeq part o 0 n e75
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c20
+tcheck tc7 c23
+tcheck tc8 c26
+tcheck tc9 c29
+tcheck tc10 c32
+tcheck tc11 c35
+tcheck tc12 c38
+tcheck tc13 c41
+tcheck tc14 c44
+tcheck tc15 c47
+tcheck tc16 c50
+tcheck tc17 c53
+tcheck tc18 c56
+tcheck tc19 c58
+tcheck tc20 c61
+tcheck tc21 c64
+tcheck tc22 c67
+tcheck tc23 c70
+tcheck tc24 c73
+tcheck tc25 c76
+ret int get tfails 0
+end

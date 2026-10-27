@@ -1,0 +1,21 @@
+note Exercism-style exercise "scrabble-score": https://exercism.org/tracks/python/exercises/scrabble-score
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note score is the Scrabble score of word, ignoring case: AEIOULNRST 1, DG 2, BCMP 3, FHVWY 4, K 5,
+note JX 8, QZ 10.
+note Check it with: sh exercise.sh exercises/scrabble-score
+om2
+note letter values A .. Z, each stored as 48 + value (":" is 10)
+text sv "1332142418513113:11114484:"
+fn score word view uchar * to ulong
+t = ulong 0
+for i ulong len word
+c = get word i
+if and ge c 97 le c 122
+c = sub c 32
+end
+if and ge c 65 le c 90
+t = add t ulong sub get sv ulong sub c 65 48
+end
+end
+ret t
+end

@@ -1,0 +1,11 @@
+note Exercism-style exercise "resistor-color-duo": https://exercism.org/tracks/python/exercises/resistor-color-duo
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note colors holds band color names joined by commas. value is the two-digit number given by the
+note first two bands (black 0, brown 1, red 2, orange 3, yellow 4, green 5, blue 6, violet 7, grey 8,
+note white 9); further bands are ignored.
+note Check it with: sh exercise.sh exercises/resistor-color-duo
+om2
+fn value colors view uchar * to ulong
+note replace this line with your solution
+trap 13
+end

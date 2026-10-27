@@ -1,0 +1,13 @@
+note Exercism-style exercise "resistor-color-trio": https://exercism.org/tracks/python/exercises/resistor-color-trio
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note colors holds band color names joined by commas (black 0, brown 1, red 2, orange 3, yellow 4,
+note green 5, blue 6, violet 7, grey 8, white 9). The first two bands give a two-digit number, the
+note third the count of zeros after it; further bands are ignored. label writes the resistance as
+note "<number> <unit>" into o, with the largest of ohms, kiloohms, megaohms, gigaohms that keeps the
+note number whole, and returns the number of bytes written.
+note Check it with: sh exercise.sh exercises/resistor-color-trio
+om2
+fn label colors view uchar * o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

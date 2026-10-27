@@ -1,0 +1,25 @@
+note Exercism-style exercise "sieve": https://exercism.org/tracks/python/exercises/sieve
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note primes writes every prime from 2 up to and including limit (limit at most 1000) into o, in
+note increasing order, using the sieve of Eratosthenes, and returns how many it wrote.
+note Check it with: sh exercise.sh exercises/sieve
+om2
+const SMAX ulong 1001
+fn primes limit ulong o edit ulong * to ulong
+comp = new uchar SMAX 0
+k = ulong 0
+for i ulong add limit 1
+if ge i 2
+if eq get comp i 0
+put o k i
+k = add k 1
+j = mul i i
+while le j limit bound 1000
+put comp j 1
+j = add j i
+end
+end
+end
+end
+ret k
+end

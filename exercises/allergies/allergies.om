@@ -1,0 +1,16 @@
+note Exercism-style exercise "allergies": https://exercism.org/tracks/python/exercises/allergies
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note The allergens in score order are eggs 1, peanuts 2, shellfish 4, strawberries 8, tomatoes 16,
+note chocolate 32, pollen 64, cats 128; a score is the sum of the allergens (higher bits are ignored).
+note allergicto is true when score includes item; list writes the allergens of score, in that order,
+note joined by commas, into o and returns the number of bytes written.
+note Check it with: sh exercise.sh exercises/allergies
+om2
+fn allergicto item view uchar * score ulong to bool
+note replace this line with your solution
+trap 13
+end
+fn list score ulong o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

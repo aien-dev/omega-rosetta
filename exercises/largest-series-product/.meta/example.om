@@ -1,0 +1,43 @@
+note Exercism-style exercise "largest-series-product": https://exercism.org/tracks/python/exercises/largest-series-product
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note largestproduct is the largest product of span adjacent decimal digits of s (1 for span 0); or
+note -1 when span is negative, -2 when span is longer than s, -3 when s holds a non-digit.
+note Check it with: sh exercise.sh exercises/largest-series-product
+om2
+fn alldigits s view uchar * to bool
+for i ulong len s
+c = get s i
+if or lt c 48 gt c 57
+ret false
+end
+end
+ret true
+end
+fn window s view uchar * k ulong w ulong to long
+p = long 1
+for j ulong w
+p = mul p long sub get s add k j 48
+end
+ret p
+end
+fn largestproduct s view uchar * span long to long
+if lt span 0
+ret -1
+end
+w = ulong span
+n = len s
+if gt w n
+ret -2
+end
+if not alldigits s
+ret -3
+end
+best = long 0
+for k ulong add sub n w 1
+p = window s k w
+if gt p best
+best = p
+end
+end
+ret best
+end

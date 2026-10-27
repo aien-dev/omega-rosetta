@@ -1,0 +1,71 @@
+note Exercism-style exercise "run-length-encoding": https://exercism.org/tracks/python/exercises/run-length-encoding
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note encode writes the run-length encoding of s into o: each run of 2 or more equal bytes becomes its
+note decimal count followed by the byte, a single byte stays as it is. decode reverses it. Both
+note return the number of bytes written.
+note Check it with: sh exercise.sh exercises/run-length-encoding
+om2
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+fn appnum o edit uchar * p ulong n ulong to ulong
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+ret app o p part d i sub 20 i
+end
+fn encode s view uchar * o edit uchar * to ulong
+p = ulong 0
+i = ulong 0
+n = len s
+while lt i n bound 999999
+c = get s i
+r = ulong 1
+while lt add i r n bound 999999
+if ne get s add i r c
+break
+end
+r = add r 1
+end
+if gt r 1
+p = appnum o p r
+end
+put o p c
+p = add p 1
+i = add i r
+end
+ret p
+end
+fn decode s view uchar * o edit uchar * to ulong
+p = ulong 0
+r = ulong 0
+for i ulong len s
+c = get s i
+if and ge c 48 le c 57
+r = add mul r 10 ulong sub c 48
+else
+if eq r 0
+r = ulong 1
+end
+for j ulong r
+put o p c
+p = add p 1
+end
+r = ulong 0
+end
+end
+ret p
+end

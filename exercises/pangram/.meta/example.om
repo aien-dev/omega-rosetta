@@ -1,0 +1,23 @@
+note Exercism-style exercise "pangram": https://exercism.org/tracks/python/exercises/pangram
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note ispangram is true when s contains every letter a .. z at least once, ignoring case.
+note Check it with: sh exercise.sh exercises/pangram
+om2
+fn ispangram s view uchar * to bool
+seen = new uchar 26 0
+n = ulong 0
+for i ulong len s
+c = get s i
+if and ge c 65 le c 90
+c = add c 32
+end
+if and ge c 97 le c 122
+k = ulong sub c 97
+if eq get seen k 0
+put seen k 1
+n = add n 1
+end
+end
+end
+ret eq n 26
+end

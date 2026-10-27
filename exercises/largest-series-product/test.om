@@ -1,0 +1,157 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/largest-series-product/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 15 cases kept, 0 skipped, 3 superseded (reimplemented) cases omitted
+text s0 "29"
+text c1 "largestProduct: finds the largest product if span equals length"
+text s2 "0123456789"
+text c3 "largestProduct: can find the largest product of 2 with numbers in order"
+text s4 "576802143"
+text c5 "largestProduct: can find the largest product of 2"
+text s6 "0123456789"
+text c7 "largestProduct: can find the largest product of 3 with numbers in order"
+text s8 "1027839564"
+text c9 "largestProduct: can find the largest product of 3"
+text s10 "0123456789"
+text c11 "largestProduct: can find the largest product of 5 with numbers in order"
+text s12 "73167176531330624919225119674426574742355349194934"
+text c13 "largestProduct: can get the largest product of a big number"
+text s14 "0000"
+text c15 "largestProduct: reports zero if the only digits are zero"
+text s16 "99099"
+text c17 "largestProduct: reports zero if all spans include zero"
+text s18 "123"
+text c19 "largestProduct: rejects span longer than string length"
+text z20 "z"
+text c21 "largestProduct: reports 1 for empty string and empty product (0 span)"
+text s22 "123"
+text c23 "largestProduct: reports 1 for nonempty string and empty product (0 span)"
+text z24 "z"
+text c25 "largestProduct: rejects empty string and nonzero span"
+text s26 "1234a5"
+text c27 "largestProduct: rejects invalid character in digits"
+text s28 "12345"
+text c29 "largestProduct: rejects negative span"
+note canonical case 7c82f8b7-e347-48ee-8a22-f672323324d4
+fn tc0 to bool
+ret eq largestproduct s0 2 18
+end
+note canonical case 88523f65-21ba-4458-a76a-b4aaf6e4cb5e
+fn tc1 to bool
+ret eq largestproduct s2 2 72
+end
+note canonical case f1376b48-1157-419d-92c2-1d7e36a70b8a
+fn tc2 to bool
+ret eq largestproduct s4 2 48
+end
+note canonical case 46356a67-7e02-489e-8fea-321c2fa7b4a4
+fn tc3 to bool
+ret eq largestproduct s6 3 504
+end
+note canonical case a2dcb54b-2b8f-4993-92dd-5ce56dece64a
+fn tc4 to bool
+ret eq largestproduct s8 3 270
+end
+note canonical case 673210a3-33cd-4708-940b-c482d7a88f9d
+fn tc5 to bool
+ret eq largestproduct s10 5 15120
+end
+note canonical case 02acd5a6-3bbf-46df-8282-8b313a80a7c9
+fn tc6 to bool
+ret eq largestproduct s12 6 23520
+end
+note canonical case 76dcc407-21e9-424c-a98e-609f269622b5
+fn tc7 to bool
+ret eq largestproduct s14 2 0
+end
+note canonical case 6ef0df9f-52d4-4a5d-b210-f6fae5f20e19
+fn tc8 to bool
+ret eq largestproduct s16 3 0
+end
+note canonical case 0ae1ce53-d9ba-41bb-827f-2fceb64f058b
+fn tc9 to bool
+ret eq largestproduct s18 4 -2
+end
+note canonical case 06bc8b90-0c51-4c54-ac22-3ec3893a079e
+fn tc10 to bool
+ret eq largestproduct part z20 0 0 0 1
+end
+note canonical case 3ec0d92e-f2e2-4090-a380-70afee02f4c0
+fn tc11 to bool
+ret eq largestproduct s22 0 1
+end
+note canonical case 6cf66098-a6af-4223-aab1-26aeeefc7402
+fn tc12 to bool
+ret eq largestproduct part z24 0 0 1 -2
+end
+note canonical case 7a38f2d6-3c35-45f6-8d6f-12e6e32d4d74
+fn tc13 to bool
+ret eq largestproduct s26 2 -3
+end
+note canonical case c859f34a-9bfe-4897-9c2f-6d7f8598e7f0
+fn tc14 to bool
+ret eq largestproduct s28 -1 -1
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+tcheck tc7 c15
+tcheck tc8 c17
+tcheck tc9 c19
+tcheck tc10 c21
+tcheck tc11 c23
+tcheck tc12 c25
+tcheck tc13 c27
+tcheck tc14 c29
+ret int get tfails 0
+end

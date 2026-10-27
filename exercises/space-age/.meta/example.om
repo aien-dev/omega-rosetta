@@ -1,0 +1,61 @@
+note Exercism-style exercise "space-age": https://exercism.org/tracks/python/exercises/space-age
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note age is how old someone of the given seconds is in years of planet: one Earth year is 31557600
+note seconds; orbital periods in Earth years are Mercury 0.2408467, Venus 0.61519726, Earth 1.0,
+note Mars 1.8808158, Jupiter 11.862615, Saturn 29.447498, Uranus 84.016846, Neptune 164.79132.
+note age is -1.0 when planet is not one of these names.
+note Check it with: sh exercise.sh exercises/space-age
+om2
+text pl0 "Mercury"
+text pl1 "Venus"
+text pl2 "Earth"
+text pl3 "Mars"
+text pl4 "Jupiter"
+text pl5 "Saturn"
+text pl6 "Uranus"
+text pl7 "Neptune"
+fn same a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+fn period planet view uchar * to f64
+if same planet pl0
+ret 0.2408467
+end
+if same planet pl1
+ret 0.61519726
+end
+if same planet pl2
+ret 1.0
+end
+if same planet pl3
+ret 1.8808158
+end
+if same planet pl4
+ret 11.862615
+end
+if same planet pl5
+ret 29.447498
+end
+if same planet pl6
+ret 84.016846
+end
+if same planet pl7
+ret 164.79132
+end
+ret -1.0
+end
+fn age planet view uchar * seconds f64 to f64
+p = period planet
+if lt p 0.0
+ret -1.0
+end
+ret div div seconds 31557600.0 p
+end

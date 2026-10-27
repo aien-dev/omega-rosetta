@@ -1,0 +1,88 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/square-root/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 6 cases kept, 0 skipped
+text c0 "squareRoot: root of 1"
+text c1 "squareRoot: root of 4"
+text c2 "squareRoot: root of 25"
+text c3 "squareRoot: root of 81"
+text c4 "squareRoot: root of 196"
+text c5 "squareRoot: root of 65025"
+note canonical case 9b748478-7b0a-490c-b87a-609dacf631fd
+fn tc0 to bool
+ret eq squareroot 1 1
+end
+note canonical case 7d3aa9ba-9ac6-4e93-a18b-2e8b477139bb
+fn tc1 to bool
+ret eq squareroot 4 2
+end
+note canonical case 6624aabf-3659-4ae0-a1c8-25ae7f33c6ef
+fn tc2 to bool
+ret eq squareroot 25 5
+end
+note canonical case 93beac69-265e-4429-abb1-94506b431f81
+fn tc3 to bool
+ret eq squareroot 81 9
+end
+note canonical case fbddfeda-8c4f-4bc4-87ca-6991af35360e
+fn tc4 to bool
+ret eq squareroot 196 14
+end
+note canonical case c03d0532-8368-4734-a8e0-f96a9eb7fc1d
+fn tc5 to bool
+ret eq squareroot 65025 255
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+ret int get tfails 0
+end

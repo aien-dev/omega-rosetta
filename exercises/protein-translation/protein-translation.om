@@ -1,0 +1,12 @@
+note Exercism-style exercise "protein-translation": https://exercism.org/tracks/python/exercises/protein-translation
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note proteins translates the RNA strand codon by codon into o, protein names joined by commas:
+note AUG Methionine; UUU UUC Phenylalanine; UUA UUG Leucine; UCU UCC UCA UCG Serine; UAU UAC
+note Tyrosine; UGU UGC Cysteine; UGG Tryptophan; UAA UAG UGA stop translation. Returns the number
+note of bytes written, or -1 when a codon before the first stop is invalid or incomplete.
+note Check it with: sh exercise.sh exercises/protein-translation
+om2
+fn proteins strand view uchar * o edit uchar * to long
+note replace this line with your solution
+trap 13
+end

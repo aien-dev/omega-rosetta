@@ -1,0 +1,198 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/prime-factors/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 12 cases kept, 0 skipped
+fn tueq a view ulong * b view ulong * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text c0 "factors: no factors"
+text c1 "factors: prime number"
+text c2 "factors: another prime number"
+text c3 "factors: square of a prime"
+text c4 "factors: product of first prime"
+text c5 "factors: cube of a prime"
+text c6 "factors: product of second prime"
+text c7 "factors: product of third prime"
+text c8 "factors: product of first and second prime"
+text c9 "factors: product of primes and non-primes"
+text c10 "factors: product of primes"
+text c11 "factors: factors include a large prime"
+note canonical case 924fc966-a8f5-4288-82f2-6b9224819ccd
+fn tc0 to bool
+o = new ulong 256 0
+n = factors 1 o
+ret eq n 0
+end
+note canonical case 17e30670-b105-4305-af53-ddde182cb6ad
+fn tc1 to bool
+o = new ulong 256 0
+n = factors 2 o
+a0 = new ulong 1 0
+put a0 0 2
+ret tueq part o 0 n a0
+end
+note canonical case 238d57c8-4c12-42ef-af34-ae4929f94789
+fn tc2 to bool
+o = new ulong 256 0
+n = factors 3 o
+a0 = new ulong 1 0
+put a0 0 3
+ret tueq part o 0 n a0
+end
+note canonical case f59b8350-a180-495a-8fb1-1712fbee1158
+fn tc3 to bool
+o = new ulong 256 0
+n = factors 9 o
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 3
+ret tueq part o 0 n a0
+end
+note canonical case 756949d3-3158-4e3d-91f2-c4f9f043ee70
+fn tc4 to bool
+o = new ulong 256 0
+n = factors 4 o
+a0 = new ulong 2 0
+put a0 0 2
+put a0 1 2
+ret tueq part o 0 n a0
+end
+note canonical case bc8c113f-9580-4516-8669-c5fc29512ceb
+fn tc5 to bool
+o = new ulong 256 0
+n = factors 8 o
+a0 = new ulong 3 0
+put a0 0 2
+put a0 1 2
+put a0 2 2
+ret tueq part o 0 n a0
+end
+note canonical case 7d6a3300-a4cb-4065-bd33-0ced1de6cb44
+fn tc6 to bool
+o = new ulong 256 0
+n = factors 27 o
+a0 = new ulong 3 0
+put a0 0 3
+put a0 1 3
+put a0 2 3
+ret tueq part o 0 n a0
+end
+note canonical case 073ac0b2-c915-4362-929d-fc45f7b9a9e4
+fn tc7 to bool
+o = new ulong 256 0
+n = factors 625 o
+a0 = new ulong 4 0
+put a0 0 5
+put a0 1 5
+put a0 2 5
+put a0 3 5
+ret tueq part o 0 n a0
+end
+note canonical case 6e0e4912-7fb6-47f3-a9ad-dbcd79340c75
+fn tc8 to bool
+o = new ulong 256 0
+n = factors 6 o
+a0 = new ulong 2 0
+put a0 0 2
+put a0 1 3
+ret tueq part o 0 n a0
+end
+note canonical case 00485cd3-a3fe-4fbe-a64a-a4308fc1f870
+fn tc9 to bool
+o = new ulong 256 0
+n = factors 12 o
+a0 = new ulong 3 0
+put a0 0 2
+put a0 1 2
+put a0 2 3
+ret tueq part o 0 n a0
+end
+note canonical case 02251d54-3ca1-4a9b-85e1-b38f4b0ccb91
+fn tc10 to bool
+o = new ulong 256 0
+n = factors 901255 o
+a0 = new ulong 4 0
+put a0 0 5
+put a0 1 17
+put a0 2 23
+put a0 3 461
+ret tueq part o 0 n a0
+end
+note canonical case 070cf8dc-e202-4285-aa37-8d775c9cd473
+fn tc11 to bool
+o = new ulong 256 0
+n = factors 93819012551 o
+a0 = new ulong 3 0
+put a0 0 11
+put a0 1 9539
+put a0 2 894119
+ret tueq part o 0 n a0
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+tcheck tc9 c9
+tcheck tc10 c10
+tcheck tc11 c11
+ret int get tfails 0
+end

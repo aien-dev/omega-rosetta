@@ -1,0 +1,438 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/protein-translation/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 30 cases kept, 0 skipped, 1 superseded (reimplemented) cases omitted
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text z0 "z"
+text c1 "proteins: Empty RNA sequence results in no proteins"
+text s2 "AUG"
+text e3 "Methionine"
+text c4 "proteins: Methionine RNA sequence"
+text s5 "UUU"
+text e6 "Phenylalanine"
+text c7 "proteins: Phenylalanine RNA sequence 1"
+text s8 "UUC"
+text e9 "Phenylalanine"
+text c10 "proteins: Phenylalanine RNA sequence 2"
+text s11 "UUA"
+text e12 "Leucine"
+text c13 "proteins: Leucine RNA sequence 1"
+text s14 "UUG"
+text e15 "Leucine"
+text c16 "proteins: Leucine RNA sequence 2"
+text s17 "UCU"
+text e18 "Serine"
+text c19 "proteins: Serine RNA sequence 1"
+text s20 "UCC"
+text e21 "Serine"
+text c22 "proteins: Serine RNA sequence 2"
+text s23 "UCA"
+text e24 "Serine"
+text c25 "proteins: Serine RNA sequence 3"
+text s26 "UCG"
+text e27 "Serine"
+text c28 "proteins: Serine RNA sequence 4"
+text s29 "UAU"
+text e30 "Tyrosine"
+text c31 "proteins: Tyrosine RNA sequence 1"
+text s32 "UAC"
+text e33 "Tyrosine"
+text c34 "proteins: Tyrosine RNA sequence 2"
+text s35 "UGU"
+text e36 "Cysteine"
+text c37 "proteins: Cysteine RNA sequence 1"
+text s38 "UGC"
+text e39 "Cysteine"
+text c40 "proteins: Cysteine RNA sequence 2"
+text s41 "UGG"
+text e42 "Tryptophan"
+text c43 "proteins: Tryptophan RNA sequence"
+text s44 "UAA"
+text c45 "proteins: STOP codon RNA sequence 1"
+text s46 "UAG"
+text c47 "proteins: STOP codon RNA sequence 2"
+text s48 "UGA"
+text c49 "proteins: STOP codon RNA sequence 3"
+text s50 "UUUUUU"
+text e51 "Phenylalanine,Phenylalanine"
+text c52 "proteins: Sequence of two protein codons translates into proteins"
+text s53 "UUAUUG"
+text e54 "Leucine,Leucine"
+text c55 "proteins: Sequence of two different protein codons translates into proteins"
+text s56 "AUGUUUUGG"
+text e57 "Methionine,Phenylalanine,Tryptophan"
+text c58 "proteins: Translate RNA strand into correct protein list"
+text s59 "UAGUGG"
+text c60 "proteins: Translation stops if STOP codon at beginning of sequence"
+text s61 "UGGUAG"
+text e62 "Tryptophan"
+text c63 "proteins: Translation stops if STOP codon at end of two-codon sequence"
+text s64 "AUGUUUUAA"
+text e65 "Methionine,Phenylalanine"
+text c66 "proteins: Translation stops if STOP codon at end of three-codon sequence"
+text s67 "UGGUAGUGG"
+text e68 "Tryptophan"
+text c69 "proteins: Translation stops if STOP codon in middle of three-codon sequence"
+text s70 "UGGUGUUAUUAAUGGUUU"
+text e71 "Tryptophan,Cysteine,Tyrosine"
+text c72 "proteins: Translation stops if STOP codon in middle of six-codon sequence"
+text s73 "AUGAUG"
+text e74 "Methionine,Methionine"
+text c75 "proteins: Sequence of two non-STOP codons does not translate to a STOP codon"
+text s76 "XYZ"
+text c77 "proteins: Unknown amino acids, not part of a codon, can't translate"
+text s78 "AUGU"
+text c79 "proteins: Incomplete RNA sequence can't translate"
+text s80 "UUCUUCUAAUGGU"
+text e81 "Phenylalanine,Phenylalanine"
+text c82 "proteins: Incomplete RNA sequence can translate if valid until a STOP codon"
+note canonical case 2c44f7bf-ba20-43f7-a3bf-f2219c0c3f98
+fn tc0 to bool
+o = new uchar 1024 0
+n = proteins part z0 0 0 o
+if lt n 0
+ret false
+end
+ret eq ulong n 0
+end
+note canonical case 96d3d44f-34a2-4db4-84cd-fff523e069be
+fn tc1 to bool
+o = new uchar 1024 0
+n = proteins s2 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e3
+end
+note canonical case 1b4c56d8-d69f-44eb-be0e-7b17546143d9
+fn tc2 to bool
+o = new uchar 1024 0
+n = proteins s5 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e6
+end
+note canonical case 81b53646-bd57-4732-b2cb-6b1880e36d11
+fn tc3 to bool
+o = new uchar 1024 0
+n = proteins s8 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e9
+end
+note canonical case 42f69d4f-19d2-4d2c-a8b0-f0ae9ee1b6b4
+fn tc4 to bool
+o = new uchar 1024 0
+n = proteins s11 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e12
+end
+note canonical case ac5edadd-08ed-40a3-b2b9-d82bb50424c4
+fn tc5 to bool
+o = new uchar 1024 0
+n = proteins s14 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e15
+end
+note canonical case 8bc36e22-f984-44c3-9f6b-ee5d4e73f120
+fn tc6 to bool
+o = new uchar 1024 0
+n = proteins s17 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e18
+end
+note canonical case 5c3fa5da-4268-44e5-9f4b-f016ccf90131
+fn tc7 to bool
+o = new uchar 1024 0
+n = proteins s20 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e21
+end
+note canonical case 00579891-b594-42b4-96dc-7ff8bf519606
+fn tc8 to bool
+o = new uchar 1024 0
+n = proteins s23 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e24
+end
+note canonical case 08c61c3b-fa34-4950-8c4a-133945570ef6
+fn tc9 to bool
+o = new uchar 1024 0
+n = proteins s26 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e27
+end
+note canonical case 54e1e7d8-63c0-456d-91d2-062c72f8eef5
+fn tc10 to bool
+o = new uchar 1024 0
+n = proteins s29 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e30
+end
+note canonical case 47bcfba2-9d72-46ad-bbce-22f7666b7eb1
+fn tc11 to bool
+o = new uchar 1024 0
+n = proteins s32 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e33
+end
+note canonical case 3a691829-fe72-43a7-8c8e-1bd083163f72
+fn tc12 to bool
+o = new uchar 1024 0
+n = proteins s35 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e36
+end
+note canonical case 1b6f8a26-ca2f-43b8-8262-3ee446021767
+fn tc13 to bool
+o = new uchar 1024 0
+n = proteins s38 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e39
+end
+note canonical case 1e91c1eb-02c0-48a0-9e35-168ad0cb5f39
+fn tc14 to bool
+o = new uchar 1024 0
+n = proteins s41 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e42
+end
+note canonical case e547af0b-aeab-49c7-9f13-801773a73557
+fn tc15 to bool
+o = new uchar 1024 0
+n = proteins s44 o
+if lt n 0
+ret false
+end
+ret eq ulong n 0
+end
+note canonical case 67640947-ff02-4f23-a2ef-816f8a2ba72e
+fn tc16 to bool
+o = new uchar 1024 0
+n = proteins s46 o
+if lt n 0
+ret false
+end
+ret eq ulong n 0
+end
+note canonical case 9c2ad527-ebc9-4ace-808b-2b6447cb54cb
+fn tc17 to bool
+o = new uchar 1024 0
+n = proteins s48 o
+if lt n 0
+ret false
+end
+ret eq ulong n 0
+end
+note canonical case f4d9d8ee-00a8-47bf-a1e3-1641d4428e54
+fn tc18 to bool
+o = new uchar 1024 0
+n = proteins s50 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e51
+end
+note canonical case dd22eef3-b4f1-4ad6-bb0b-27093c090a9d
+fn tc19 to bool
+o = new uchar 1024 0
+n = proteins s53 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e54
+end
+note canonical case d0f295df-fb70-425c-946c-ec2ec185388e
+fn tc20 to bool
+o = new uchar 1024 0
+n = proteins s56 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e57
+end
+note canonical case e30e8505-97ec-4e5f-a73e-5726a1faa1f4
+fn tc21 to bool
+o = new uchar 1024 0
+n = proteins s59 o
+if lt n 0
+ret false
+end
+ret eq ulong n 0
+end
+note canonical case 5358a20b-6f4c-4893-bce4-f929001710f3
+fn tc22 to bool
+o = new uchar 1024 0
+n = proteins s61 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e62
+end
+note canonical case ba16703a-1a55-482f-bb07-b21eef5093a3
+fn tc23 to bool
+o = new uchar 1024 0
+n = proteins s64 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e65
+end
+note canonical case 4089bb5a-d5b4-4e71-b79e-b8d1f14a2911
+fn tc24 to bool
+o = new uchar 1024 0
+n = proteins s67 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e68
+end
+note canonical case 2c2a2a60-401f-4a80-b977-e0715b23b93d
+fn tc25 to bool
+o = new uchar 1024 0
+n = proteins s70 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e71
+end
+note canonical case f6f92714-769f-4187-9524-e353e8a41a80
+fn tc26 to bool
+o = new uchar 1024 0
+n = proteins s73 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e74
+end
+note canonical case 9eac93f3-627a-4c90-8653-6d0a0595bc6f
+fn tc27 to bool
+o = new uchar 1024 0
+ret eq proteins s76 o -1
+end
+note canonical case 9d73899f-e68e-4291-b1e2-7bf87c00f024
+fn tc28 to bool
+o = new uchar 1024 0
+ret eq proteins s78 o -1
+end
+note canonical case 43945cf7-9968-402d-ab9f-b8a28750b050
+fn tc29 to bool
+o = new uchar 1024 0
+n = proteins s80 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e81
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c4
+tcheck tc2 c7
+tcheck tc3 c10
+tcheck tc4 c13
+tcheck tc5 c16
+tcheck tc6 c19
+tcheck tc7 c22
+tcheck tc8 c25
+tcheck tc9 c28
+tcheck tc10 c31
+tcheck tc11 c34
+tcheck tc12 c37
+tcheck tc13 c40
+tcheck tc14 c43
+tcheck tc15 c45
+tcheck tc16 c47
+tcheck tc17 c49
+tcheck tc18 c52
+tcheck tc19 c55
+tcheck tc20 c58
+tcheck tc21 c60
+tcheck tc22 c63
+tcheck tc23 c66
+tcheck tc24 c69
+tcheck tc25 c72
+tcheck tc26 c75
+tcheck tc27 c77
+tcheck tc28 c79
+tcheck tc29 c82
+ret int get tfails 0
+end

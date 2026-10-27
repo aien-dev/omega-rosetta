@@ -1,0 +1,106 @@
+note Exercism-style exercise "allergies": https://exercism.org/tracks/python/exercises/allergies
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note The allergens in score order are eggs 1, peanuts 2, shellfish 4, strawberries 8, tomatoes 16,
+note chocolate 32, pollen 64, cats 128; a score is the sum of the allergens (higher bits are ignored).
+note allergicto is true when score includes item; list writes the allergens of score, in that order,
+note joined by commas, into o and returns the number of bytes written.
+note Check it with: sh exercise.sh exercises/allergies
+om2
+text al0 "eggs"
+text al1 "peanuts"
+text al2 "shellfish"
+text al3 "strawberries"
+text al4 "tomatoes"
+text al5 "chocolate"
+text al6 "pollen"
+text al7 "cats"
+fn same a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+fn itemidx item view uchar * to ulong
+if same item al0
+ret 0
+end
+if same item al1
+ret 1
+end
+if same item al2
+ret 2
+end
+if same item al3
+ret 3
+end
+if same item al4
+ret 4
+end
+if same item al5
+ret 5
+end
+if same item al6
+ret 6
+end
+if same item al7
+ret 7
+end
+ret 8
+end
+fn allergicto item view uchar * score ulong to bool
+k = itemidx item
+if eq k 8
+ret false
+end
+ret ne and shr score k 1 0
+end
+fn appitem o edit uchar * p ulong k ulong to ulong
+if eq k 0
+ret app o p al0
+end
+if eq k 1
+ret app o p al1
+end
+if eq k 2
+ret app o p al2
+end
+if eq k 3
+ret app o p al3
+end
+if eq k 4
+ret app o p al4
+end
+if eq k 5
+ret app o p al5
+end
+if eq k 6
+ret app o p al6
+end
+ret app o p al7
+end
+fn list score ulong o edit uchar * to ulong
+p = ulong 0
+for k ulong 8
+if ne and shr score k 1 0
+if gt p 0
+put o p 44
+p = add p 1
+end
+p = appitem o p k
+end
+end
+ret p
+end

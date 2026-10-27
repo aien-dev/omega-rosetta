@@ -1,0 +1,10 @@
+note Exercism-style exercise "prime-factors": https://exercism.org/tracks/python/exercises/prime-factors
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note factors writes the prime factors of value into o, smallest first and with repetition, and
+note returns how many it wrote.
+note Check it with: sh exercise.sh exercises/prime-factors
+om2
+fn factors value ulong o edit ulong * to ulong
+note replace this line with your solution
+trap 13
+end

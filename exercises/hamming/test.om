@@ -1,0 +1,124 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/hamming/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 9 cases kept, 0 skipped, 6 superseded (reimplemented) cases omitted
+text z0 "z"
+text z1 "z"
+text c2 "distance: empty strands"
+text s3 "A"
+text s4 "A"
+text c5 "distance: single letter identical strands"
+text s6 "G"
+text s7 "T"
+text c8 "distance: single letter different strands"
+text s9 "GGACTGAAATCTG"
+text s10 "GGACTGAAATCTG"
+text c11 "distance: long identical strands"
+text s12 "GGACGGATTCTG"
+text s13 "AGGACGGATTCT"
+text c14 "distance: long different strands"
+text s15 "AATG"
+text s16 "AAA"
+text c17 "distance: disallow first strand longer"
+text s18 "ATA"
+text s19 "AGTG"
+text c20 "distance: disallow second strand longer"
+text z21 "z"
+text s22 "G"
+text c23 "distance: disallow empty first strand"
+text s24 "G"
+text z25 "z"
+text c26 "distance: disallow empty second strand"
+note canonical case f6dcb64f-03b0-4b60-81b1-3c9dbf47e887
+fn tc0 to bool
+ret eq distance part z0 0 0 part z1 0 0 0
+end
+note canonical case 54681314-eee2-439a-9db0-b0636c656156
+fn tc1 to bool
+ret eq distance s3 s4 0
+end
+note canonical case 294479a3-a4c8-478f-8d63-6209815a827b
+fn tc2 to bool
+ret eq distance s6 s7 1
+end
+note canonical case 9aed5f34-5693-4344-9b31-40c692fb5592
+fn tc3 to bool
+ret eq distance s9 s10 0
+end
+note canonical case cd2273a5-c576-46c8-a52b-dee251c3e6e5
+fn tc4 to bool
+ret eq distance s12 s13 9
+end
+note canonical case b9228bb1-465f-4141-b40f-1f99812de5a8
+fn tc5 to bool
+ret eq distance s15 s16 -1
+end
+note canonical case dab38838-26bb-4fff-acbe-3b0a9bfeba2d
+fn tc6 to bool
+ret eq distance s18 s19 -1
+end
+note canonical case b764d47c-83ff-4de2-ab10-6cfe4b15c0f3
+fn tc7 to bool
+ret eq distance part z21 0 0 s22 -1
+end
+note canonical case 9ab9262f-3521-4191-81f5-0ed184a5aa89
+fn tc8 to bool
+ret eq distance s24 part z25 0 0 -1
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c20
+tcheck tc7 c23
+tcheck tc8 c26
+ret int get tfails 0
+end

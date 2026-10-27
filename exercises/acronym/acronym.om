@@ -1,0 +1,10 @@
+note Exercism-style exercise "acronym": https://exercism.org/tracks/python/exercises/acronym
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note abbreviate writes the upper-case acronym of phrase s into o and returns its length. Words are
+note separated by spaces, hyphens and other punctuation; an apostrophe does not start a new word.
+note Check it with: sh exercise.sh exercises/acronym
+om2
+fn abbreviate s view uchar * o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

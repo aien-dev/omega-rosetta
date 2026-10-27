@@ -1,0 +1,123 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/space-age/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 9 cases kept, 0 skipped
+text s0 "Earth"
+text c1 "age: age on Earth"
+text s2 "Mercury"
+text c3 "age: age on Mercury"
+text s4 "Venus"
+text c5 "age: age on Venus"
+text s6 "Mars"
+text c7 "age: age on Mars"
+text s8 "Jupiter"
+text c9 "age: age on Jupiter"
+text s10 "Saturn"
+text c11 "age: age on Saturn"
+text s12 "Uranus"
+text c13 "age: age on Uranus"
+text s14 "Neptune"
+text c15 "age: age on Neptune"
+text s16 "Sun"
+text c17 "age: invalid planet causes error"
+note canonical case 84f609af-5a91-4d68-90a3-9e32d8a5cd34
+fn tc0 to bool
+v = age s0 1000000000.0
+ret lt fabs sub v 31.69 0.005
+end
+note canonical case ca20c4e9-6054-458c-9312-79679ffab40b
+fn tc1 to bool
+v = age s2 2134835688.0
+ret lt fabs sub v 280.88 0.005
+end
+note canonical case 502c6529-fd1b-41d3-8fab-65e03082b024
+fn tc2 to bool
+v = age s4 189839836.0
+ret lt fabs sub v 9.78 0.005
+end
+note canonical case 9ceadf5e-a0d5-4388-9d40-2c459227ceb8
+fn tc3 to bool
+v = age s6 2129871239.0
+ret lt fabs sub v 35.88 0.005
+end
+note canonical case 42927dc3-fe5e-4f76-a5b5-f737fc19bcde
+fn tc4 to bool
+v = age s8 901876382.0
+ret lt fabs sub v 2.41 0.005
+end
+note canonical case 8469b332-7837-4ada-b27c-00ee043ebcad
+fn tc5 to bool
+v = age s10 2000000000.0
+ret lt fabs sub v 2.15 0.005
+end
+note canonical case 999354c1-76f8-4bb5-a672-f317b6436743
+fn tc6 to bool
+v = age s12 1210123456.0
+ret lt fabs sub v 0.46 0.005
+end
+note canonical case 80096d30-a0d4-4449-903e-a381178355d8
+fn tc7 to bool
+v = age s14 1821023456.0
+ret lt fabs sub v 0.35 0.005
+end
+note canonical case 57b96e2a-1178-40b7-b34d-f3c9c34e4bf4
+fn tc8 to bool
+ret lt age s16 680804807.0 0.0
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+tcheck tc7 c15
+tcheck tc8 c17
+ret int get tfails 0
+end

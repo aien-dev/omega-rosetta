@@ -1,0 +1,21 @@
+note Exercism-style exercise "rotational-cipher": https://exercism.org/tracks/python/exercises/rotational-cipher
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note rotate writes s into o with every letter shifted key places along the alphabet (keeping its
+note case, wrapping z to a) and every other byte unchanged; returns the length.
+note Check it with: sh exercise.sh exercises/rotational-cipher
+om2
+fn rotate s view uchar * key ulong o edit uchar * to ulong
+k = uchar rem key 26
+for i ulong len s
+c = get s i
+if and ge c 65 le c 90
+c = add 65 rem add sub c 65 k 26
+else
+if and ge c 97 le c 122
+c = add 97 rem add sub c 97 k 26
+end
+end
+put o i c
+end
+ret len s
+end

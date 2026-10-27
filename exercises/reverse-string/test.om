@@ -1,0 +1,122 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/reverse-string/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 6 cases kept, 3 skipped: "wide characters" (needs Unicode grapheme handling (non-ASCII input)); "grapheme cluster with pre-combined form" (needs Unicode grapheme handling (non-ASCII input)); "grapheme clusters" (needs Unicode grapheme handling (non-ASCII input))
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text z0 "z"
+text c1 "reverse: an empty string"
+text s2 "robot"
+text e3 "tobor"
+text c4 "reverse: a word"
+text s5 "Ramen"
+text e6 "nemaR"
+text c7 "reverse: a capitalized word"
+text s8 "I'm hungry!"
+text e9 "!yrgnuh m'I"
+text c10 "reverse: a sentence with punctuation"
+text s11 "racecar"
+text e12 "racecar"
+text c13 "reverse: a palindrome"
+text s14 "drawer"
+text e15 "reward"
+text c16 "reverse: an even-sized word"
+note canonical case c3b7d806-dced-49ee-8543-933fd1719b1c
+fn tc0 to bool
+o = new uchar 1024 0
+n = reverse part z0 0 0 o
+ret eq n 0
+end
+note canonical case 01ebf55b-bebb-414e-9dec-06f7bb0bee3c
+fn tc1 to bool
+o = new uchar 1024 0
+n = reverse s2 o
+ret tbeq part o 0 n e3
+end
+note canonical case 0f7c07e4-efd1-4aaa-a07a-90b49ce0b746
+fn tc2 to bool
+o = new uchar 1024 0
+n = reverse s5 o
+ret tbeq part o 0 n e6
+end
+note canonical case 71854b9c-f200-4469-9f5c-1e8e5eff5614
+fn tc3 to bool
+o = new uchar 1024 0
+n = reverse s8 o
+ret tbeq part o 0 n e9
+end
+note canonical case 1f8ed2f3-56f3-459b-8f3e-6d8d654a1f6c
+fn tc4 to bool
+o = new uchar 1024 0
+n = reverse s11 o
+ret tbeq part o 0 n e12
+end
+note canonical case b9e7dec1-c6df-40bd-9fa3-cd7ded010c4c
+fn tc5 to bool
+o = new uchar 1024 0
+n = reverse s14 o
+ret tbeq part o 0 n e15
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c4
+tcheck tc2 c7
+tcheck tc3 c10
+tcheck tc4 c13
+tcheck tc5 c16
+ret int get tfails 0
+end
