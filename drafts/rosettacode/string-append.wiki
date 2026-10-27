@@ -1,0 +1,40 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text s0 "Hello,"
+text more " World!"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note copyto copies s into d at offset off and returns the offset after it (past the end traps 3)
+fn copyto d edit uchar * off ulong s view uchar * to ulong
+for i ulong len s
+put d add off i get s i
+end
+ret add off len s
+end
+fn main to int
+note the string lives in a 64-byte buffer b with length n; appending copies after byte n
+b = new uchar 64 0
+n = copyto b 0 s0
+n = copyto b n more
+emit part b 0 n
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+Hello, World!
+</pre>

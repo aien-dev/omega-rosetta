@@ -1,0 +1,68 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text tb " bytes "
+text tc " characters\n"
+text s1 "møøse"
+text s2 "𝔘𝔫𝔦𝔠𝔬𝔡𝔢"
+text s3 "J̲o̲s̲é̲"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a UTF-8 code point starts at every byte that is not a continuation byte 10xxxxxx
+fn show a view uchar * to void
+n = ulong 0
+for i ulong len a
+if ne and get a i 192 128
+n = add n 1
+end
+end
+emit a
+emit nl
+emitu len a
+emit tb
+emitu n
+emit tc
+end
+fn main to int
+show s1
+show s2
+show s3
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+møøse
+7 bytes 5 characters
+𝔘𝔫𝔦𝔠𝔬𝔡𝔢
+28 bytes 7 characters
+J̲o̲s̲é̲
+13 bytes 8 characters
+</pre>

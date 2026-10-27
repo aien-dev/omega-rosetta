@@ -1,0 +1,43 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text ha "ha"
+text star "*"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note repeat writes a, k times, into one buffer (up to 256 bytes, more traps 3) and prints it
+fn repeat a view uchar * k ulong to void
+b = new uchar 256 0
+p = ulong 0
+for j ulong k
+for i ulong len a
+put b p get a i
+p = add p 1
+end
+end
+emit part b 0 p
+emit nl
+end
+fn main to int
+repeat ha 5
+repeat star 5
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+hahahahaha
+*****
+</pre>

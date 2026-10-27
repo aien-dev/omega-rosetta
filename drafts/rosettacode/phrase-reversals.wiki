@@ -1,0 +1,81 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text msg "rosetta code phrase reversal"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note words splits a into (start, length) pairs at single spaces and returns how many
+fn words a view uchar * st edit ulong 16 ln edit ulong 16 to ulong
+k = ulong 0
+s = ulong 0
+for i ulong add len a 1
+e = eq i len a
+if not e
+e = eq get a i 32
+end
+if e
+put st k s
+put ln k sub i s
+k = add k 1
+s = add i 1
+end
+end
+ret k
+end
+fn revb a view uchar * to void
+for i ulong len a
+emitc get a sub sub len a 1 i
+end
+end
+fn main to int
+st = new ulong 16 0
+ln = new ulong 16 0
+k = words msg st ln
+note 1: the whole string reversed
+revb msg
+emit nl
+note 2: each word reversed, order kept
+for w ulong k
+if gt w 0
+emit sp
+end
+revb part msg get st w get ln w
+end
+emit nl
+note 3: the word order reversed, words kept
+for w ulong k
+if gt w 0
+emit sp
+end
+x = sub sub k 1 w
+emit part msg get st x get ln x
+end
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+lasrever esarhp edoc attesor
+attesor edoc esarhp lasrever
+reversal phrase code rosetta
+</pre>

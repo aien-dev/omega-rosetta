@@ -1,0 +1,92 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text tyes "yes"
+text tno "no"
+note the 20 blocks, two letters each, separated by spaces
+text blocks "BO XK DQ CP NA GT RE TG QD FS JW HU VI AN OB ER FS LY PC ZM"
+text w0 "A"
+text w1 "BARK"
+text w2 "BOOK"
+text w3 "TREAT"
+text w4 "COMMON"
+text w5 "SQUAD"
+text w6 "CONFUSE"
+global used uchar 20
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+fn emitb b bool to void
+if b
+emit tyes
+else
+emit tno
+end
+end
+note onblock: block b carries letter c
+fn onblock b ulong c uchar to bool
+x = mul b 3
+ret or eq get blocks x c eq get blocks add x 1 c
+end
+note can: letters i.. of w can be spelled with the unused blocks (depth-first, a block is taken
+note back when the rest fails)
+fn can w view uchar * i ulong to bool
+if eq i len w
+ret true
+end
+c = get w i
+for b ulong 20
+if eq get used b 0
+if onblock b c
+put used b 1
+if can w add i 1
+ret true
+end
+put used b 0
+end
+end
+end
+ret false
+end
+fn show w view uchar * to void
+for b ulong 20
+put used b 0
+end
+emit w
+emit sp
+emitb can w 0
+emit nl
+end
+fn main to int
+show w0
+show w1
+show w2
+show w3
+show w4
+show w5
+show w6
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+A yes
+BARK yes
+BOOK no
+TREAT yes
+COMMON no
+SQUAD yes
+CONFUSE yes
+</pre>

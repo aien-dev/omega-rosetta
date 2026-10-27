@@ -1,0 +1,169 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text hexd "0123456789abcdef"
+note K[i] = floor(abs(sin(i + 1)) * 2^32) as 64 eight-digit hex words (RFC 1321, section 3.4)
+text khex "d76aa478e8c7b756242070dbc1bdceeef57c0faf4787c62aa8304613fd469501698098d88b44f7afffff5bb1895cd7be6b901122fd987193a679438e49b40821f61e2562c040b340265e5a51e9b6c7aad62f105d02441453d8a1e681e7d3fbc821e1cde6c33707d6f4d50d87455a14eda9e3e905fcefa3f8676f02d98d2a4c8afffa39428771f6816d9d6122fde5380ca4beea444bdecfa9f6bb4b60bebfbc70289b7ec6eaa127fad4ef308504881d05d9d4d039e6db99e51fa27cf8c4ac5665f4292244432aff97ab9423a7fc93a039655b59c38f0ccc92ffeff47d85845dd16fa87e4ffe2ce6e0a30143144e0811a1f7537e82bd3af2352ad7d2bbeb86d391"
+note the rotate amounts of the four rounds, two decimal digits each
+text rots "07121722050914200411162306101521"
+text m0 "The quick brown fox jumps over the lazy dog"
+text m1 "The quick brown fox jumped over the lazy dog's back"
+text m2 "Rosetta Code"
+text m3 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+global kt uint 64
+global hs uint 4
+global mw uint 16
+global buf uchar 128
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note hexv gives the value of one lower-case hex digit
+fn hexv c uchar to uint
+if le c 57
+ret uint sub c 48
+end
+ret uint sub c 87
+end
+note emith writes the byte v as two lower-case hex digits
+fn emith v uchar to void
+emitc get hexd shr v 4
+emitc get hexd and v 15
+end
+fn initk to void
+for i ulong 64
+v = uint 0
+for j ulong 8
+v = or shl v 4 hexv get khex add mul i 8 j
+end
+put kt i v
+end
+end
+note rotamt is the rotate amount of step i: round i / 16, place i mod 4
+fn rotamt i ulong to uint
+x = mul add mul div i 16 4 rem i 4 2
+h = sub get rots x 48
+l = sub get rots add x 1 48
+ret uint add mul h 10 l
+end
+note rnd is step i of 64 on the state (a, b, c, d) in hs, with the block's words in mw
+fn rnd i ulong to void
+a = get hs 0
+b = get hs 1
+c = get hs 2
+d = get hs 3
+f = uint 0
+g = ulong 0
+if lt i 16
+f = or and b c and not b d
+g = i
+else
+if lt i 32
+f = or and d b and not d c
+g = rem add mul i 5 1 16
+else
+if lt i 48
+f = xor xor b c d
+g = rem add mul i 3 5 16
+else
+f = xor c or b not d
+g = rem mul i 7 16
+end
+end
+end
+f = add add add f a get kt i get mw g
+s = rotamt i
+put hs 0 d
+put hs 3 c
+put hs 2 b
+put hs 1 add b rotl f s
+end
+note block loads the 64 bytes of buf at p as 16 little-endian words and runs the 64 steps
+fn block p ulong to void
+for w ulong 16
+v = uint 0
+for j ulong 4
+v = or shl v 8 uint get buf add add p mul w 4 sub 3 j
+end
+put mw w v
+end
+sv = new uint 4 0
+for k ulong 4
+put sv k get hs k
+end
+for i ulong 64
+rnd i
+end
+for k ulong 4
+put hs k add get hs k get sv k
+end
+end
+note md5 pads a (up to 119 bytes) with 0x80, zeros and the bit length (little-endian) to one or two
+note 64-byte blocks, hashes them and prints the digest in hex
+fn md5 a view uchar * to void
+put hs 0 uint 1732584193
+put hs 1 uint 4023233417
+put hs 2 uint 2562383102
+put hs 3 uint 271733878
+n = len a
+for i ulong 128
+put buf i 0
+end
+for i ulong n
+put buf i get a i
+end
+put buf n 128
+t = ulong 64
+if ge n 56
+t = 128
+end
+bits = mul n 8
+for j ulong 8
+put buf add sub t 8 j uchar and shr bits mul j 8 255
+end
+for b ulong div t 64
+block mul b 64
+end
+for k ulong 4
+v = get hs k
+for j ulong 4
+emith uchar and shr v mul uint j 8 255
+end
+end
+emit nl
+end
+fn main to int
+initk
+note the empty message, as a slice of length 0
+md5 part m0 0 0
+md5 m0
+md5 m1
+md5 m2
+md5 m3
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+d41d8cd98f00b204e9800998ecf8427e
+9e107d9d372bb6826bd81d3542a419d6
+e38ca1d920c4b8b8d3946b2c72f01680
+cca1bf66b09554e10f837838c3d3efb1
+0f5c6c4e740bfcc08c3c26ccb2673d46
+</pre>

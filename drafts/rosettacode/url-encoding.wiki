@@ -1,0 +1,66 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text pct "%"
+text hexd "0123456789ABCDEF"
+text u1 "http://foo bar/"
+text u2 "mailto:joe@example.com?subject=a&b c~d_e.f-g"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note keep says whether c is written as itself: letters and digits always, - . _ ~ only in the
+note RFC 3986 variant (rfc true); every other byte becomes % and two upper-case hex digits
+fn keep c uchar rfc bool to bool
+if or or and ge c 48 le c 57 and ge c 65 le c 90 and ge c 97 le c 122
+ret true
+end
+if and rfc or or eq c 45 eq c 46 or eq c 95 eq c 126
+ret true
+end
+ret false
+end
+fn enc a view uchar * rfc bool to void
+for i ulong len a
+c = get a i
+if keep c rfc
+emitc c
+else
+emit pct
+emitc get hexd shr c 4
+emitc get hexd and c 15
+end
+end
+emit nl
+end
+fn main to int
+enc u1 false
+enc u1 true
+enc u2 false
+enc u2 true
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+http%3A%2F%2Ffoo%20bar%2F
+http%3A%2F%2Ffoo%20bar%2F
+mailto%3Ajoe%40example%2Ecom%3Fsubject%3Da%26b%20c%7Ed%5Fe%2Ef%2Dg
+mailto%3Ajoe%40example.com%3Fsubject%3Da%26b%20c~d_e.f-g
+</pre>

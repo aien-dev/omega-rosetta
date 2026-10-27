@@ -1,0 +1,93 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text secret "rosetta code"
+text cover "bacon's cipher is a method of steganography devised by francis bacon. a message is concealed in the presentation of text rather than its content."
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note 26-letter variant: letter n (a = 0) is 5 bits, most significant first; a space is 26 (11010).
+note The bits ride on the cover text's letters: 0 lower case, 1 upper case; other bytes are copied,
+note letters after the last bit stay lower case. Decoding reads the case of the letters 5 at a time.
+fn code c uchar to ulong
+if eq c 32
+ret 26
+end
+ret ulong sub c 97
+end
+fn isl c uchar to bool
+ret and ge c 97 le c 122
+end
+fn enc o edit uchar * to void
+nb = mul len secret 5
+b = ulong 0
+for i ulong len cover
+c = get cover i
+if and isl c lt b nb
+v = code get secret div b 5
+if eq and shr v sub 4 rem b 5 1 1
+c = sub c 32
+end
+b = add b 1
+end
+put o i c
+end
+end
+fn dec e view uchar * n ulong to void
+v = ulong 0
+k = ulong 0
+m = ulong 0
+for i ulong len e
+c = get e i
+if and lt m n or isl c and ge c 65 le c 90
+v = shl v 1
+if le c 90
+v = or v 1
+end
+k = add k 1
+if eq k 5
+if eq v 26
+emitc 32
+else
+emitc add uchar v 97
+end
+v = 0
+k = 0
+m = add m 1
+end
+end
+end
+emit nl
+end
+fn main to int
+o = new uchar 256 0
+n = len cover
+enc part o 0 n
+emit part o 0 n
+emit nl
+dec part o 0 n len secret
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+BacoN's CIPhEr iS a meThoD of STEgaNOgraphY DeVised By fRANcis bACon. A message is concealed in the presentation of text rather than its content.
+rosetta code
+</pre>

@@ -1,8 +1,9 @@
 name: tasks
 # Births omc from the 408-byte seed at the aien-dev/omega-mv commit in omega.ref on a GitHub-hosted
 # ubuntu-24.04-arm runner, compiles and runs every task and exercise, and runs negative controls
-# that must fail: a mutated expected.txt, a mutated task source, every exercise stub, and a wrong
-# exercise solution.
+# that must fail: a mutated expected.txt, a mutated task source, every exercise stub, a wrong
+# exercise solution, and every task's expected.txt mutated at once (each task and each oracle
+# comparison must catch its own).
 on:
   push:
     branches: [main]
@@ -88,6 +89,23 @@ jobs:
           [ "$rc" = 1 ] || { echo "wrong solution was not caught: rc=$rc"; exit 1; }
           grep -qx 'EXERCISE FAIL leap failed=3' "$RUNNER_TEMP/wrong.log"
           echo "negative control 4 failed as required (rc=$rc)"
+      - name: Negative control 5, every expected.txt mutated (every task and every oracle check must FAIL)
+        run: |
+          set -u
+          t="$RUNNER_TEMP/neg5"; cp -r tasks "$t"
+          total=0
+          for d in "$t"/*/; do
+            n=$(basename "$d")
+            printf 'omega-rosetta negative control\n' >> "$d/expected.txt"
+            if python3 "tasks/$n/oracle.py" | cmp -s - "$d/expected.txt"; then echo "oracle check missed mutated $n"; exit 1; fi
+            total=$((total + 1))
+          done
+          rc=0; sh run.sh --omc build/omega-mv/seed/out/omc --tasks "$t" > "$RUNNER_TEMP/neg5.log" || rc=$?
+          cat "$RUNNER_TEMP/neg5.log"
+          [ "$rc" = 1 ] || { echo "mutated expected.txt files were not caught: rc=$rc"; exit 1; }
+          [ "$(grep -c '^FAIL .* stdout differs from expected.txt$' "$RUNNER_TEMP/neg5.log")" = "$total" ]
+          grep -qx "TASKS PASS 0/$total" "$RUNNER_TEMP/neg5.log"
+          echo "negative control 5: all $total mutated tasks failed as required (rc=$rc)"
       - name: Keep the logs
         if: always()
         uses: actions/upload-artifact@v4

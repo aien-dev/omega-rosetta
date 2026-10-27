@@ -1,0 +1,39 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+note the collection: names separated by newlines
+text fruit "apple\nbanana\ncherry\ndate\nelderberry\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note foreach visits every newline-terminated element of the collection in order
+fn main to int
+s = ulong 0
+for i ulong len fruit
+if eq get fruit i 10
+emit part fruit s add sub i s 1
+s = add i 1
+end
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+apple
+banana
+cherry
+date
+elderberry
+</pre>

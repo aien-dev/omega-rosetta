@@ -1,0 +1,153 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text hexd "0123456789abcdef"
+text m0 "abc"
+text m1 "Rosetta Code"
+text m2 "The quick brown fox jumps over the lazy dog"
+text m3 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+global hs uint 5
+global ww uint 80
+global buf uchar 128
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note emith writes the byte v as two lower-case hex digits
+fn emith v uchar to void
+emitc get hexd shr v 4
+emitc get hexd and v 15
+end
+note rnd is step i of 80 on the state (a, b, c, d, e) in hs, with the expanded schedule in ww
+fn rnd i ulong to void
+a = get hs 0
+b = get hs 1
+c = get hs 2
+d = get hs 3
+f = uint 0
+k = uint 0
+if lt i 20
+f = or and b c and not b d
+k = 1518500249
+else
+if lt i 40
+f = xor xor b c d
+k = 1859775393
+else
+if lt i 60
+f = or or and b c and b d and c d
+k = 2400959708
+else
+f = xor xor b c d
+k = 3395469782
+end
+end
+end
+t = add add add add rotl a uint 5 f get hs 4 k get ww i
+put hs 4 d
+put hs 3 c
+put hs 2 rotl b uint 30
+put hs 1 a
+put hs 0 t
+end
+note block loads the 64 bytes of buf at p as 16 big-endian words, extends them to 80 and runs the steps
+fn block p ulong to void
+for w ulong 16
+v = uint 0
+for j ulong 4
+v = or shl v 8 uint get buf add add p mul w 4 j
+end
+put ww w v
+end
+for w ulong 64
+x = add w 16
+v = xor get ww sub x 3 get ww sub x 8
+v = xor v get ww sub x 14
+v = xor v get ww w
+put ww x rotl v uint 1
+end
+sv = new uint 5 0
+for k ulong 5
+put sv k get hs k
+end
+for i ulong 80
+rnd i
+end
+for k ulong 5
+put hs k add get hs k get sv k
+end
+end
+note digest prints the five state words big-endian in hex
+fn digest to void
+for k ulong 5
+v = get hs k
+for j ulong 4
+s = mul uint sub 3 j 8
+emith uchar and shr v s 255
+end
+end
+emit nl
+end
+note sha1 pads a (up to 119 bytes) with 0x80, zeros and the bit length (big-endian) to one or two
+note 64-byte blocks, hashes them and prints the digest in hex
+fn sha1 a view uchar * to void
+put hs 0 uint 1732584193
+put hs 1 uint 4023233417
+put hs 2 uint 2562383102
+put hs 3 uint 271733878
+put hs 4 uint 3285377520
+n = len a
+for i ulong 128
+put buf i 0
+end
+for i ulong n
+put buf i get a i
+end
+put buf n 128
+t = ulong 64
+if ge n 56
+t = 128
+end
+bits = mul n 8
+for j ulong 8
+put buf sub sub t 1 j uchar and shr bits mul j 8 255
+end
+for b ulong div t 64
+block mul b 64
+end
+digest
+end
+fn main to int
+note the empty message, as a slice of length 0
+sha1 part m0 0 0
+sha1 m0
+sha1 m1
+sha1 m2
+sha1 m3
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+da39a3ee5e6b4b0d3255bfef95601890afd80709
+a9993e364706816aba3e25717850c26c9cd0d89d
+48c98f7e5a6e736d790ab740dfc3f51a61abe2b5
+2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
+ed6c69d9e8b4373af86303dfaa3528dfbc129902
+</pre>

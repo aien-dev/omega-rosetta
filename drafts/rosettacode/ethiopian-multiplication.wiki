@@ -1,0 +1,87 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text kept " KEPT\n"
+text struck " STRUCK\n"
+text tx " x "
+text teq " = "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn halve n ulong to ulong
+ret shr n 1
+end
+fn double n ulong to ulong
+ret shl n 1
+end
+fn iseven n ulong to bool
+ret eq and n 1 0
+end
+note left column halves to 1, right column doubles; rows with an even left number are struck out and
+note the kept right numbers add up to the product
+fn ethiop a ulong b ulong to ulong
+s = ulong 0
+l = a
+r = b
+while ge l 1 bound 64
+emitu l
+emit sp
+emitu r
+if iseven l
+emit struck
+else
+emit kept
+s = add s r
+end
+l = halve l
+r = double r
+end
+ret s
+end
+fn main to int
+p = ethiop 17 34
+emitu 17
+emit tx
+emitu 34
+emit teq
+emitu p
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+17 34 KEPT
+8 68 STRUCK
+4 136 STRUCK
+2 272 STRUCK
+1 544 KEPT
+17 x 34 = 578
+</pre>

@@ -1,0 +1,128 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text tsn " -> snake: "
+text tcm " -> camel: "
+text c0 "snakeCase"
+text c1 "snake_case"
+text c2 "variable_10_case"
+text c3 "variable10Case"
+text c4 "hurry-up-joe!"
+text c5 "c://my-docs/happy_Flag-Day/12.doc"
+text c6 "  spaces  "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note leading and trailing spaces are kept as they are; inside the text, space and '-' count as
+note separators like '_'
+fn issep c uchar to bool
+ret or or eq c 95 eq c 45 eq c 32
+end
+fn lead a view uchar * to ulong
+for i ulong len a
+if ne get a i 32
+ret i
+end
+end
+ret len a
+end
+fn trail a view uchar * to ulong
+for i ulong len a
+if ne get a sub sub len a 1 i 32
+ret sub len a i
+end
+end
+ret 0
+end
+note snake: a separator becomes '_', an upper-case letter becomes '_' and its lower case (no '_' first
+note when it is at the start or follows a separator)
+fn snake a view uchar * to void
+l = lead a
+t = trail a
+emit part a 0 l
+for i ulong sub t l
+k = add l i
+c = get a k
+if issep c
+emitc 95
+else
+if and ge c 65 le c 90
+if gt i 0
+if not issep get a sub k 1
+emitc 95
+end
+end
+emitc add c 32
+else
+emitc c
+end
+end
+end
+emit part a t sub len a t
+end
+note camel: separators are dropped and the letter after one is upper-cased
+fn camel a view uchar * to void
+l = lead a
+t = trail a
+emit part a 0 l
+up = false
+for i ulong sub t l
+c = get a add l i
+if issep c
+up = true
+else
+if and up and ge c 97 le c 122
+c = sub c 32
+end
+emitc c
+up = false
+end
+end
+emit part a t sub len a t
+end
+fn show a view uchar * to void
+emit a
+emit tsn
+snake a
+emit tcm
+camel a
+emit nl
+end
+fn main to int
+show c0
+show c1
+show c2
+show c3
+show c4
+show c5
+show c6
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+snakeCase -> snake: snake_case -> camel: snakeCase
+snake_case -> snake: snake_case -> camel: snakeCase
+variable_10_case -> snake: variable_10_case -> camel: variable10Case
+variable10Case -> snake: variable10_case -> camel: variable10Case
+hurry-up-joe! -> snake: hurry_up_joe! -> camel: hurryUpJoe!
+c://my-docs/happy_Flag-Day/12.doc -> snake: c://my_docs/happy_flag_day/12.doc -> camel: c://myDocs/happyFlagDay/12.doc
+  spaces   -> snake:   spaces   -> camel:   spaces  
+</pre>

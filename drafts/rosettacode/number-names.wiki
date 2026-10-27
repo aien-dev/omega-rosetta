@@ -1,0 +1,147 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text hy "-"
+text colon ": "
+text ones "zero\none\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\nten\neleven\ntwelve\nthirteen\nfourteen\nfifteen\nsixteen\nseventeen\neighteen\nnineteen\n"
+text tens "twenty\nthirty\nforty\nfifty\nsixty\nseventy\neighty\nninety\n"
+text scales "thousand\nmillion\nbillion\ntrillion\nquadrillion\nquintillion\n"
+text hund " hundred"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note word writes element k of a newline-terminated list
+fn word t view uchar * k ulong to void
+s = ulong 0
+m = ulong 0
+for i ulong len t
+if eq get t i 10
+if eq m k
+emit part t s sub i s
+ret
+end
+m = add m 1
+s = add i 1
+end
+end
+trap 9
+end
+note three writes 1..999 in words: hundreds, then the rest (under 20 by name, else tens-ones)
+fn three g ulong to void
+h = div g 100
+r = rem g 100
+if gt h 0
+word ones h
+emit hund
+if gt r 0
+emit sp
+end
+end
+if and gt r 0 lt r 20
+word ones r
+end
+if ge r 20
+word tens sub div r 10 2
+if gt rem r 10 0
+emit hy
+word ones rem r 10
+end
+end
+end
+note spell splits n into groups of three digits and writes each non-zero one with its scale
+fn spell n ulong to void
+if eq n 0
+word ones 0
+ret
+end
+g = new ulong 7 0
+v = n
+for i ulong 7
+put g i rem v 1000
+v = div v 1000
+end
+first = true
+for k ulong 7
+i = sub 6 k
+x = get g i
+if gt x 0
+if not first
+emit sp
+end
+three x
+if gt i 0
+emit sp
+word scales sub i 1
+end
+first = false
+end
+end
+end
+fn show n ulong to void
+emitu n
+emit colon
+spell n
+emit nl
+end
+fn main to int
+show 0
+show 7
+show 13
+show 21
+show 99
+show 100
+show 101
+show 999
+show 1000
+show 1001
+show 12345
+show 1000000
+show 1234567890
+show 18446744073709551615
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+0: zero
+7: seven
+13: thirteen
+21: twenty-one
+99: ninety-nine
+100: one hundred
+101: one hundred one
+999: nine hundred ninety-nine
+1000: one thousand
+1001: one thousand one
+12345: twelve thousand three hundred forty-five
+1000000: one million
+1234567890: one billion two hundred thirty-four million five hundred sixty-seven thousand eight hundred ninety
+18446744073709551615: eighteen quintillion four hundred forty-six quadrillion seven hundred forty-four trillion seventy-three billion seven hundred nine million five hundred fifty-one thousand six hundred fifteen
+</pre>
