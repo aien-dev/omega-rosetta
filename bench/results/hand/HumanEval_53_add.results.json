@@ -1,0 +1,31 @@
+{
+  "name": "HumanEval_53_add",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Add two numbers x and y\nnote >>> add_ 2 3\nnote 5\nnote >>> add_ 5 7\nnote 12\nnote Omega name: add is add_ here.\nfn add_ x long y long to long\n",
+  "tests": "fn tc_0 to bool\nr = add_ 0 1\nret eq r 1\nend\nfn tc_1 to bool\nr = add_ 1 0\nret eq r 1\nend\nfn tc_2 to bool\nr = add_ 2 3\nret eq r 5\nend\nfn tc_3 to bool\nr = add_ 5 7\nret eq r 12\nend\nfn tc_4 to bool\nr = add_ 7 5\nret eq r 12\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "hand",
+  "results": [
+    {
+      "program": "om2\nnote Add two numbers x and y\nnote >>> add_ 2 3\nnote 5\nnote >>> add_ 5 7\nnote 12\nnote Omega name: add is add_ here.\nfn add_ x long y long to long\nret add x y\nend\n\nfn tc_0 to bool\nr = add_ 0 1\nret eq r 1\nend\nfn tc_1 to bool\nr = add_ 1 0\nret eq r 1\nend\nfn tc_2 to bool\nr = add_ 2 3\nret eq r 5\nend\nfn tc_3 to bool\nr = add_ 5 7\nret eq r 12\nend\nfn tc_4 to bool\nr = add_ 7 5\nret eq r 12\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+      "exit_code": 0,
+      "stdout": "MultiPL-E Omega: all tests passed\n",
+      "stderr": "",
+      "status": "OK",
+      "om_status": "pass",
+      "om_case": null,
+      "timestamp": 1793102244
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+w = long number
+ret sub number f64 w
+end

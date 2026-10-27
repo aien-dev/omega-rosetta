@@ -1,0 +1,9 @@
+x = a
+y = b
+while ne y 0 bound 999999
+t = rem x y
+x = y
+y = t
+end
+ret x
+end

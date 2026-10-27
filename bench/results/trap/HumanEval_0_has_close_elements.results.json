@@ -1,0 +1,31 @@
+{
+  "name": "HumanEval_0_has_close_elements",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Check if in given array of numbers, are any two numbers closer to each other than\nnote given threshold.\nnote >>> has_close_elements [1.0, 2.0, 3.0] 0.5\nnote false\nnote >>> has_close_elements [1.0, 2.8, 3.0, 4.0, 5.0, 2.0] 0.3\nnote true\nnote Omega name: threshold is threshol here.\nfn has_close_elements numbers view f64 * threshol f64 to bool\n",
+  "tests": "fn tc_0 to bool\na0 = new f64 6 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 3.9\nput a0 3 4.0\nput a0 4 5.0\nput a0 5 2.2\nr = has_close_elements a0 0.3\nret eq r true\nend\nfn tc_1 to bool\na0 = new f64 6 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 3.9\nput a0 3 4.0\nput a0 4 5.0\nput a0 5 2.2\nr = has_close_elements a0 0.05\nret eq r false\nend\nfn tc_2 to bool\na0 = new f64 5 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 5.9\nput a0 3 4.0\nput a0 4 5.0\nr = has_close_elements a0 0.95\nret eq r true\nend\nfn tc_3 to bool\na0 = new f64 5 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 5.9\nput a0 3 4.0\nput a0 4 5.0\nr = has_close_elements a0 0.8\nret eq r false\nend\nfn tc_4 to bool\na0 = new f64 6 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 3.0\nput a0 3 4.0\nput a0 4 5.0\nput a0 5 2.0\nr = has_close_elements a0 0.1\nret eq r true\nend\nfn tc_5 to bool\na0 = new f64 5 0.0\nput a0 0 1.1\nput a0 1 2.2\nput a0 2 3.1\nput a0 3 4.1\nput a0 4 5.1\nr = has_close_elements a0 1.0\nret eq r true\nend\nfn tc_6 to bool\na0 = new f64 5 0.0\nput a0 0 1.1\nput a0 1 2.2\nput a0 2 3.1\nput a0 3 4.1\nput a0 4 5.1\nr = has_close_elements a0 0.5\nret eq r false\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nif not tc_5\nret 6\nend\nif not tc_6\nret 7\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "trap",
+  "results": [
+    {
+      "program": "om2\nnote Check if in given array of numbers, are any two numbers closer to each other than\nnote given threshold.\nnote >>> has_close_elements [1.0, 2.0, 3.0] 0.5\nnote false\nnote >>> has_close_elements [1.0, 2.8, 3.0, 4.0, 5.0, 2.0] 0.3\nnote true\nnote Omega name: threshold is threshol here.\nfn has_close_elements numbers view f64 * threshol f64 to bool\ntrap 5\nend\n\nfn tc_0 to bool\na0 = new f64 6 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 3.9\nput a0 3 4.0\nput a0 4 5.0\nput a0 5 2.2\nr = has_close_elements a0 0.3\nret eq r true\nend\nfn tc_1 to bool\na0 = new f64 6 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 3.9\nput a0 3 4.0\nput a0 4 5.0\nput a0 5 2.2\nr = has_close_elements a0 0.05\nret eq r false\nend\nfn tc_2 to bool\na0 = new f64 5 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 5.9\nput a0 3 4.0\nput a0 4 5.0\nr = has_close_elements a0 0.95\nret eq r true\nend\nfn tc_3 to bool\na0 = new f64 5 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 5.9\nput a0 3 4.0\nput a0 4 5.0\nr = has_close_elements a0 0.8\nret eq r false\nend\nfn tc_4 to bool\na0 = new f64 6 0.0\nput a0 0 1.0\nput a0 1 2.0\nput a0 2 3.0\nput a0 3 4.0\nput a0 4 5.0\nput a0 5 2.0\nr = has_close_elements a0 0.1\nret eq r true\nend\nfn tc_5 to bool\na0 = new f64 5 0.0\nput a0 0 1.1\nput a0 1 2.2\nput a0 2 3.1\nput a0 3 4.1\nput a0 4 5.1\nr = has_close_elements a0 1.0\nret eq r true\nend\nfn tc_6 to bool\na0 = new f64 5 0.0\nput a0 0 1.1\nput a0 1 2.2\nput a0 2 3.1\nput a0 3 4.1\nput a0 4 5.1\nr = has_close_elements a0 0.5\nret eq r false\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nif not tc_5\nret 6\nend\nif not tc_6\nret 7\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+      "exit_code": 105,
+      "stdout": "",
+      "stderr": "",
+      "status": "Exception",
+      "om_status": "trap",
+      "om_case": 5,
+      "timestamp": 1793102245
+    }
+  ]
+}

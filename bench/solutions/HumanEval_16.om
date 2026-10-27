@@ -1,0 +1,14 @@
+seen = new uchar 256 0
+n = long 0
+for i ulong len string
+c = get string i
+if and ge c 65 le c 90
+c = add c 32
+end
+if eq get seen c 0
+put seen c 1
+n = add n 1
+end
+end
+ret n
+end

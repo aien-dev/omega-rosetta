@@ -1,0 +1,15 @@
+n = long 0
+for i ulong len string
+c = get string i
+if and ge c 97 le c 122
+c = sub c 32
+else
+if and ge c 65 le c 90
+c = add c 32
+end
+end
+put res i c
+n = add n 1
+end
+ret n
+end

@@ -1,0 +1,12 @@
+for i ulong len numbers
+for j ulong len numbers
+if ne i j
+d = fabs sub get numbers i get numbers j
+if lt d threshol
+ret true
+end
+end
+end
+end
+ret false
+end

@@ -1,0 +1,31 @@
+{
+  "name": "HumanEval_2_truncate_number",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Given a positive floating point number, it can be decomposed into\nnote and integer part (largest integer smaller than given number) and decimals\nnote (leftover part always smaller than 1).\nnote Return the decimal part of the number.\nnote >>> Truncate_number 3.5\nnote 0.5\nnote Omega name: truncate_number is Truncate_number here.\nfn Truncate_number number f64 to f64\n",
+  "tests": "fn tc_0 to bool\nr = Truncate_number 3.5\nret eq r 0.5\nend\nfn tc_1 to bool\nr = Truncate_number 1.25\nret eq r 0.25\nend\nfn tc_2 to bool\nr = Truncate_number 123.0\nret eq r 0.0\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "wrong",
+  "results": [
+    {
+      "program": "om2\nnote Given a positive floating point number, it can be decomposed into\nnote and integer part (largest integer smaller than given number) and decimals\nnote (leftover part always smaller than 1).\nnote Return the decimal part of the number.\nnote >>> Truncate_number 3.5\nnote 0.5\nnote Omega name: truncate_number is Truncate_number here.\nfn Truncate_number number f64 to f64\nret 0.0\nend\n\nfn tc_0 to bool\nr = Truncate_number 3.5\nret eq r 0.5\nend\nfn tc_1 to bool\nr = Truncate_number 1.25\nret eq r 0.25\nend\nfn tc_2 to bool\nr = Truncate_number 123.0\nret eq r 0.0\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "status": "Exception",
+      "om_status": "wrong_answer",
+      "om_case": 0,
+      "timestamp": 1793102244
+    }
+  ]
+}

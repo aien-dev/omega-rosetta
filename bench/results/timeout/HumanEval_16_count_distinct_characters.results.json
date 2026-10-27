@@ -1,0 +1,31 @@
+{
+  "name": "HumanEval_16_count_distinct_characters",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Given a string, find out how many distinct characters (regardless of case) does it consist of\nnote >>> count_distinct_characters \"xyzXYZ\"\nnote 3\nnote >>> count_distinct_characters \"Jerry\"\nnote 4\nfn count_distinct_characters string view uchar * to long\n",
+  "tests": "fn tc_0 to bool\na0 = new uchar 1 0\nr = count_distinct_characters part a0 0 0\nret eq r 0\nend\ntext t1_0 \"abcde\"\nfn tc_1 to bool\nr = count_distinct_characters t1_0\nret eq r 5\nend\ntext t2_0 \"abcdecadeCADE\"\nfn tc_2 to bool\nr = count_distinct_characters t2_0\nret eq r 5\nend\ntext t3_0 \"aaaaAAAAaaaa\"\nfn tc_3 to bool\nr = count_distinct_characters t3_0\nret eq r 1\nend\ntext t4_0 \"Jerry jERRY JeRRRY\"\nfn tc_4 to bool\nr = count_distinct_characters t4_0\nret eq r 5\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "timeout",
+  "results": [
+    {
+      "program": "om2\nnote Given a string, find out how many distinct characters (regardless of case) does it consist of\nnote >>> count_distinct_characters \"xyzXYZ\"\nnote 3\nnote >>> count_distinct_characters \"Jerry\"\nnote 4\nfn count_distinct_characters string view uchar * to long\nn = ulong 0\nfor i ulong 16777216\nfor j ulong 16777216\nfor k ulong 16777216\nn = xor n k\nend\nend\nend\nret 0\nend\n\nfn tc_0 to bool\na0 = new uchar 1 0\nr = count_distinct_characters part a0 0 0\nret eq r 0\nend\ntext t1_0 \"abcde\"\nfn tc_1 to bool\nr = count_distinct_characters t1_0\nret eq r 5\nend\ntext t2_0 \"abcdecadeCADE\"\nfn tc_2 to bool\nr = count_distinct_characters t2_0\nret eq r 5\nend\ntext t3_0 \"aaaaAAAAaaaa\"\nfn tc_3 to bool\nr = count_distinct_characters t3_0\nret eq r 1\nend\ntext t4_0 \"Jerry jERRY JeRRRY\"\nfn tc_4 to bool\nr = count_distinct_characters t4_0\nret eq r 5\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+      "exit_code": -1,
+      "stdout": "",
+      "stderr": "",
+      "status": "Timeout",
+      "om_status": "timeout",
+      "om_case": null,
+      "timestamp": 1793102252
+    }
+  ]
+}

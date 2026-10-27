@@ -1,0 +1,31 @@
+{
+  "name": "HumanEval_30_get_positive",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Return only positive numbers in the array.\nnote >>> get_positive [-1, 2, -4, 5, 6]\nnote [2, 5, 6]\nnote >>> get_positive [5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10]\nnote [5, 3, 2, 3, 9, 123, 1]\nnote Result: write the elements into res (len res >= 4096) and return how many were written.\nfn get_positive l view long * res edit long * to long\n",
+  "tests": "fn tc_0 to bool\na0 = new long 5 0\nput a0 0 -1\nput a0 1 -2\nput a0 2 4\nput a0 3 5\nput a0 4 6\nres = new long 4096 0\nr = get_positive a0 res\nif ne r 3\nret false\nend\nif ne get res 0 4\nret false\nend\nif ne get res 1 5\nret false\nend\nif ne get res 2 6\nret false\nend\nret true\nend\nfn tc_1 to bool\na0 = new long 11 0\nput a0 0 5\nput a0 1 3\nput a0 2 -5\nput a0 3 2\nput a0 4 3\nput a0 5 3\nput a0 6 9\nput a0 7 0\nput a0 8 123\nput a0 9 1\nput a0 10 -10\nres = new long 4096 0\nr = get_positive a0 res\nif ne r 8\nret false\nend\nif ne get res 0 5\nret false\nend\nif ne get res 1 3\nret false\nend\nif ne get res 2 2\nret false\nend\nif ne get res 3 3\nret false\nend\nif ne get res 4 3\nret false\nend\nif ne get res 5 9\nret false\nend\nif ne get res 6 123\nret false\nend\nif ne get res 7 1\nret false\nend\nret true\nend\nfn tc_2 to bool\na0 = new long 2 0\nput a0 0 -1\nput a0 1 -2\nres = new long 4096 0\nr = get_positive a0 res\nif ne r 0\nret false\nend\nret true\nend\nfn tc_3 to bool\na0 = new long 1 0\nres = new long 4096 0\nr = get_positive part a0 0 0 res\nif ne r 0\nret false\nend\nret true\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "trap",
+  "results": [
+    {
+      "program": "om2\nnote Return only positive numbers in the array.\nnote >>> get_positive [-1, 2, -4, 5, 6]\nnote [2, 5, 6]\nnote >>> get_positive [5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10]\nnote [5, 3, 2, 3, 9, 123, 1]\nnote Result: write the elements into res (len res >= 4096) and return how many were written.\nfn get_positive l view long * res edit long * to long\ntrap 5\nend\n\nfn tc_0 to bool\na0 = new long 5 0\nput a0 0 -1\nput a0 1 -2\nput a0 2 4\nput a0 3 5\nput a0 4 6\nres = new long 4096 0\nr = get_positive a0 res\nif ne r 3\nret false\nend\nif ne get res 0 4\nret false\nend\nif ne get res 1 5\nret false\nend\nif ne get res 2 6\nret false\nend\nret true\nend\nfn tc_1 to bool\na0 = new long 11 0\nput a0 0 5\nput a0 1 3\nput a0 2 -5\nput a0 3 2\nput a0 4 3\nput a0 5 3\nput a0 6 9\nput a0 7 0\nput a0 8 123\nput a0 9 1\nput a0 10 -10\nres = new long 4096 0\nr = get_positive a0 res\nif ne r 8\nret false\nend\nif ne get res 0 5\nret false\nend\nif ne get res 1 3\nret false\nend\nif ne get res 2 2\nret false\nend\nif ne get res 3 3\nret false\nend\nif ne get res 4 3\nret false\nend\nif ne get res 5 9\nret false\nend\nif ne get res 6 123\nret false\nend\nif ne get res 7 1\nret false\nend\nret true\nend\nfn tc_2 to bool\na0 = new long 2 0\nput a0 0 -1\nput a0 1 -2\nres = new long 4096 0\nr = get_positive a0 res\nif ne r 0\nret false\nend\nret true\nend\nfn tc_3 to bool\na0 = new long 1 0\nres = new long 4096 0\nr = get_positive part a0 0 0 res\nif ne r 0\nret false\nend\nret true\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+      "exit_code": 105,
+      "stdout": "",
+      "stderr": "",
+      "status": "Exception",
+      "om_status": "trap",
+      "om_case": 5,
+      "timestamp": 1793102245
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+bal = long 0
+for i ulong len operatio
+bal = add bal get operatio i
+if lt bal 0
+ret true
+end
+end
+ret false
+end

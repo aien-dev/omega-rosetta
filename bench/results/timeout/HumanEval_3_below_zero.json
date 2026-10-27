@@ -1,0 +1,22 @@
+{
+  "name": "HumanEval_3_below_zero",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote You're given an array of deposit and withdrawal operations on a bank account that starts with\nnote zero balance. Your task is to detect if at any point the balance of account fallls below zero, and\nnote at that point function should return true. Otherwise it should return false.\nnote >>> below_zero [1, 2, 3]\nnote false\nnote >>> below_zero [1, 2, -4, 5]\nnote true\nnote Omega name: operations is operatio here.\nfn below_zero operatio view long * to bool\n",
+  "tests": "fn tc_0 to bool\na0 = new long 1 0\nr = below_zero part a0 0 0\nret eq r false\nend\nfn tc_1 to bool\na0 = new long 6 0\nput a0 0 1\nput a0 1 2\nput a0 2 -3\nput a0 3 1\nput a0 4 2\nput a0 5 -3\nr = below_zero a0\nret eq r false\nend\nfn tc_2 to bool\na0 = new long 5 0\nput a0 0 1\nput a0 1 2\nput a0 2 -4\nput a0 3 5\nput a0 4 6\nr = below_zero a0\nret eq r true\nend\nfn tc_3 to bool\na0 = new long 8 0\nput a0 0 1\nput a0 1 -1\nput a0 2 2\nput a0 3 -2\nput a0 4 5\nput a0 5 -5\nput a0 6 4\nput a0 7 -4\nr = below_zero a0\nret eq r false\nend\nfn tc_4 to bool\na0 = new long 8 0\nput a0 0 1\nput a0 1 -1\nput a0 2 2\nput a0 3 -2\nput a0 4 5\nput a0 5 -5\nput a0 6 4\nput a0 7 -5\nr = below_zero a0\nret eq r true\nend\nfn tc_5 to bool\na0 = new long 8 0\nput a0 0 1\nput a0 1 -2\nput a0 2 2\nput a0 3 -2\nput a0 4 5\nput a0 5 -5\nput a0 6 4\nput a0 7 -4\nr = below_zero a0\nret eq r true\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nif not tc_5\nret 6\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "completions": [
+    "n = ulong 0\nfor i ulong 16777216\nfor j ulong 16777216\nfor k ulong 16777216\nn = xor n k\nend\nend\nend\nret false\nend\n"
+  ],
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "timeout"
+}

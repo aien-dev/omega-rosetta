@@ -1,0 +1,22 @@
+{
+  "name": "HumanEval_13_greatest_common_divisor",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Return a greatest common divisor of two integers a and b\nnote >>> greatest_common_divisor 3 5\nnote 1\nnote >>> greatest_common_divisor 25 15\nnote 5\nfn greatest_common_divisor a long b long to long\n",
+  "tests": "fn tc_0 to bool\nr = greatest_common_divisor 3 7\nret eq r 1\nend\nfn tc_1 to bool\nr = greatest_common_divisor 10 15\nret eq r 5\nend\nfn tc_2 to bool\nr = greatest_common_divisor 49 14\nret eq r 7\nend\nfn tc_3 to bool\nr = greatest_common_divisor 144 60\nret eq r 12\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "completions": [
+    "x = a\ny = b\nwhile ne y 0 bound 999999\nt = rem x y\nx = y\ny = t\nend\nret x\nend\n"
+  ],
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "hand"
+}
