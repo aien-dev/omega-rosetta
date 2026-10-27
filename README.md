@@ -129,6 +129,10 @@ single runnable tour.
 - **No imports, no standard library.** A program is one unit; units compose by concatenation. Output
   is the host word `write 1 buf offset count`, which is why each task carries `emit`/`emitu` helpers.
 
+## Benchmark
+
+- [`bench/`](bench/): a MultiPL-E adapter for Omega. It translates HumanEval (129/164) and MBPP (272/400) into OM-2 prompts and tests, and grades completions with the pinned `omc`. It includes 10 hand solutions and the gates (`sh bench/check.sh --omc PATH`). See [bench/README.md](bench/README.md).
+
 ## Rosetta Code drafts
 
 [`drafts/rosettacode/`](drafts/rosettacode/) holds one ready-to-paste `.wiki` section per task and
