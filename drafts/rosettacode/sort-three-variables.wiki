@@ -1,0 +1,190 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tx "x = "
+text ty "y = "
+text tz "z = "
+text s0 "lions, tigers, and"
+text s1 "bears, oh my!"
+text s2 "(from the \"Wizard of OZ\")"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note sort3 orders three longs with three compare-exchanges and prints them as x, y, z
+fn sort3 x long y long z long to void
+if gt x y
+t = x
+x = y
+y = t
+end
+if gt y z
+t = y
+y = z
+z = t
+end
+if gt x y
+t = x
+x = y
+y = t
+end
+emit tx
+emiti x
+emit nl
+emit ty
+emiti y
+emit nl
+emit tz
+emiti z
+emit nl
+end
+note str writes text number k (0, 1 or 2); a text cannot be chosen by index, so this is an if chain
+fn str k ulong to void
+if eq k 0
+emit s0
+end
+if eq k 1
+emit s1
+end
+if eq k 2
+emit s2
+end
+end
+note cmpb compares two byte strings: negative, zero or positive, like C's strcmp on unsigned bytes
+fn cmpb a view uchar * b view uchar * to long
+for i ulong len a
+if ge i len b
+ret 1
+end
+if ne get a i get b i
+ret sub long get a i long get b i
+end
+end
+if lt len a len b
+ret -1
+end
+ret 0
+end
+note gtk says whether text j sorts after text k; the three pairs are spelled out for the same reason
+fn gtk j ulong k ulong to bool
+c = long 0
+if and eq j 0 eq k 1
+c = cmpb s0 s1
+end
+if and eq j 1 eq k 0
+c = cmpb s1 s0
+end
+if and eq j 0 eq k 2
+c = cmpb s0 s2
+end
+if and eq j 2 eq k 0
+c = cmpb s2 s0
+end
+if and eq j 1 eq k 2
+c = cmpb s1 s2
+end
+if and eq j 2 eq k 1
+c = cmpb s2 s1
+end
+ret gt c 0
+end
+fn showk x ulong y ulong z ulong to void
+emit tx
+str x
+emit nl
+emit ty
+str y
+emit nl
+emit tz
+str z
+emit nl
+end
+note sorts the strings the same way, by swapping which text each variable names
+fn sorts to void
+x = ulong 0
+y = ulong 1
+z = ulong 2
+showk x y z
+if gtk x y
+t = x
+x = y
+y = t
+end
+if gtk y z
+t = y
+y = z
+z = t
+end
+if gtk x y
+t = x
+x = y
+y = t
+end
+showk x y z
+end
+fn main to int
+emit tx
+emiti 77444
+emit nl
+emit ty
+emiti -12
+emit nl
+emit tz
+emiti 0
+emit nl
+sort3 77444 -12 0
+sorts
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+x = 77444
+y = -12
+z = 0
+x = -12
+y = 0
+z = 77444
+x = lions, tigers, and
+y = bears, oh my!
+z = (from the "Wizard of OZ")
+x = (from the "Wizard of OZ")
+y = bears, oh my!
+z = lions, tigers, and
+</pre>

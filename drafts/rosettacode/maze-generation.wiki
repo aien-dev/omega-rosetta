@@ -1,0 +1,181 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tcorner "+"
+text thwall "---+"
+text thopen "   +"
+text tvwall "|"
+text tcell "   "
+text tpath " * "
+text tspace " "
+global seed ulong 1
+global ewall uchar 60
+global swall uchar 60
+global seen uchar 60
+global stk ulong 60
+global cand ulong 4
+global mark uchar 60
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note rnd is Knuth's MMIX linear congruential generator, x = x*6364136223846793005 + 1442695040888963407
+note mod 2^64 (ulong arithmetic wraps), starting from seed 0; it returns the top 31 bits, x >> 33
+fn rnd to ulong
+x = add mul get seed 0 6364136223846793005 1442695040888963407
+put seed 0 x
+ret shr x 33
+end
+note the maze has 10 columns and 6 rows of cells, cell c = row*10 + column; ewall[c] and swall[c] are the
+note walls on its east and south sides, all standing at the start
+note neighbour says which cell lies in direction d (0 north, 1 east, 2 south, 3 west), 60 if none
+fn neighbour c ulong d ulong to ulong
+r = div c 10
+k = rem c 10
+if and eq d 0 gt r 0
+ret sub c 10
+end
+if and eq d 1 lt k 9
+ret add c 1
+end
+if and eq d 2 lt r 5
+ret add c 10
+end
+if and eq d 3 gt k 0
+ret sub c 1
+end
+ret 60
+end
+note knock removes the wall between neighbouring cells a and b
+fn knock a ulong b ulong to void
+if eq b add a 1
+put ewall a 0
+end
+if eq a add b 1
+put ewall b 0
+end
+if eq b add a 10
+put swall a 0
+end
+if eq a add b 10
+put swall b 0
+end
+end
+note recursive backtracker with an explicit stack: from the top cell, collect the unvisited neighbours in
+note the order north, east, south, west, pick one with rnd mod their count, knock through and push it;
+note with none left, pop; every pass pushes a new cell or pops, so 2*60 passes suffice
+fn generate to void
+for c ulong 60
+put ewall c 1
+put swall c 1
+put seen c 0
+end
+put seen 0 1
+put stk 0 0
+sp1 = ulong 1
+while gt sp1 0 bound 120
+c = get stk sub sp1 1
+k = ulong 0
+for d ulong 4
+b = neighbour c d
+if lt b 60
+if eq get seen b 0
+put cand k b
+k = add k 1
+end
+end
+end
+if eq k 0
+sp1 = sub sp1 1
+else
+b = get cand rem rnd k
+knock c b
+put seen b 1
+put stk sp1 b
+sp1 = add sp1 1
+end
+end
+end
+note draw prints the maze; cells with mark[c] = 1 show a *
+fn draw to void
+emit tcorner
+for k ulong 10
+emit thwall
+end
+emit nl
+for r ulong 6
+emit tvwall
+for k ulong 10
+c = add mul r 10 k
+if eq get mark c 1
+emit tpath
+else
+emit tcell
+end
+if eq get ewall c 1
+emit tvwall
+else
+emit tspace
+end
+end
+emit nl
+emit tcorner
+for k ulong 10
+if eq get swall add mul r 10 k 1
+emit thwall
+else
+emit thopen
+end
+end
+emit nl
+end
+end
+fn main to int
+generate
+draw
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
++---+---+---+---+---+---+---+---+---+---+
+|   |                   |               |
++   +---+---+---+---+   +   +   +---+---+
+|               |       |   |           |
++---+---+---+   +   +---+   +---+---+   +
+|       |       |               |       |
++   +   +   +---+---+---+---+---+   +   +
+|   |       |               |       |   |
++   +---+---+   +---+---+   +   +---+---+
+|       |       |       |   |           |
++---+   +   +---+   +---+   +---+---+   +
+|           |                           |
++---+---+---+---+---+---+---+---+---+---+
+</pre>

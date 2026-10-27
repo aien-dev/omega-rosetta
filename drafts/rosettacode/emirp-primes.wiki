@@ -1,0 +1,119 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text first "first 20 emirps:"
+text betw "emirps between 7700 and 8000:"
+text nth "the 10000th emirp: "
+note cp i is 1 when i is composite; the sieve covers every number below 10^6, which holds each 6-digit reversal
+global cp uchar 1000000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note bound: i * i < 10^6 needs i < 1000; the multiples of one i below 10^6 are fewer than 500000
+fn sieve to void
+put cp 0 1
+put cp 1 1
+i = ulong 2
+while lt mul i i 1000000 bound 1000
+if eq get cp i 0
+j = mul i i
+while lt j 1000000 bound 999999
+put cp j 1
+j = add j i
+end
+end
+i = add i 1
+end
+end
+note rev reverses the decimal digits of n; a ulong has at most 20 digits
+fn rev n ulong to ulong
+r = ulong 0
+v = n
+while gt v 0 bound 20
+r = add mul r 10 rem v 10
+v = div v 10
+end
+ret r
+end
+note an emirp is a prime whose reversal is a different prime; n stays below 10^6 here
+fn emirp n ulong to bool
+if ne get cp n 0
+ret false
+end
+r = rev n
+if eq r n
+ret false
+end
+ret eq get cp r 0
+end
+fn main to int
+sieve
+emit first
+n = ulong 0
+k = ulong 0
+while lt k 20 bound 1000
+n = add n 1
+if emirp n
+k = add k 1
+emit sp
+emitu n
+end
+end
+emit nl
+emit betw
+n = ulong 7700
+while le n 8000 bound 1000
+if emirp n
+emit sp
+emitu n
+end
+n = add n 1
+end
+emit nl
+n = ulong 0
+k = ulong 0
+while lt k 10000 bound 999999
+n = add n 1
+if emirp n
+k = add k 1
+end
+end
+emit nth
+emitu n
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 20 emirps: 13 17 31 37 71 73 79 97 107 113 149 157 167 179 199 311 337 347 359 389
+emirps between 7700 and 8000: 7717 7757 7817 7841 7867 7879 7901 7927 7949 7951 7963
+the 10000th emirp: 948349
+</pre>

@@ -1,0 +1,74 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text first "first 20 Harshad numbers:"
+text above "first Harshad number above 1000: "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note n is a Harshad number when its digit sum divides it
+fn harshad n ulong to bool
+s = ulong 0
+v = n
+while gt v 0 bound 20
+s = add s rem v 10
+v = div v 10
+end
+ret eq rem n s 0
+end
+note bound: every multiple of 10 up to 100 is Harshad, so neither search passes 1000 candidates
+fn main to int
+emit first
+n = ulong 0
+k = ulong 0
+while lt k 20 bound 1000
+n = add n 1
+if harshad n
+emit sp
+emitu n
+k = add k 1
+end
+end
+emit nl
+n = ulong 1001
+while not harshad n bound 1000
+n = add n 1
+end
+emit above
+emitu n
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 20 Harshad numbers: 1 2 3 4 5 6 7 8 9 10 12 18 20 21 24 27 30 36 40 42
+first Harshad number above 1000: 1002
+</pre>

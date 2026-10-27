@@ -1,0 +1,124 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tfirst "first 15: "
+text tat " first appears at "
+text tgcd "gcd of each consecutive pair of the first 1000 is 1: "
+text tyes "yes"
+text tno "no"
+global sb ulong 1200
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note start 1, 1; for each k from 1 on, append sb[k] + sb[k-1] and then sb[k], until 1200 members
+fn build to void
+put sb 0 1
+put sb 1 1
+n = ulong 2
+k = ulong 1
+note each pass adds two members, so 600 passes fill 1200
+while lt n 1200 bound 600
+put sb n add get sb k get sb sub k 1
+put sb add n 1 get sb k
+n = add n 2
+k = add k 1
+end
+end
+note find gives the 1-based position of v's first appearance, 0 if not within the 1200
+fn find v ulong to ulong
+for i ulong 1200
+if eq get sb i v
+ret add i 1
+end
+end
+ret 0
+end
+fn gcd a ulong b ulong to ulong
+note Euclid's remainders shrink at least as fast as Fibonacci numbers, so 100 steps cover any ulong
+while ne b 0 bound 100
+t = rem a b
+a = b
+b = t
+end
+ret a
+end
+fn show v ulong to void
+emitu v
+emit tat
+emitu find v
+emit nl
+end
+fn main to int
+build
+emit tfirst
+for i ulong 15
+if gt i 0
+emit sp
+end
+emitu get sb i
+end
+emit nl
+for i ulong 10
+show add i 1
+end
+show 100
+ok = true
+for i ulong 999
+if ne gcd get sb i get sb add i 1 1
+ok = false
+end
+end
+emit tgcd
+if ok
+emit tyes
+else
+emit tno
+end
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 15: 1 1 2 1 3 2 3 1 4 3 5 2 5 3 4
+1 first appears at 1
+2 first appears at 3
+3 first appears at 5
+4 first appears at 9
+5 first appears at 11
+6 first appears at 33
+7 first appears at 19
+8 first appears at 21
+9 first appears at 35
+10 first appears at 39
+100 first appears at 1179
+gcd of each consecutive pair of the first 1000 is 1: yes
+</pre>

@@ -1,0 +1,91 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitc writes the single byte c
+fn emitc c uchar to void
+b = new uchar 1 c
+emit b
+end
+note each term reads the previous one as runs of equal digits, writing run length then digit
+note bound: the 15th term has 102 digits; 256-byte buffers hold every term here, and no run is longer than 3
+fn main to int
+a = new uchar 256 0
+b = new uchar 256 0
+put a 0 1
+n = ulong 1
+for t ulong 15
+for i ulong n
+emitc add get a i uchar 48
+end
+emit nl
+m = ulong 0
+i = ulong 0
+while lt i n bound 256
+d = get a i
+j = i
+while lt j n bound 256
+if ne get a j d
+break
+end
+j = add j 1
+end
+put b m uchar sub j i
+put b add m 1 d
+m = add m 2
+i = j
+end
+for k ulong m
+put a k get b k
+end
+n = m
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+1
+11
+21
+1211
+111221
+312211
+13112221
+1113213211
+31131211131221
+13211311123113112211
+11131221133112132113212221
+3113112221232112111312211312113211
+1321132132111213122112311311222113111221131221
+11131221131211131231121113112221121321132132211331222113112211
+311311222113111231131112132112311321322112111312211312111322212311322113212221
+</pre>

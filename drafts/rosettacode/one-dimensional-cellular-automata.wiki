@@ -1,0 +1,111 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tstart "_###_##_#_#_#_#__#__"
+text tgen "generation "
+text tcolon ": "
+global cur uchar 20
+global nxt uchar 20
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitb writes the single byte c
+fn emitb c ulong to void
+d = new uchar 1 0
+put d 0 uchar c
+emit d
+end
+note a cell is alive next generation when exactly two of itself and its two neighbours are alive
+note (cells beyond the ends are dead); the run stops when a generation repeats the one before
+fn cell i ulong to ulong
+if eq get cur i 35
+ret 1
+end
+ret 0
+end
+fn step to bool
+changed = false
+for i ulong 20
+n = cell i
+if gt i 0
+n = add n cell sub i 1
+end
+if lt i 19
+n = add n cell add i 1
+end
+v = uchar 95
+if eq n 2
+v = 35
+end
+if ne v get cur i
+changed = true
+end
+put nxt i v
+end
+for i ulong 20
+put cur i get nxt i
+end
+ret changed
+end
+note 20 cells can change at most 2^20 ways, but this start settles after 9 generations; 100 is ample
+fn main to int
+for i ulong 20
+put cur i get tstart i
+end
+g = ulong 0
+while true bound 100
+emit tgen
+emitu g
+emit tcolon
+for i ulong 20
+emitb ulong get cur i
+end
+emit nl
+if not step
+break
+end
+g = add g 1
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+generation 0: _###_##_#_#_#_#__#__
+generation 1: _#_#####_#_#_#______
+generation 2: __##___##_#_#_______
+generation 3: __##___###_#________
+generation 4: __##___#_##_________
+generation 5: __##____###_________
+generation 6: __##____#_#_________
+generation 7: __##_____#__________
+generation 8: __##________________
+</pre>

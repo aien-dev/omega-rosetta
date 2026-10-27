@@ -1,0 +1,139 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text puzzle "850002400720000009004000000000107002305000900040000000000080070017000000000036040"
+text tbar "------+-------+------\n"
+text tsep "| "
+text tsolved "solved:\n"
+global grid ulong 81
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note ok says whether digit d may go in cell c: not already in its row, column or 3x3 box
+fn ok c ulong d ulong to bool
+r = div c 9
+k = rem c 9
+b = add mul mul div r 3 3 9 mul div k 3 3
+for i ulong 9
+if eq get grid add mul r 9 i d
+ret false
+end
+if eq get grid add mul i 9 k d
+ret false
+end
+q = add b add mul div i 3 9 rem i 3
+if eq get grid q d
+ret false
+end
+end
+ret true
+end
+note solve fills the first empty cell at or after c with each digit that fits and recurses; on a dead
+note end it empties the cell again (backtracking); the recursion is at most 81 deep
+fn solve c ulong to bool
+p = c
+while lt p 81 bound 81
+if eq get grid p 0
+break
+end
+p = add p 1
+end
+if eq p 81
+ret true
+end
+for x ulong 9
+d = add x 1
+if ok p d
+put grid p d
+if solve add p 1
+ret true
+end
+end
+end
+put grid p 0
+ret false
+end
+fn show to void
+for r ulong 9
+if and gt r 0 eq rem r 3 0
+emit tbar
+end
+for k ulong 9
+if and gt k 0 eq rem k 3 0
+emit tsep
+end
+emitu get grid add mul r 9 k
+if lt k 8
+emit sp
+end
+end
+emit nl
+end
+end
+fn main to int
+for i ulong 81
+put grid i sub ulong get puzzle i 48
+end
+show
+if not solve 0
+exit 1
+end
+emit tsolved
+show
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+8 5 0 | 0 0 2 | 4 0 0
+7 2 0 | 0 0 0 | 0 0 9
+0 0 4 | 0 0 0 | 0 0 0
+------+-------+------
+0 0 0 | 1 0 7 | 0 0 2
+3 0 5 | 0 0 0 | 9 0 0
+0 4 0 | 0 0 0 | 0 0 0
+------+-------+------
+0 0 0 | 0 8 0 | 0 7 0
+0 1 7 | 0 0 0 | 0 0 0
+0 0 0 | 0 3 6 | 0 4 0
+solved:
+8 5 9 | 6 1 2 | 4 3 7
+7 2 3 | 8 5 4 | 1 6 9
+1 6 4 | 3 7 9 | 5 2 8
+------+-------+------
+9 8 6 | 1 4 7 | 3 5 2
+3 7 5 | 2 6 8 | 9 1 4
+2 4 1 | 5 9 3 | 7 8 6
+------+-------+------
+4 3 2 | 9 8 1 | 6 7 5
+6 1 7 | 4 2 5 | 8 9 3
+5 9 8 | 7 3 6 | 2 4 1
+</pre>

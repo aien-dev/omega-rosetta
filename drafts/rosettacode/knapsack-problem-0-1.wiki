@@ -1,0 +1,162 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text names "map|compass|water|sandwich|glucose|tin|banana|apple|cheese|beer|suntan cream|camera|T-shirt|trousers|umbrella|waterproof trousers|waterproof overclothes|note-case|sunglasses|towel|socks|book"
+text data "9 150 13 35 153 200 50 160 15 60 68 45 27 60 39 40 23 30 52 10 11 70 32 30 24 15 48 10 73 40 42 70 43 75 22 80 7 20 18 12 4 50 30 10"
+text tw "total weight "
+text tv "total value "
+global vals long 44
+global best long 401
+global keep uchar 9223
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note parse reads the decimal numbers in s (separated by spaces, an optional - sign) into vals and
+note returns how many; one pass over s, so the loop is bounded by len s
+fn parse s view uchar * to ulong
+n = ulong 0
+v = long 0
+sg = long 1
+dig = false
+for i ulong len s
+c = get s i
+if eq c 45
+sg = long -1
+else
+if and ge c 48 le c 57
+v = add mul v 10 long sub c 48
+dig = true
+else
+if dig
+put vals n mul sg v
+n = add n 1
+end
+v = long 0
+sg = long 1
+dig = false
+end
+end
+end
+if dig
+put vals n mul sg v
+n = add n 1
+end
+ret n
+end
+note item writes the k-th name of the |-separated names text
+fn item k ulong to void
+f = ulong 0
+st = ulong 0
+for i ulong len names
+if eq get names i 124
+if eq f k
+emit part names st sub i st
+ret
+end
+f = add f 1
+st = add i 1
+end
+end
+emit part names st sub len names st
+end
+note pack runs the 0-1 dynamic program over capacities 0..400: best[c] is the best value with weight <= c
+note using the items seen so far; keep[i*401+c] records that item i was taken at capacity c
+fn pack n ulong to void
+for i ulong n
+w = ulong get vals mul i 2
+v = get vals add mul i 2 1
+for x ulong 401
+c = sub 400 x
+if ge c w
+if gt add get best sub c w v get best c
+put best c add get best sub c w v
+put keep add mul i 401 c 1
+end
+end
+end
+end
+end
+fn main to int
+n = div parse data 2
+pack n
+note walk back from capacity 400 over the items in reverse, taking each recorded item
+c = ulong 400
+tot = ulong 0
+for x ulong n
+i = sub sub n x 1
+if eq get keep add mul i 401 c 1
+put vals add mul i 2 1 -1
+w = ulong get vals mul i 2
+c = sub c w
+tot = add tot w
+end
+end
+for i ulong n
+if eq get vals add mul i 2 1 -1
+item i
+emit nl
+end
+end
+emit tw
+emitu tot
+emit nl
+emit tv
+emiti get best 400
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+map
+compass
+water
+sandwich
+glucose
+banana
+suntan cream
+waterproof trousers
+waterproof overclothes
+note-case
+sunglasses
+socks
+total weight 396
+total value 1030
+</pre>

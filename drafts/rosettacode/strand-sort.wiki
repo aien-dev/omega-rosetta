@@ -1,0 +1,175 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text data "5 1 4 2 0 9 6 3 8 7 -2 11"
+global vals long 16
+global rest long 16
+global strand long 16
+global res long 16
+global mrg long 16
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note parse reads the decimal numbers in s (separated by spaces, an optional - sign) into vals and
+note returns how many; one pass over s, so the loop is bounded by len s
+fn parse s view uchar * to ulong
+n = ulong 0
+v = long 0
+sg = long 1
+dig = false
+for i ulong len s
+c = get s i
+if eq c 45
+sg = long -1
+else
+if and ge c 48 le c 57
+v = add mul v 10 long sub c 48
+dig = true
+else
+if dig
+put vals n mul sg v
+n = add n 1
+end
+v = long 0
+sg = long 1
+dig = false
+end
+end
+end
+if dig
+put vals n mul sg v
+n = add n 1
+end
+ret n
+end
+note show writes vals[0..n-1] separated by spaces, then a newline
+fn show n ulong to void
+for i ulong n
+if gt i 0
+emit sp
+end
+emiti get vals i
+end
+emit nl
+end
+note pull takes an increasing strand out of rest[0..m-1] into strand, keeps the others in order at the
+note front of rest, and returns the strand length
+fn pull m ulong to ulong
+s = ulong 0
+k = ulong 0
+for i ulong m
+v = get rest i
+take = false
+if eq s 0
+take = true
+else
+if ge v get strand sub s 1
+take = true
+end
+end
+if take
+put strand s v
+s = add s 1
+else
+put rest k v
+k = add k 1
+end
+end
+ret s
+end
+note mergein merges strand[0..s-1] into res[0..r-1] through mrg and returns the new length
+fn mergein r ulong s ulong to ulong
+i = ulong 0
+j = ulong 0
+k = ulong 0
+while lt k add r s bound 32
+left = false
+if ge j s
+left = true
+else
+if lt i r
+if le get res i get strand j
+left = true
+end
+end
+end
+if left
+put mrg k get res i
+i = add i 1
+else
+put mrg k get strand j
+j = add j 1
+end
+k = add k 1
+end
+for x ulong k
+put res x get mrg x
+end
+ret k
+end
+note stsort repeats pull and merge; each strand removes at least one element, so n rounds suffice
+fn stsort n ulong to void
+for i ulong n
+put rest i get vals i
+end
+m = n
+r = ulong 0
+while gt m 0 bound 16
+s = pull m
+m = sub m s
+r = mergein r s
+end
+for i ulong n
+put vals i get res i
+end
+end
+fn main to int
+n = parse data
+show n
+stsort n
+show n
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+5 1 4 2 0 9 6 3 8 7 -2 11
+-2 0 1 2 3 4 5 6 7 8 9 11
+</pre>

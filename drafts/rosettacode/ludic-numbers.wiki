@@ -1,0 +1,116 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text first "first 25 ludic numbers:"
+text upto "ludic numbers <= 1000: "
+text tfrom "2000th to 2005th ludic numbers:"
+text trip "ludic triplets (x, x+2, x+6) below 250:"
+text lp " ("
+text cm ", "
+text rp ")"
+note the sieve runs on 2..21999; the 2005th ludic number, 21511, is below that limit, and every ludic number
+note found is final because removing every k-th survivor never touches the survivors in front of it
+global ls ulong 22000
+global lu ulong 22000
+global isl uchar 22000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note round: the first survivor k is ludic; it and every k-th survivor after it (positions 0, k, 2k, ...) go
+note bound: each round removes at least one survivor, so at most 21998 rounds over at most 21998 survivors
+fn main to int
+n = ulong 0
+for i ulong 21998
+put ls i add i 2
+n = add n 1
+end
+put lu 0 1
+put isl 1 1
+c = ulong 1
+while gt n 0 bound 22000
+k = get ls 0
+put lu c k
+put isl k 1
+c = add c 1
+m = ulong 0
+for i ulong n
+if ne rem i k 0
+put ls m get ls i
+m = add m 1
+end
+end
+n = m
+end
+emit first
+for i ulong 25
+emit sp
+emitu get lu i
+end
+emit nl
+emit upto
+m = ulong 0
+for i ulong c
+if le get lu i 1000
+m = add m 1
+end
+end
+emitu m
+emit nl
+emit tfrom
+for i ulong 6
+emit sp
+emitu get lu add 1999 i
+end
+emit nl
+emit trip
+for x ulong 244
+if eq get isl x 1
+if and eq get isl add x 2 1 eq get isl add x 6 1
+emit lp
+emitu x
+emit cm
+emitu add x 2
+emit cm
+emitu add x 6
+emit rp
+end
+end
+end
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 25 ludic numbers: 1 2 3 5 7 11 13 17 23 25 29 37 41 43 47 53 61 67 71 77 83 89 91 97 107
+ludic numbers &lt;= 1000: 142
+2000th to 2005th ludic numbers: 21475 21481 21487 21493 21503 21511
+ludic triplets (x, x+2, x+6) below 250: (1, 3, 7) (5, 7, 11) (11, 13, 17) (23, 25, 29) (41, 43, 47) (173, 175, 179) (221, 223, 227) (233, 235, 239)
+</pre>

@@ -1,0 +1,82 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text hdr "first 199 terms of the Moebius sequence (the first cell, n = 0, is blank):\n"
+text blank "   "
+text tneg " -1"
+text tzer "  0"
+text tpos "  1"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note mu(n) by trial division: 0 if some prime divides n twice, else (-1)^(number of prime factors)
+note bound: n < 200, so d walks fewer than 15 values with d * d <= n
+fn mu n ulong to long
+v = n
+s = long 1
+d = ulong 2
+while le mul d d v bound 200
+if eq rem v d 0
+v = div v d
+if eq rem v d 0
+ret 0
+end
+s = sub long 0 s
+end
+d = add d 1
+end
+if gt v 1
+s = sub long 0 s
+end
+ret s
+end
+fn main to int
+emit hdr
+for r ulong 10
+for c ulong 20
+n = add mul r 20 c
+if eq n 0
+emit blank
+else
+m = mu n
+if lt m 0
+emit tneg
+end
+if eq m 0
+emit tzer
+end
+if gt m 0
+emit tpos
+end
+end
+end
+emit nl
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 199 terms of the Moebius sequence (the first cell, n = 0, is blank):
+     1 -1 -1  0 -1  1 -1  0  0  1 -1  0 -1  1  1  0 -1  0 -1
+  0  1  1 -1  0  0  1  0  0 -1 -1 -1  0  1  1  1  0 -1  1  1
+  0 -1 -1 -1  0  0  1 -1  0  0  0  1  0 -1  0  1  0  1  1 -1
+  0 -1  1  0  0  1 -1 -1  0  1 -1 -1  0 -1  1  0  0  1 -1 -1
+  0  0  1 -1  0  1  1  1  0 -1  0  1  0  1  1  1  0 -1  0  0
+  0 -1 -1 -1  0 -1  1 -1  0 -1 -1  1  0 -1 -1  1  0  0  1  1
+  0  0  1  1  0  0  0 -1  0  1 -1 -1  0  1  1  0  0 -1 -1 -1
+  0  1  1  1  0  1  1  0  0 -1  0 -1  0  0 -1  1  0 -1  1  1
+  0  1  0 -1  0 -1  1 -1  0  0 -1  0  0 -1 -1  0  0  1  1 -1
+  0 -1 -1  1  0  1 -1  1  0  0 -1 -1  0 -1  1 -1  0 -1  0 -1
+</pre>

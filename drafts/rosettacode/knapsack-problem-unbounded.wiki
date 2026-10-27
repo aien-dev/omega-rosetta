@@ -1,0 +1,99 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text thead "panacea ichor gold value weight volume\n"
+text ttenth "/10 "
+text tthou "/1000\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note the weights are in tenths (0.3, 0.2, 2.0 -> 3, 2, 20; limit 25 -> 250) and the volumes in
+note thousandths (0.025, 0.015, 0.002 -> 25, 15, 2; limit 0.25 -> 250), so all arithmetic is exact;
+note values are 3000, 1800 and 2500; every count that fits is tried (at most 11 * 17 * 13 cases)
+fn fits a ulong b ulong c ulong to bool
+w = add add mul a 3 mul b 2 mul c 20
+v = add add mul a 25 mul b 15 mul c 2
+ret and le w 250 le v 250
+end
+fn value a ulong b ulong c ulong to ulong
+ret add add mul a 3000 mul b 1800 mul c 2500
+end
+fn row a ulong b ulong c ulong to void
+emitu a
+emit sp
+emitu b
+emit sp
+emitu c
+emit sp
+emitu value a b c
+emit sp
+emitu add add mul a 3 mul b 2 mul c 20
+emit ttenth
+emitu add add mul a 25 mul b 15 mul c 2
+emit tthou
+end
+note pass 1 finds the best value, pass 2 prints every combination that reaches it
+fn main to int
+best = ulong 0
+for a ulong 11
+for b ulong 17
+for c ulong 13
+if fits a b c
+if gt value a b c best
+best = value a b c
+end
+end
+end
+end
+end
+emit thead
+for a ulong 11
+for b ulong 17
+for c ulong 13
+if fits a b c
+if eq value a b c best
+row a b c
+end
+end
+end
+end
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+panacea ichor gold value weight volume
+0 15 11 54500 250/10 247/1000
+3 10 11 54500 249/10 247/1000
+6 5 11 54500 248/10 247/1000
+9 0 11 54500 247/10 247/1000
+</pre>

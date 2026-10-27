@@ -1,0 +1,150 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text two "2^"
+text mid " - 1 = "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note addm is (a + b) mod m for a, b < m; it never forms the wrapped sum a + b
+fn addm a ulong b ulong m ulong to ulong
+if ge a sub m b
+ret sub a sub m b
+end
+ret add a b
+end
+note mulm is a * b mod m for any 64-bit m > 0: double and add over the 64 bits of b, high bit first
+fn mulm a ulong b ulong m ulong to ulong
+x = rem a m
+r = ulong 0
+for i ulong 64
+r = addm r r m
+if ne and shr b sub 63 i 1 0
+r = addm r x m
+end
+end
+ret r
+end
+note powm is b ^ e mod m; e has at most 64 bits, so 64 squarings
+fn powm b ulong e ulong m ulong to ulong
+r = rem ulong 1 m
+x = rem b m
+v = e
+while gt v 0 bound 64
+if eq and v 1 1
+r = mulm r x m
+end
+x = mulm x x m
+v = shr v 1
+end
+ret r
+end
+note sprp: is odd n > 2 a strong probable prime to base a? n - 1 = d * 2^s with d odd, s at most 63
+fn sprp n ulong a ulong to bool
+d = sub n 1
+s = ulong 0
+while eq and d 1 0 bound 64
+d = shr d 1
+s = add s 1
+end
+x = powm a d n
+if or eq x 1 eq x sub n 1
+ret true
+end
+for i ulong sub s 1
+x = mulm x x n
+if eq x sub n 1
+ret true
+end
+end
+ret false
+end
+note the first 12 primes as bases decide every n < 2^64 (3.18 * 10^23 is the first strong pseudoprime to all of them)
+fn isprime n ulong to bool
+bs = new ulong 12 0
+put bs 0 2
+put bs 1 3
+put bs 2 5
+put bs 3 7
+put bs 4 11
+put bs 5 13
+put bs 6 17
+put bs 7 19
+put bs 8 23
+put bs 9 29
+put bs 10 31
+put bs 11 37
+if lt n 2
+ret false
+end
+for i ulong 12
+a = get bs i
+if eq n a
+ret true
+end
+if eq rem n a 0
+ret false
+end
+end
+for i ulong 12
+if not sprp n get bs i
+ret false
+end
+end
+ret true
+end
+note every Mersenne number 2^p - 1 that fits a ulong (p <= 63), tested by deterministic Miller-Rabin
+fn main to int
+p = ulong 2
+while le p 63 bound 62
+m = sub shl ulong 1 p 1
+if isprime m
+emit two
+emitu p
+emit mid
+emitu m
+emit nl
+end
+p = add p 1
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+2^2 - 1 = 3
+2^3 - 1 = 7
+2^5 - 1 = 31
+2^7 - 1 = 127
+2^13 - 1 = 8191
+2^17 - 1 = 131071
+2^19 - 1 = 524287
+2^31 - 1 = 2147483647
+2^61 - 1 = 2305843009213693951
+</pre>

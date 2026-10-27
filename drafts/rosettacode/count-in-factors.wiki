@@ -1,0 +1,106 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text x " x "
+text eqs " = "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note prime factors in ascending order by trial division; 1 is shown as itself
+note bound: each pass divides v or steps d, and d * d <= v; for the inputs here d never passes 6857
+fn tell n ulong to void
+emitu n
+emit eqs
+if eq n 1
+emitu 1
+emit nl
+ret
+end
+v = n
+d = ulong 2
+f = ulong 0
+while le mul d d v bound 999999
+if eq rem v d 0
+if gt f 0
+emit x
+end
+emitu d
+f = add f 1
+v = div v d
+else
+d = add d 1
+end
+end
+if gt v 1
+if gt f 0
+emit x
+end
+emitu v
+end
+emit nl
+end
+fn main to int
+for i ulong 25
+tell add i 1
+end
+for i ulong 13
+tell add 2144 i
+end
+tell 600851475143
+tell 1000000000000
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+1 = 1
+2 = 2
+3 = 3
+4 = 2 x 2
+5 = 5
+6 = 2 x 3
+7 = 7
+8 = 2 x 2 x 2
+9 = 3 x 3
+10 = 2 x 5
+11 = 11
+12 = 2 x 2 x 3
+13 = 13
+14 = 2 x 7
+15 = 3 x 5
+...
+2151 = 3 x 3 x 239
+2152 = 2 x 2 x 2 x 269
+2153 = 2153
+2154 = 2 x 3 x 359
+2155 = 5 x 431
+2156 = 2 x 2 x 7 x 7 x 11
+600851475143 = 71 x 839 x 1471 x 6857
+1000000000000 = 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5
+</pre>
