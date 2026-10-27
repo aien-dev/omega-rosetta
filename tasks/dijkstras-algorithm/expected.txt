@@ -1,0 +1,5 @@
+a -> b  cost 7  path a b
+a -> c  cost 9  path a c
+a -> d  cost 20  path a c d
+a -> e  cost 26  path a c d e
+a -> f  cost 11  path a c f

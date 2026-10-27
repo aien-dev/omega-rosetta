@@ -1,0 +1,111 @@
+note Rosetta Code task "Permutations by swapping": https://rosettacode.org/wiki/Permutations_by_swapping
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tperm "Perm: ["
+text tsign "] Sign: "
+text tcomma ", "
+global perm ulong 8
+global dir long 8
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note Steinhaus-Johnson-Trotter with Even's speedup: every element has a direction (all start left);
+note the largest mobile element (one whose neighbour in its direction is smaller) swaps that way, and
+note every larger element turns round; each step is one swap, so the sign alternates
+fn mobile n ulong to ulong
+b = n
+for i ulong n
+j = add long i get dir i
+if and ge j 0 lt j long n
+if gt get perm i get perm ulong j
+if or eq b n gt get perm i get perm b
+b = i
+end
+end
+end
+end
+ret b
+end
+fn show n ulong s long to void
+emit tperm
+for i ulong n
+if gt i 0
+emit tcomma
+end
+emitu get perm i
+end
+emit tsign
+emiti s
+emit nl
+end
+fn sjt n ulong to void
+for i ulong n
+put perm i add i 1
+put dir i -1
+end
+s = long 1
+show n s
+note each pass makes one new permutation and n! of them end the run: 720 = 6! covers n up to 6
+while true bound 720
+m = mobile n
+if eq m n
+break
+end
+v = get perm m
+j = ulong add long m get dir m
+put perm m get perm j
+put perm j v
+t = get dir m
+put dir m get dir j
+put dir j t
+for i ulong n
+if gt get perm i v
+put dir i neg get dir i
+end
+end
+s = neg s
+show n s
+end
+end
+note n = 3 and n = 4: 3! + 4! = 30 lines; 6! = 720 bounds the loop for any n up to 6
+fn main to int
+sjt 3
+emit nl
+sjt 4
+ret 0
+end

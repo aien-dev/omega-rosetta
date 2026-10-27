@@ -1,0 +1,94 @@
+note Rosetta Code task "Magic squares of odd order": https://rosettacode.org/wiki/Magic_squares_of_odd_order
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tconst "magic constant: "
+global grid ulong 81
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitw writes n right-aligned in w columns (w at most 20; a wider number is not cut)
+fn emitw n ulong w ulong to void
+d = new uchar 20 32
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+if gt w sub 20 i
+i = sub 20 w
+end
+emit part d i sub 20 i
+end
+note the Siamese method: 1 goes in the middle of the top row; each next number goes one up and one
+note right (wrapping round), or straight down when that cell is taken, which happens every n numbers
+fn siamese n ulong to void
+for i ulong mul n n
+put grid i 0
+end
+r = ulong 0
+c = div n 2
+for k ulong mul n n
+put grid add mul r n c add k 1
+ur = rem sub add r n 1 n
+uc = rem add c 1 n
+if eq get grid add mul ur n uc 0
+r = ur
+c = uc
+else
+r = rem add r 1 n
+end
+end
+end
+fn show n ulong to void
+for i ulong n
+for j ulong n
+emitw get grid add mul i n j 4
+end
+emit nl
+end
+emit tconst
+emitu div mul n add mul n n 1 2
+emit nl
+end
+fn main to int
+siamese 3
+show 3
+emit nl
+siamese 5
+show 5
+emit nl
+siamese 9
+show 9
+ret 0
+end

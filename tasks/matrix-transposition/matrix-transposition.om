@@ -1,0 +1,91 @@
+note Rosetta Code task "Matrix transposition": https://rosettacode.org/wiki/Matrix_transposition
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tt "transposed:\n"
+global ma long 15
+global mt long 15
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitwi writes a signed n right-aligned in w columns (w at most 20)
+fn emitwi n long w ulong to void
+d = new uchar 21 32
+i = ulong 21
+v = n
+if lt n 0
+v = neg n
+end
+while true bound 20
+i = sub i 1
+put d i uchar add long 48 rem v 10
+v = div v 10
+if eq v 0
+break
+end
+end
+if lt n 0
+i = sub i 1
+put d i 45
+end
+if gt w sub 21 i
+i = sub 21 w
+end
+emit part d i sub 21 i
+end
+note ma is a 3 x 5 matrix stored row by row; its transpose mt is 5 x 3, mt[j][i] = ma[i][j]
+fn showt r ulong c ulong to void
+for i ulong r
+for j ulong c
+emitwi get mt add mul i c j 4
+end
+emit nl
+end
+end
+fn showa r ulong c ulong to void
+for i ulong r
+for j ulong c
+emitwi get ma add mul i c j 4
+end
+emit nl
+end
+end
+fn main to int
+for i ulong 15
+put ma i sub long mul i i 50
+end
+showa 3 5
+for i ulong 3
+for j ulong 5
+put mt add mul j 3 i get ma add mul i 5 j
+end
+end
+emit tt
+showt 5 3
+ret 0
+end

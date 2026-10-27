@@ -1,0 +1,2 @@
+ways to make 100 cents from 1, 5, 10, 25: 242
+ways to make 100000 cents from 1, 5, 10, 25, 50, 100: 13398445413854501

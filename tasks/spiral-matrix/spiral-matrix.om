@@ -1,0 +1,99 @@
+note Rosetta Code task "Spiral matrix": https://rosettacode.org/wiki/Spiral_matrix
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+global grid ulong 64
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitw writes n right-aligned in w columns (w at most 20; a wider number is not cut)
+fn emitw n ulong w ulong to void
+d = new uchar 20 32
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+if gt w sub 20 i
+i = sub 20 w
+end
+emit part d i sub 20 i
+end
+note the walk starts at the top left going right and turns clockwise whenever the next cell is off the
+note grid or already numbered; grid holds number+1 so that 0 means empty
+fn spiral n ulong to void
+for i ulong mul n n
+put grid i 0
+end
+r = long 0
+c = long 0
+dr = long 0
+dc = long 1
+for k ulong mul n n
+put grid add mul ulong r n ulong c add k 1
+nr = add r dr
+nc = add c dc
+if blocked nr nc n
+t = dr
+dr = dc
+dc = neg t
+nr = add r dr
+nc = add c dc
+end
+r = nr
+c = nc
+end
+end
+note blocked says whether (r, c) is outside the n x n grid or already numbered
+fn blocked r long c long n ulong to bool
+if or or lt r 0 ge r long n or lt c 0 ge c long n
+ret true
+end
+ret ne get grid add mul ulong r n ulong c 0
+end
+fn show n ulong to void
+for i ulong n
+for j ulong n
+emitw sub get grid add mul i n j 1 3
+end
+emit nl
+end
+end
+fn main to int
+spiral 5
+show 5
+emit nl
+spiral 8
+show 8
+ret 0
+end

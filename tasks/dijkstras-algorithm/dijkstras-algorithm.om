@@ -1,0 +1,143 @@
+note Rosetta Code task "Dijkstra's algorithm": https://rosettacode.org/wiki/Dijkstra's_algorithm
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tarrow " -> "
+text tcost "  cost "
+text tpath "  path"
+text tnone "  unreachable"
+global wt long 36
+global dist long 6
+global prev ulong 6
+global done uchar 6
+global stk ulong 6
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note emitb writes the single byte c
+fn emitb c ulong to void
+d = new uchar 1 0
+put d 0 uchar c
+emit d
+end
+note edge records a directed edge u -> v of weight w; vertices a..f are 0..5, weight 0 means no edge
+fn edge u ulong v ulong w long to void
+put wt add mul u 6 v w
+end
+note dijkstra from s: repeatedly settle the unsettled vertex of least known distance (-1 is infinity)
+note and relax its out-edges; 6 rounds settle every reachable vertex
+fn dijkstra s ulong to void
+for i ulong 6
+put dist i -1
+put prev i 6
+put done i 0
+end
+put dist s 0
+for r ulong 6
+u = ulong 6
+for i ulong 6
+if and eq get done i 0 ge get dist i 0
+if eq u 6
+u = i
+else
+if lt get dist i get dist u
+u = i
+end
+end
+end
+end
+if eq u 6
+ret
+end
+put done u 1
+for v ulong 6
+relax u v
+end
+end
+end
+fn relax u ulong v ulong to void
+w = get wt add mul u 6 v
+if gt w 0
+d = add get dist u w
+if or lt get dist v 0 lt d get dist v
+put dist v d
+put prev v u
+end
+end
+end
+note route prints the path to t by following prev back to the source through a small stack
+fn route t ulong to void
+k = ulong 0
+v = t
+while lt v 6 bound 6
+put stk k v
+k = add k 1
+v = get prev v
+end
+emit tpath
+for x ulong k
+emit sp
+emitb add 97 get stk sub sub k x 1
+end
+end
+fn main to int
+edge 0 1 7
+edge 0 2 9
+edge 0 5 14
+edge 1 2 10
+edge 1 3 15
+edge 2 3 11
+edge 2 5 2
+edge 3 4 6
+edge 4 5 9
+dijkstra 0
+for t ulong 5
+v = add t 1
+emitb 97
+emit tarrow
+emitb add 97 v
+if lt get dist v 0
+emit tnone
+else
+emit tcost
+emiti get dist v
+route v
+end
+emit nl
+end
+ret 0
+end

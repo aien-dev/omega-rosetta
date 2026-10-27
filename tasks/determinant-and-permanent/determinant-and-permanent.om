@@ -1,0 +1,207 @@
+note Rosetta Code task "Determinant and permanent": https://rosettacode.org/wiki/Determinant_and_permanent
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tm "matrix:\n"
+text tdet "determinant: "
+text tper "permanent: "
+text tdata "1 2 3 4 2 9 4 7 5 3 6 1 8 1 2 3 4 4 5 6 7 7 8 9 10 10 11 12 13"
+global vals long 64
+global mat long 25
+global perm ulong 8
+global res long 2
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note emitwi writes a signed n right-aligned in w columns (w at most 20)
+fn emitwi n long w ulong to void
+d = new uchar 21 32
+i = ulong 21
+v = n
+if lt n 0
+v = neg n
+end
+while true bound 20
+i = sub i 1
+put d i uchar add long 48 rem v 10
+v = div v 10
+if eq v 0
+break
+end
+end
+if lt n 0
+i = sub i 1
+put d i 45
+end
+if gt w sub 21 i
+i = sub 21 w
+end
+emit part d i sub 21 i
+end
+note parse reads the decimal numbers in s (separated by spaces, an optional - sign) into vals and
+note returns how many; one pass over s, so the loop is bounded by len s
+fn parse s view uchar * to ulong
+n = ulong 0
+v = long 0
+sg = long 1
+dig = false
+for i ulong len s
+c = get s i
+if eq c 45
+sg = long -1
+else
+if and ge c 48 le c 57
+v = add mul v 10 long sub c 48
+dig = true
+else
+if dig
+put vals n mul sg v
+n = add n 1
+end
+v = long 0
+sg = long 1
+dig = false
+end
+end
+end
+if dig
+put vals n mul sg v
+n = add n 1
+end
+ret n
+end
+note both are sums over all n! permutations p of the products m[0][p0] * .. * m[n-1][p(n-1)]; the
+note determinant gives each the sign of p (its inversion count parity), the permanent adds them all
+note nextp: the next permutation in lexicographic order, false after the last
+fn nextp n ulong to bool
+if lt n 2
+ret false
+end
+i = sub n 1
+while gt i 0 bound 8
+if lt get perm sub i 1 get perm i
+break
+end
+i = sub i 1
+end
+if eq i 0
+ret false
+end
+j = sub n 1
+while le get perm j get perm sub i 1 bound 8
+j = sub j 1
+end
+t = get perm sub i 1
+put perm sub i 1 get perm j
+put perm j t
+k = sub n 1
+while lt i k bound 8
+t2 = get perm i
+put perm i get perm k
+put perm k t2
+i = add i 1
+k = sub k 1
+end
+ret true
+end
+fn odd n ulong to bool
+c = ulong 0
+for i ulong n
+for j ulong n
+if and lt i j gt get perm i get perm j
+c = add c 1
+end
+end
+end
+ret eq rem c 2 1
+end
+fn term n ulong to long
+p = long 1
+for i ulong n
+p = mul p get mat add mul i n get perm i
+end
+ret p
+end
+note detper fills res[0] with the determinant and res[1] with the permanent; 5! = 120 bounds the loop
+fn detper n ulong to void
+for i ulong n
+put perm i i
+end
+put res 0 0
+put res 1 0
+while true bound 120
+t = term n
+put res 1 add get res 1 t
+if odd n
+put res 0 sub get res 0 t
+else
+put res 0 add get res 0 t
+end
+if not nextp n
+break
+end
+end
+end
+fn case o ulong n ulong to void
+emit tm
+for i ulong n
+for j ulong n
+put mat add mul i n j get vals add o add mul i n j
+emitwi get mat add mul i n j 4
+end
+emit nl
+end
+detper n
+emit tdet
+emiti get res 0
+emit nl
+emit tper
+emiti get res 1
+emit nl
+end
+note the 5 x 5 case is 0 .. 24, filled in place rather than parsed
+fn main to int
+n = parse tdata
+case 0 2
+case 4 3
+case 13 4
+for i ulong 25
+put vals add 29 i long i
+end
+case 29 5
+ret 0
+end

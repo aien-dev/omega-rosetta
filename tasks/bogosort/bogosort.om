@@ -1,0 +1,132 @@
+note Rosetta Code task "Sorting algorithms/Bogosort": https://rosettacode.org/wiki/Sorting_algorithms/Bogosort
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text data "3 -1 4 1 5 9 2"
+text tshuf "shuffles: "
+global vals long 8
+global seed ulong 1
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note parse reads the decimal numbers in s (separated by spaces, an optional - sign) into vals and
+note returns how many; one pass over s, so the loop is bounded by len s
+fn parse s view uchar * to ulong
+n = ulong 0
+v = long 0
+sg = long 1
+dig = false
+for i ulong len s
+c = get s i
+if eq c 45
+sg = long -1
+else
+if and ge c 48 le c 57
+v = add mul v 10 long sub c 48
+dig = true
+else
+if dig
+put vals n mul sg v
+n = add n 1
+end
+v = long 0
+sg = long 1
+dig = false
+end
+end
+end
+if dig
+put vals n mul sg v
+n = add n 1
+end
+ret n
+end
+note show writes vals[0..n-1] separated by spaces, then a newline
+fn show n ulong to void
+for i ulong n
+if gt i 0
+emit sp
+end
+emiti get vals i
+end
+emit nl
+end
+note rnd is Knuth's MMIX linear congruential generator, x = x*6364136223846793005 + 1442695040888963407
+note mod 2^64 (ulong arithmetic wraps), starting from seed 0; it returns the top 31 bits, x >> 33
+fn rnd to ulong
+x = add mul get seed 0 6364136223846793005 1442695040888963407
+put seed 0 x
+ret shr x 33
+end
+note shuffle is Fisher-Yates: for i = n-1 .. 1 swap vals[i] with vals[rnd mod (i+1)]
+fn shuffle n ulong to void
+for x ulong sub n 1
+i = sub sub n x 1
+j = rem rnd add i 1
+t = get vals i
+put vals i get vals j
+put vals j t
+end
+end
+fn inorder n ulong to bool
+for i ulong sub n 1
+if gt get vals i get vals add i 1
+ret false
+end
+end
+ret true
+end
+note bgsort shuffles until sorted; with this generator and input it takes the count printed, well under
+note the bound of 200000 (7! = 5040 orders, so a working generator lands far inside it)
+fn bgsort n ulong to ulong
+c = ulong 0
+while not inorder n bound 200000
+shuffle n
+c = add c 1
+end
+ret c
+end
+fn main to int
+n = parse data
+show n
+c = bgsort n
+show n
+emit tshuf
+emitu c
+emit nl
+ret 0
+end
