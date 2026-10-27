@@ -1,0 +1,32 @@
+note Exercism-style exercise "perfect-numbers": https://exercism.org/tracks/python/exercises/perfect-numbers
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note classify compares n with its aliquot sum (the sum of its divisors other than n): 1 perfect
+note (equal), 2 abundant (greater), 3 deficient (smaller), 0 when n is not a positive integer.
+note Check it with: sh exercise.sh exercises/perfect-numbers
+om2
+fn classify n long to int
+if le n 0
+ret 0
+end
+s = long 0
+d = long 1
+while le mul d d n bound 999999
+if eq rem n d 0
+if ne d n
+s = add s d
+end
+e = div n d
+if and ne e d ne e n
+s = add s e
+end
+end
+d = add d 1
+end
+if eq s n
+ret 1
+end
+if gt s n
+ret 2
+end
+ret 3
+end

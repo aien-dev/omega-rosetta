@@ -1,0 +1,35 @@
+note Exercism-style exercise "series": https://exercism.org/tracks/python/exercises/series
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note slices writes every contiguous run of k bytes of s, in order, joined by commas, into o and
+note returns the number of bytes written; or -1 when s is empty, -2 when k is negative, -3 when k is
+note zero, -4 when k is longer than s.
+note Check it with: sh exercise.sh exercises/series
+om2
+fn slices s view uchar * k long o edit uchar * to long
+n = len s
+if eq n 0
+ret -1
+end
+if lt k 0
+ret -2
+end
+if eq k 0
+ret -3
+end
+w = ulong k
+if gt w n
+ret -4
+end
+p = ulong 0
+for i ulong add sub n w 1
+if gt i 0
+put o p 44
+p = add p 1
+end
+for j ulong w
+put o p get s add i j
+p = add p 1
+end
+end
+ret long p
+end

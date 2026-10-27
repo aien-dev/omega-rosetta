@@ -1,0 +1,18 @@
+note Exercism-style exercise "square-root": https://exercism.org/tracks/python/exercises/square-root
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note squareroot is the integer square root of n: the largest r with r * r <= n.
+note Check it with: sh exercise.sh exercises/square-root
+om2
+fn squareroot n ulong to ulong
+lo = ulong 0
+hi = add div n 2 1
+while lt lo hi bound 64
+m = div add add lo hi 1 2
+if le m div n m
+lo = m
+else
+hi = sub m 1
+end
+end
+ret lo
+end

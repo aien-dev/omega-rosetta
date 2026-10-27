@@ -1,0 +1,27 @@
+note Exercism-style exercise "two-fer": https://exercism.org/tracks/python/exercises/two-fer
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note twofer writes "One for X, one for me." into o, X being name, or "you" when name is empty,
+note and returns the number of bytes written.
+note Check it with: sh exercise.sh exercises/two-fer
+om2
+text ofa "One for "
+text ofb ", one for me."
+text ofy "you"
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+fn twofer name view uchar * o edit uchar * to ulong
+p = app o 0 ofa
+if eq len name 0
+p = app o p ofy
+else
+p = app o p name
+end
+p = app o p ofb
+ret p
+end

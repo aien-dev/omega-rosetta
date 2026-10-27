@@ -1,0 +1,32 @@
+note Exercism-style exercise "isbn-verifier": https://exercism.org/tracks/python/exercises/isbn-verifier
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note isvalid is true when isbn, with its hyphens removed, is a valid ISBN-10: nine digits and a check
+note digit or X (10), such that d1*10 + d2*9 + ... + d10*1 is divisible by 11.
+note Check it with: sh exercise.sh exercises/isbn-verifier
+om2
+fn isvalid isbn view uchar * to bool
+k = ulong 0
+t = ulong 0
+for i ulong len isbn
+c = get isbn i
+if eq c 45
+continue
+end
+d = ulong 0
+if and ge c 48 le c 57
+d = ulong sub c 48
+else
+if and eq c 88 eq k 9
+d = ulong 10
+else
+ret false
+end
+end
+if ge k 10
+ret false
+end
+t = add t mul d sub 10 k
+k = add k 1
+end
+ret and eq k 10 eq rem t 11 0
+end

@@ -1,0 +1,29 @@
+note Exercism-style exercise "luhn": https://exercism.org/tracks/python/exercises/luhn
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note valid is true when s, after removing spaces, is at least two decimal digits (and nothing else)
+note that pass the Luhn checksum.
+note Check it with: sh exercise.sh exercises/luhn
+om2
+fn valid s view uchar * to bool
+n = ulong 0
+t = ulong 0
+for i ulong len s
+c = get s sub sub len s 1 i
+if eq c 32
+continue
+end
+if or lt c 48 gt c 57
+ret false
+end
+d = ulong sub c 48
+if eq rem n 2 1
+d = mul d 2
+if gt d 9
+d = sub d 9
+end
+end
+t = add t d
+n = add n 1
+end
+ret and gt n 1 eq rem t 10 0
+end

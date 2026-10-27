@@ -1,0 +1,12 @@
+note Exercism-style exercise "bob": https://exercism.org/tracks/python/exercises/bob
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note response writes Bob's reply to s into o and returns its length. Silence (only spaces, tabs,
+note CR, LF): "Fine. Be that way!". A yelled question: "Calm down, I know what I'm doing!". Yelling
+note (some letter, no lower-case letter): "Whoa, chill out!". A question (last non-space byte is
+note "?"): "Sure.". Anything else: "Whatever.".
+note Check it with: sh exercise.sh exercises/bob
+om2
+fn response s view uchar * o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

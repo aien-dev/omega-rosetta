@@ -1,0 +1,64 @@
+note Exercism-style exercise "change": https://exercism.org/tracks/python/exercises/change
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note findfewestcoins writes the fewest coins from the denominations coins (each usable any number
+note of times) that add up to target (at most 1000) into o, in ascending order, and returns how many;
+note or -1 when target cannot be made, -2 when target is negative.
+note Check it with: sh exercise.sh exercises/change
+om2
+const CMAX ulong 1001
+const CINF ulong 1000000
+global cbest ulong CMAX
+global clast ulong CMAX
+fn fill coins view ulong * t ulong to void
+put cbest 0 0
+for v ulong t
+w = add v 1
+put cbest w CINF
+for j ulong len coins
+c = get coins j
+if and gt c 0 le c w
+b = add get cbest sub w c 1
+if lt b get cbest w
+put cbest w b
+put clast w c
+end
+end
+end
+end
+end
+fn findfewestcoins coins view ulong * target long o edit ulong * to long
+if lt target 0
+ret -2
+end
+t = ulong target
+fill coins t
+if ge get cbest t CINF
+ret -1
+end
+k = trace o t
+sortasc o k
+ret long k
+end
+fn trace o edit ulong * t ulong to ulong
+k = ulong 0
+r = t
+while gt r 0 bound 1001
+c = get clast r
+put o k c
+k = add k 1
+r = sub r c
+end
+ret k
+end
+fn sortasc o edit ulong * k ulong to void
+for a ulong k
+for b ulong sub sub k 1 a
+x = get o b
+y = get o add b 1
+if gt x y
+put o b y
+put o add b 1 x
+end
+end
+end
+end

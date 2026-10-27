@@ -1,0 +1,193 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/run-length-encoding/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 13 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text z0 "z"
+text c1 "encode: run-length encode a string / empty string"
+text s2 "XYZ"
+text e3 "XYZ"
+text c4 "encode: run-length encode a string / single characters only are encoded without count"
+text s5 "AABBBCCCC"
+text e6 "2A3B4C"
+text c7 "encode: run-length encode a string / string with no single characters"
+text s8 "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB"
+text e9 "12WB12W3B24WB"
+text c10 "encode: run-length encode a string / single characters mixed with repeated characters"
+text s11 "  hsqq qww  "
+text e12 "2 hs2q q2w2 "
+text c13 "encode: run-length encode a string / multiple whitespace mixed in string"
+text s14 "aabbbcccc"
+text e15 "2a3b4c"
+text c16 "encode: run-length encode a string / lowercase characters"
+text z17 "z"
+text c18 "decode: run-length decode a string / empty string"
+text s19 "XYZ"
+text e20 "XYZ"
+text c21 "decode: run-length decode a string / single characters only"
+text s22 "2A3B4C"
+text e23 "AABBBCCCC"
+text c24 "decode: run-length decode a string / string with no single characters"
+text s25 "12WB12W3B24WB"
+text e26 "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB"
+text c27 "decode: run-length decode a string / single characters with repeated characters"
+text s28 "2 hs2q q2w2 "
+text e29 "  hsqq qww  "
+text c30 "decode: run-length decode a string / multiple whitespace mixed in string"
+text s31 "2a3b4c"
+text e32 "aabbbcccc"
+text c33 "decode: run-length decode a string / lowercase string"
+text s34 "zzz ZZ  zZ"
+text e35 "zzz ZZ  zZ"
+text c36 "consistency: encode and then decode / encode followed by decode gives original string"
+note canonical case ad53b61b-6ffc-422f-81a6-61f7df92a231
+fn tc0 to bool
+o = new uchar 1024 0
+n = encode part z0 0 0 o
+ret eq n 0
+end
+note canonical case 52012823-b7e6-4277-893c-5b96d42f82de
+fn tc1 to bool
+o = new uchar 1024 0
+n = encode s2 o
+ret tbeq part o 0 n e3
+end
+note canonical case b7868492-7e3a-415f-8da3-d88f51f80409
+fn tc2 to bool
+o = new uchar 1024 0
+n = encode s5 o
+ret tbeq part o 0 n e6
+end
+note canonical case 859b822b-6e9f-44d6-9c46-6091ee6ae358
+fn tc3 to bool
+o = new uchar 1024 0
+n = encode s8 o
+ret tbeq part o 0 n e9
+end
+note canonical case 1b34de62-e152-47be-bc88-469746df63b3
+fn tc4 to bool
+o = new uchar 1024 0
+n = encode s11 o
+ret tbeq part o 0 n e12
+end
+note canonical case abf176e2-3fbd-40ad-bb2f-2dd6d4df721a
+fn tc5 to bool
+o = new uchar 1024 0
+n = encode s14 o
+ret tbeq part o 0 n e15
+end
+note canonical case 7ec5c390-f03c-4acf-ac29-5f65861cdeb5
+fn tc6 to bool
+o = new uchar 1024 0
+n = decode part z17 0 0 o
+ret eq n 0
+end
+note canonical case ad23f455-1ac2-4b0e-87d0-b85b10696098
+fn tc7 to bool
+o = new uchar 1024 0
+n = decode s19 o
+ret tbeq part o 0 n e20
+end
+note canonical case 21e37583-5a20-4a0e-826c-3dee2c375f54
+fn tc8 to bool
+o = new uchar 1024 0
+n = decode s22 o
+ret tbeq part o 0 n e23
+end
+note canonical case 1389ad09-c3a8-4813-9324-99363fba429c
+fn tc9 to bool
+o = new uchar 1024 0
+n = decode s25 o
+ret tbeq part o 0 n e26
+end
+note canonical case 3f8e3c51-6aca-4670-b86c-a213bf4706b0
+fn tc10 to bool
+o = new uchar 1024 0
+n = decode s28 o
+ret tbeq part o 0 n e29
+end
+note canonical case 29f721de-9aad-435f-ba37-7662df4fb551
+fn tc11 to bool
+o = new uchar 1024 0
+n = decode s31 o
+ret tbeq part o 0 n e32
+end
+note canonical case 2a762efd-8695-4e04-b0d6-9736899fbc16
+fn tc12 to bool
+o = new uchar 1024 0
+o2 = new uchar 1024 0
+n = encode s34 o
+m = decode part o 0 n o2
+ret tbeq part o2 0 m e35
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c4
+tcheck tc2 c7
+tcheck tc3 c10
+tcheck tc4 c13
+tcheck tc5 c16
+tcheck tc6 c18
+tcheck tc7 c21
+tcheck tc8 c24
+tcheck tc9 c27
+tcheck tc10 c30
+tcheck tc11 c33
+tcheck tc12 c36
+ret int get tfails 0
+end

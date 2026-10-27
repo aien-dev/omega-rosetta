@@ -1,0 +1,307 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/change/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 13 cases kept, 0 skipped
+fn tueq a view ulong * b view ulong * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text c0 "findFewestCoins: change for 1 cent"
+text c1 "findFewestCoins: single coin change"
+text c2 "findFewestCoins: multiple coin change"
+text c3 "findFewestCoins: change with Lilliputian Coins"
+text c4 "findFewestCoins: change with Lower Elbonia Coins"
+text c5 "findFewestCoins: large target values"
+text c6 "findFewestCoins: possible change without unit coins available"
+text c7 "findFewestCoins: another possible change without unit coins available"
+text c8 "findFewestCoins: a greedy approach is not optimal"
+text c9 "findFewestCoins: no coins make 0 change"
+text c10 "findFewestCoins: error testing for change smaller than the smallest of coins"
+text c11 "findFewestCoins: error if no combination can add up to target"
+text c12 "findFewestCoins: cannot find negative change values"
+note canonical case d0ebd0e1-9d27-4609-a654-df5c0ba1d83a
+fn tc0 to bool
+a0 = new ulong 4 0
+put a0 0 1
+put a0 1 5
+put a0 2 10
+put a0 3 25
+o = new ulong 256 0
+n = findfewestcoins a0 1 o
+if lt n 0
+ret false
+end
+a1 = new ulong 1 0
+put a1 0 1
+ret tueq part o 0 ulong n a1
+end
+note canonical case 36887bea-7f92-4a9c-b0cc-c0e886b3ecc8
+fn tc1 to bool
+a0 = new ulong 5 0
+put a0 0 1
+put a0 1 5
+put a0 2 10
+put a0 3 25
+put a0 4 100
+o = new ulong 256 0
+n = findfewestcoins a0 25 o
+if lt n 0
+ret false
+end
+a1 = new ulong 1 0
+put a1 0 25
+ret tueq part o 0 ulong n a1
+end
+note canonical case cef21ccc-0811-4e6e-af44-f011e7eab6c6
+fn tc2 to bool
+a0 = new ulong 5 0
+put a0 0 1
+put a0 1 5
+put a0 2 10
+put a0 3 25
+put a0 4 100
+o = new ulong 256 0
+n = findfewestcoins a0 15 o
+if lt n 0
+ret false
+end
+a1 = new ulong 2 0
+put a1 0 5
+put a1 1 10
+ret tueq part o 0 ulong n a1
+end
+note canonical case d60952bc-0c1a-4571-bf0c-41be72690cb3
+fn tc3 to bool
+a0 = new ulong 5 0
+put a0 0 1
+put a0 1 4
+put a0 2 15
+put a0 3 20
+put a0 4 50
+o = new ulong 256 0
+n = findfewestcoins a0 23 o
+if lt n 0
+ret false
+end
+a1 = new ulong 3 0
+put a1 0 4
+put a1 1 4
+put a1 2 15
+ret tueq part o 0 ulong n a1
+end
+note canonical case 408390b9-fafa-4bb9-b608-ffe6036edb6c
+fn tc4 to bool
+a0 = new ulong 5 0
+put a0 0 1
+put a0 1 5
+put a0 2 10
+put a0 3 21
+put a0 4 25
+o = new ulong 256 0
+n = findfewestcoins a0 63 o
+if lt n 0
+ret false
+end
+a1 = new ulong 3 0
+put a1 0 21
+put a1 1 21
+put a1 2 21
+ret tueq part o 0 ulong n a1
+end
+note canonical case 7421a4cb-1c48-4bf9-99c7-7f049689132f
+fn tc5 to bool
+a0 = new ulong 7 0
+put a0 0 1
+put a0 1 2
+put a0 2 5
+put a0 3 10
+put a0 4 20
+put a0 5 50
+put a0 6 100
+o = new ulong 256 0
+n = findfewestcoins a0 999 o
+if lt n 0
+ret false
+end
+a1 = new ulong 15 0
+put a1 0 2
+put a1 1 2
+put a1 2 5
+put a1 3 20
+put a1 4 20
+put a1 5 50
+put a1 6 100
+put a1 7 100
+put a1 8 100
+put a1 9 100
+put a1 10 100
+put a1 11 100
+put a1 12 100
+put a1 13 100
+put a1 14 100
+ret tueq part o 0 ulong n a1
+end
+note canonical case f79d2e9b-0ae3-4d6a-bb58-dc978b0dba28
+fn tc6 to bool
+a0 = new ulong 5 0
+put a0 0 2
+put a0 1 5
+put a0 2 10
+put a0 3 20
+put a0 4 50
+o = new ulong 256 0
+n = findfewestcoins a0 21 o
+if lt n 0
+ret false
+end
+a1 = new ulong 5 0
+put a1 0 2
+put a1 1 2
+put a1 2 2
+put a1 3 5
+put a1 4 10
+ret tueq part o 0 ulong n a1
+end
+note canonical case 9a166411-d35d-4f7f-a007-6724ac266178
+fn tc7 to bool
+a0 = new ulong 2 0
+put a0 0 4
+put a0 1 5
+o = new ulong 256 0
+n = findfewestcoins a0 27 o
+if lt n 0
+ret false
+end
+a1 = new ulong 6 0
+put a1 0 4
+put a1 1 4
+put a1 2 4
+put a1 3 5
+put a1 4 5
+put a1 5 5
+ret tueq part o 0 ulong n a1
+end
+note canonical case ce0f80d5-51c3-469d-818c-3e69dbd25f75
+fn tc8 to bool
+a0 = new ulong 3 0
+put a0 0 1
+put a0 1 10
+put a0 2 11
+o = new ulong 256 0
+n = findfewestcoins a0 20 o
+if lt n 0
+ret false
+end
+a1 = new ulong 2 0
+put a1 0 10
+put a1 1 10
+ret tueq part o 0 ulong n a1
+end
+note canonical case bbbcc154-e9e9-4209-a4db-dd6d81ec26bb
+fn tc9 to bool
+a0 = new ulong 5 0
+put a0 0 1
+put a0 1 5
+put a0 2 10
+put a0 3 21
+put a0 4 25
+o = new ulong 256 0
+n = findfewestcoins a0 0 o
+if lt n 0
+ret false
+end
+ret eq ulong n 0
+end
+note canonical case c8b81d5a-49bd-4b61-af73-8ee5383a2ce1
+fn tc10 to bool
+a0 = new ulong 2 0
+put a0 0 5
+put a0 1 10
+o = new ulong 256 0
+ret eq findfewestcoins a0 3 o -1
+end
+note canonical case 3c43e3e4-63f9-46ac-9476-a67516e98f68
+fn tc11 to bool
+a0 = new ulong 2 0
+put a0 0 5
+put a0 1 10
+o = new ulong 256 0
+ret eq findfewestcoins a0 94 o -1
+end
+note canonical case 8fe1f076-9b2d-4f44-89fe-8a6ccd63c8f3
+fn tc12 to bool
+a0 = new ulong 3 0
+put a0 0 1
+put a0 1 2
+put a0 2 5
+o = new ulong 256 0
+ret eq findfewestcoins a0 -5 o -2
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+tcheck tc9 c9
+tcheck tc10 c10
+tcheck tc11 c11
+tcheck tc12 c12
+ret int get tfails 0
+end

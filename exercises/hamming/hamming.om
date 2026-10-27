@@ -1,0 +1,10 @@
+note Exercism-style exercise "hamming": https://exercism.org/tracks/python/exercises/hamming
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note distance is the number of positions at which DNA strands a and b differ,
+note or -1 when they are not of equal length.
+note Check it with: sh exercise.sh exercises/hamming
+om2
+fn distance a view uchar * b view uchar * to long
+note replace this line with your solution
+trap 13
+end

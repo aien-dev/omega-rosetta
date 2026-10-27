@@ -1,0 +1,10 @@
+note Exercism-style exercise "rna-transcription": https://exercism.org/tracks/python/exercises/rna-transcription
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note torna writes the RNA complement of DNA strand dna into o (G to C, C to G, T to A, A to U)
+note and returns its length.
+note Check it with: sh exercise.sh exercises/rna-transcription
+om2
+fn torna dna view uchar * o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

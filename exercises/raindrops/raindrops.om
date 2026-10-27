@@ -1,0 +1,10 @@
+note Exercism-style exercise "raindrops": https://exercism.org/tracks/python/exercises/raindrops
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note convert writes "Pling" if n is divisible by 3, then "Plang" if by 5, then "Plong" if by 7,
+note or the decimal digits of n when it is divisible by none of them, into o; returns the length.
+note Check it with: sh exercise.sh exercises/raindrops
+om2
+fn convert n ulong o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

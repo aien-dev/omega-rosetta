@@ -1,0 +1,178 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/triangle/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 21 cases kept, 0 skipped
+text c0 "equilateral: equilateral triangle / all sides are equal"
+text c1 "equilateral: equilateral triangle / any side is unequal"
+text c2 "equilateral: equilateral triangle / no sides are equal"
+text c3 "equilateral: equilateral triangle / all zero sides is not a triangle"
+text c4 "equilateral: equilateral triangle / sides may be floats"
+text c5 "isosceles: isosceles triangle / last two sides are equal"
+text c6 "isosceles: isosceles triangle / first two sides are equal"
+text c7 "isosceles: isosceles triangle / first and last sides are equal"
+text c8 "isosceles: isosceles triangle / equilateral triangles are also isosceles"
+text c9 "isosceles: isosceles triangle / no sides are equal"
+text c10 "isosceles: isosceles triangle / first triangle inequality violation"
+text c11 "isosceles: isosceles triangle / second triangle inequality violation"
+text c12 "isosceles: isosceles triangle / third triangle inequality violation"
+text c13 "isosceles: isosceles triangle / sides may be floats"
+text c14 "scalene: scalene triangle / no sides are equal"
+text c15 "scalene: scalene triangle / all sides are equal"
+text c16 "scalene: scalene triangle / first and second sides are equal"
+text c17 "scalene: scalene triangle / first and third sides are equal"
+text c18 "scalene: scalene triangle / second and third sides are equal"
+text c19 "scalene: scalene triangle / may not violate triangle inequality"
+text c20 "scalene: scalene triangle / sides may be floats"
+note canonical case 8b2c43ac-7257-43f9-b552-7631a91988af
+fn tc0 to bool
+ret eq equilateral 2.0 2.0 2.0 true
+end
+note canonical case 33eb6f87-0498-4ccf-9573-7f8c3ce92b7b
+fn tc1 to bool
+ret eq equilateral 2.0 3.0 2.0 false
+end
+note canonical case c6585b7d-a8c0-4ad8-8a34-e21d36f7ad87
+fn tc2 to bool
+ret eq equilateral 5.0 4.0 6.0 false
+end
+note canonical case 16e8ceb0-eadb-46d1-b892-c50327479251
+fn tc3 to bool
+ret eq equilateral 0.0 0.0 0.0 false
+end
+note canonical case 3022f537-b8e5-4cc1-8f12-fd775827a00c
+fn tc4 to bool
+ret eq equilateral 0.5 0.5 0.5 true
+end
+note canonical case cbc612dc-d75a-4c1c-87fc-e2d5edd70b71
+fn tc5 to bool
+ret eq isosceles 3.0 4.0 4.0 true
+end
+note canonical case e388ce93-f25e-4daf-b977-4b7ede992217
+fn tc6 to bool
+ret eq isosceles 4.0 4.0 3.0 true
+end
+note canonical case d2080b79-4523-4c3f-9d42-2da6e81ab30f
+fn tc7 to bool
+ret eq isosceles 4.0 3.0 4.0 true
+end
+note canonical case 8d71e185-2bd7-4841-b7e1-71689a5491d8
+fn tc8 to bool
+ret eq isosceles 4.0 4.0 4.0 true
+end
+note canonical case 840ed5f8-366f-43c5-ac69-8f05e6f10bbb
+fn tc9 to bool
+ret eq isosceles 2.0 3.0 4.0 false
+end
+note canonical case 2eba0cfb-6c65-4c40-8146-30b608905eae
+fn tc10 to bool
+ret eq isosceles 1.0 1.0 3.0 false
+end
+note canonical case 278469cb-ac6b-41f0-81d4-66d9b828f8ac
+fn tc11 to bool
+ret eq isosceles 1.0 3.0 1.0 false
+end
+note canonical case 90efb0c7-72bb-4514-b320-3a3892e278ff
+fn tc12 to bool
+ret eq isosceles 3.0 1.0 1.0 false
+end
+note canonical case adb4ee20-532f-43dc-8d31-e9271b7ef2bc
+fn tc13 to bool
+ret eq isosceles 0.5 0.4 0.5 true
+end
+note canonical case e8b5f09c-ec2e-47c1-abec-f35095733afb
+fn tc14 to bool
+ret eq scalene 5.0 4.0 6.0 true
+end
+note canonical case 2510001f-b44d-4d18-9872-2303e7977dc1
+fn tc15 to bool
+ret eq scalene 4.0 4.0 4.0 false
+end
+note canonical case c6e15a92-90d9-4fb3-90a2-eef64f8d3e1e
+fn tc16 to bool
+ret eq scalene 4.0 4.0 3.0 false
+end
+note canonical case 3da23a91-a166-419a-9abf-baf4868fd985
+fn tc17 to bool
+ret eq scalene 3.0 4.0 3.0 false
+end
+note canonical case b6a75d98-1fef-4c42-8e9a-9db854ba0a4d
+fn tc18 to bool
+ret eq scalene 4.0 3.0 3.0 false
+end
+note canonical case 70ad5154-0033-48b7-af2c-b8d739cd9fdc
+fn tc19 to bool
+ret eq scalene 7.0 3.0 2.0 false
+end
+note canonical case 26d9d59d-f8f1-40d3-ad58-ae4d54123d7d
+fn tc20 to bool
+ret eq scalene 0.5 0.4 0.6 true
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+tcheck tc9 c9
+tcheck tc10 c10
+tcheck tc11 c11
+tcheck tc12 c12
+tcheck tc13 c13
+tcheck tc14 c14
+tcheck tc15 c15
+tcheck tc16 c16
+tcheck tc17 c17
+tcheck tc18 c18
+tcheck tc19 c19
+tcheck tc20 c20
+ret int get tfails 0
+end

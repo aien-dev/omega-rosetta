@@ -1,0 +1,32 @@
+note Exercism-style exercise "nucleotide-count": https://exercism.org/tracks/python/exercises/nucleotide-count
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note nucleotidecounts writes how many A, C, G and T the DNA strand holds into o[0] .. o[3] and is
+note true; it is false when the strand holds any other byte.
+note Check it with: sh exercise.sh exercises/nucleotide-count
+om2
+fn nucleotidecounts strand view uchar * o edit ulong * to bool
+for j ulong 4
+put o j 0
+end
+for i ulong len strand
+c = get strand i
+k = ulong 4
+if eq c 65
+k = ulong 0
+end
+if eq c 67
+k = ulong 1
+end
+if eq c 71
+k = ulong 2
+end
+if eq c 84
+k = ulong 3
+end
+if eq k 4
+ret false
+end
+put o k add get o k 1
+end
+ret true
+end

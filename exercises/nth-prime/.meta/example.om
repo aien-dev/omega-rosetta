@@ -1,0 +1,29 @@
+note Exercism-style exercise "nth-prime": https://exercism.org/tracks/python/exercises/nth-prime
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note prime is the n-th prime number (prime 1 is 2), or 0 for n = 0, which has no prime.
+note Check it with: sh exercise.sh exercises/nth-prime
+om2
+fn isprime n ulong to bool
+d = ulong 2
+while le mul d d n bound 999999
+if eq rem n d 0
+ret false
+end
+d = add d 1
+end
+ret true
+end
+fn prime n ulong to ulong
+if eq n 0
+ret 0
+end
+c = ulong 0
+v = ulong 1
+while lt c n bound 999999
+v = add v 1
+if isprime v
+c = add c 1
+end
+end
+ret v
+end

@@ -1,0 +1,10 @@
+note Exercism-style exercise "largest-series-product": https://exercism.org/tracks/python/exercises/largest-series-product
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note largestproduct is the largest product of span adjacent decimal digits of s (1 for span 0); or
+note -1 when span is negative, -2 when span is longer than s, -3 when s holds a non-digit.
+note Check it with: sh exercise.sh exercises/largest-series-product
+om2
+fn largestproduct s view uchar * span long to long
+note replace this line with your solution
+trap 13
+end

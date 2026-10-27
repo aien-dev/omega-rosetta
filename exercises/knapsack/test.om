@@ -1,0 +1,184 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/knapsack/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 7 cases kept, 0 skipped, 1 superseded (reimplemented) cases omitted
+text c0 "maximumValue: no items"
+text c1 "maximumValue: one item, too heavy"
+text c2 "maximumValue: five items (cannot be greedy by weight)"
+text c3 "maximumValue: five items (cannot be greedy by value)"
+text c4 "maximumValue: example knapsack"
+text c5 "maximumValue: 8 items"
+text c6 "maximumValue: 15 items"
+note canonical case 3993a824-c20e-493d-b3c9-ee8a7753ee59
+fn tc0 to bool
+a0 = new ulong 1 0
+a1 = new ulong 1 0
+ret eq maximumvalue part a0 0 0 part a1 0 0 100 0
+end
+note canonical case 1d39e98c-6249-4a8b-912f-87cb12e506b0
+fn tc1 to bool
+a0 = new ulong 1 0
+put a0 0 100
+a1 = new ulong 1 0
+put a1 0 1
+ret eq maximumvalue a0 a1 10 0
+end
+note canonical case 833ea310-6323-44f2-9d27-a278740ffbd8
+fn tc2 to bool
+a0 = new ulong 5 0
+put a0 0 2
+put a0 1 2
+put a0 2 2
+put a0 3 2
+put a0 4 10
+a1 = new ulong 5 0
+put a1 0 5
+put a1 1 5
+put a1 2 5
+put a1 3 5
+put a1 4 21
+ret eq maximumvalue a0 a1 10 21
+end
+note canonical case 277cdc52-f835-4c7d-872b-bff17bab2456
+fn tc3 to bool
+a0 = new ulong 5 0
+put a0 0 2
+put a0 1 2
+put a0 2 2
+put a0 3 2
+put a0 4 10
+a1 = new ulong 5 0
+put a1 0 20
+put a1 1 20
+put a1 2 20
+put a1 3 20
+put a1 4 50
+ret eq maximumvalue a0 a1 10 80
+end
+note canonical case 81d8e679-442b-4f7a-8a59-7278083916c9
+fn tc4 to bool
+a0 = new ulong 4 0
+put a0 0 5
+put a0 1 4
+put a0 2 6
+put a0 3 4
+a1 = new ulong 4 0
+put a1 0 10
+put a1 1 40
+put a1 2 30
+put a1 3 50
+ret eq maximumvalue a0 a1 10 90
+end
+note canonical case f23a2449-d67c-4c26-bf3e-cde020f27ecc
+fn tc5 to bool
+a0 = new ulong 8 0
+put a0 0 25
+put a0 1 35
+put a0 2 45
+put a0 3 5
+put a0 4 25
+put a0 5 3
+put a0 6 2
+put a0 7 2
+a1 = new ulong 8 0
+put a1 0 350
+put a1 1 400
+put a1 2 450
+put a1 3 20
+put a1 4 70
+put a1 5 8
+put a1 6 5
+put a1 7 5
+ret eq maximumvalue a0 a1 104 900
+end
+note canonical case 7c682ae9-c385-4241-a197-d2fa02c81a11
+fn tc6 to bool
+a0 = new ulong 15 0
+put a0 0 70
+put a0 1 73
+put a0 2 77
+put a0 3 80
+put a0 4 82
+put a0 5 87
+put a0 6 90
+put a0 7 94
+put a0 8 98
+put a0 9 106
+put a0 10 110
+put a0 11 113
+put a0 12 115
+put a0 13 118
+put a0 14 120
+a1 = new ulong 15 0
+put a1 0 135
+put a1 1 139
+put a1 2 149
+put a1 3 150
+put a1 4 156
+put a1 5 163
+put a1 6 173
+put a1 7 184
+put a1 8 192
+put a1 9 201
+put a1 10 210
+put a1 11 214
+put a1 12 221
+put a1 13 229
+put a1 14 240
+ret eq maximumvalue a0 a1 750 1458
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+ret int get tfails 0
+end

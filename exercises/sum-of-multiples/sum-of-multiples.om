@@ -1,0 +1,10 @@
+note Exercism-style exercise "sum-of-multiples": https://exercism.org/tracks/python/exercises/sum-of-multiples
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note sum is the sum of every distinct number below limit that is a multiple of at least one of the
+note factors fs (a factor 0 has no multiples here).
+note Check it with: sh exercise.sh exercises/sum-of-multiples
+om2
+fn sum fs view ulong * limit ulong to ulong
+note replace this line with your solution
+trap 13
+end

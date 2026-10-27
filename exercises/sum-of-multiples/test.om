@@ -1,0 +1,196 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/sum-of-multiples/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 16 cases kept, 0 skipped
+text c0 "sum: no multiples within limit"
+text c1 "sum: one factor has multiples within limit"
+text c2 "sum: more than one multiple within limit"
+text c3 "sum: more than one factor with multiples within limit"
+text c4 "sum: each multiple is only counted once"
+text c5 "sum: a much larger limit"
+text c6 "sum: three factors"
+text c7 "sum: factors not relatively prime"
+text c8 "sum: some pairs of factors relatively prime and some not"
+text c9 "sum: one factor is a multiple of another"
+text c10 "sum: much larger factors"
+text c11 "sum: all numbers are multiples of 1"
+text c12 "sum: no factors means an empty sum"
+text c13 "sum: the only multiple of 0 is 0"
+text c14 "sum: the factor 0 does not affect the sum of multiples of other factors"
+text c15 "sum: solutions using include-exclude must extend to cardinality greater than 3"
+note canonical case 54aaab5a-ce86-4edc-8b40-d3ab2400a279
+fn tc0 to bool
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 5
+ret eq sum a0 1 0
+end
+note canonical case 361e4e50-c89b-4f60-95ef-5bc5c595490a
+fn tc1 to bool
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 5
+ret eq sum a0 4 3
+end
+note canonical case e644e070-040e-4ae0-9910-93c69fc3f7ce
+fn tc2 to bool
+a0 = new ulong 1 0
+put a0 0 3
+ret eq sum a0 7 9
+end
+note canonical case 607d6eb9-535c-41ce-91b5-3a61da3fa57f
+fn tc3 to bool
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 5
+ret eq sum a0 10 23
+end
+note canonical case f47e8209-c0c5-4786-b07b-dc273bf86b9b
+fn tc4 to bool
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 5
+ret eq sum a0 100 2318
+end
+note canonical case 28c4b267-c980-4054-93e9-07723db615ac
+fn tc5 to bool
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 5
+ret eq sum a0 1000 233168
+end
+note canonical case 09c4494d-ff2d-4e0f-8421-f5532821ee12
+fn tc6 to bool
+a0 = new ulong 3 0
+put a0 0 7
+put a0 1 13
+put a0 2 17
+ret eq sum a0 20 51
+end
+note canonical case 2d0d5faa-f177-4ad6-bde9-ebb865083751
+fn tc7 to bool
+a0 = new ulong 2 0
+put a0 0 4
+put a0 1 6
+ret eq sum a0 15 30
+end
+note canonical case ece8f2e8-96aa-4166-bbb7-6ce71261e354
+fn tc8 to bool
+a0 = new ulong 3 0
+put a0 0 5
+put a0 1 6
+put a0 2 8
+ret eq sum a0 150 4419
+end
+note canonical case 624fdade-6ffb-400e-8472-456a38c171c0
+fn tc9 to bool
+a0 = new ulong 2 0
+put a0 0 5
+put a0 1 25
+ret eq sum a0 51 275
+end
+note canonical case 949ee7eb-db51-479c-b5cb-4a22b40ac057
+fn tc10 to bool
+a0 = new ulong 2 0
+put a0 0 43
+put a0 1 47
+ret eq sum a0 10000 2203160
+end
+note canonical case 41093673-acbd-482c-ab80-d00a0cbedecd
+fn tc11 to bool
+a0 = new ulong 1 0
+put a0 0 1
+ret eq sum a0 100 4950
+end
+note canonical case 1730453b-baaa-438e-a9c2-d754497b2a76
+fn tc12 to bool
+a0 = new ulong 1 0
+ret eq sum part a0 0 0 10000 0
+end
+note canonical case 214a01e9-f4bf-45bb-80f1-1dce9fbb0310
+fn tc13 to bool
+a0 = new ulong 1 0
+put a0 0 0
+ret eq sum a0 1 0
+end
+note canonical case c423ae21-a0cb-4ec7-aeb1-32971af5b510
+fn tc14 to bool
+a0 = new ulong 2 0
+put a0 0 3
+put a0 1 0
+ret eq sum a0 4 3
+end
+note canonical case 17053ba9-112f-4ac0-aadb-0519dd836342
+fn tc15 to bool
+a0 = new ulong 5 0
+put a0 0 2
+put a0 1 3
+put a0 2 5
+put a0 3 7
+put a0 4 11
+ret eq sum a0 10000 39614537
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+tcheck tc9 c9
+tcheck tc10 c10
+tcheck tc11 c11
+tcheck tc12 c12
+tcheck tc13 c13
+tcheck tc14 c14
+tcheck tc15 c15
+ret int get tfails 0
+end

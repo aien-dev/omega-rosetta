@@ -1,0 +1,432 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/allergies/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 50 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "eggs"
+text c1 "allergicTo: testing for eggs allergy / not allergic to anything"
+text s2 "eggs"
+text c3 "allergicTo: testing for eggs allergy / allergic only to eggs"
+text s4 "eggs"
+text c5 "allergicTo: testing for eggs allergy / allergic to eggs and something else"
+text s6 "eggs"
+text c7 "allergicTo: testing for eggs allergy / allergic to something, but not eggs"
+text s8 "eggs"
+text c9 "allergicTo: testing for eggs allergy / allergic to everything"
+text s10 "peanuts"
+text c11 "allergicTo: testing for peanuts allergy / not allergic to anything"
+text s12 "peanuts"
+text c13 "allergicTo: testing for peanuts allergy / allergic only to peanuts"
+text s14 "peanuts"
+text c15 "allergicTo: testing for peanuts allergy / allergic to peanuts and something else"
+text s16 "peanuts"
+text c17 "allergicTo: testing for peanuts allergy / allergic to something, but not peanuts"
+text s18 "peanuts"
+text c19 "allergicTo: testing for peanuts allergy / allergic to everything"
+text s20 "shellfish"
+text c21 "allergicTo: testing for shellfish allergy / not allergic to anything"
+text s22 "shellfish"
+text c23 "allergicTo: testing for shellfish allergy / allergic only to shellfish"
+text s24 "shellfish"
+text c25 "allergicTo: testing for shellfish allergy / allergic to shellfish and something else"
+text s26 "shellfish"
+text c27 "allergicTo: testing for shellfish allergy / allergic to something, but not shellfish"
+text s28 "shellfish"
+text c29 "allergicTo: testing for shellfish allergy / allergic to everything"
+text s30 "strawberries"
+text c31 "allergicTo: testing for strawberries allergy / not allergic to anything"
+text s32 "strawberries"
+text c33 "allergicTo: testing for strawberries allergy / allergic only to strawberries"
+text s34 "strawberries"
+text c35 "allergicTo: testing for strawberries allergy / allergic to strawberries and something else"
+text s36 "strawberries"
+text c37 "allergicTo: testing for strawberries allergy / allergic to something, but not strawberries"
+text s38 "strawberries"
+text c39 "allergicTo: testing for strawberries allergy / allergic to everything"
+text s40 "tomatoes"
+text c41 "allergicTo: testing for tomatoes allergy / not allergic to anything"
+text s42 "tomatoes"
+text c43 "allergicTo: testing for tomatoes allergy / allergic only to tomatoes"
+text s44 "tomatoes"
+text c45 "allergicTo: testing for tomatoes allergy / allergic to tomatoes and something else"
+text s46 "tomatoes"
+text c47 "allergicTo: testing for tomatoes allergy / allergic to something, but not tomatoes"
+text s48 "tomatoes"
+text c49 "allergicTo: testing for tomatoes allergy / allergic to everything"
+text s50 "chocolate"
+text c51 "allergicTo: testing for chocolate allergy / not allergic to anything"
+text s52 "chocolate"
+text c53 "allergicTo: testing for chocolate allergy / allergic only to chocolate"
+text s54 "chocolate"
+text c55 "allergicTo: testing for chocolate allergy / allergic to chocolate and something else"
+text s56 "chocolate"
+text c57 "allergicTo: testing for chocolate allergy / allergic to something, but not chocolate"
+text s58 "chocolate"
+text c59 "allergicTo: testing for chocolate allergy / allergic to everything"
+text s60 "pollen"
+text c61 "allergicTo: testing for pollen allergy / not allergic to anything"
+text s62 "pollen"
+text c63 "allergicTo: testing for pollen allergy / allergic only to pollen"
+text s64 "pollen"
+text c65 "allergicTo: testing for pollen allergy / allergic to pollen and something else"
+text s66 "pollen"
+text c67 "allergicTo: testing for pollen allergy / allergic to something, but not pollen"
+text s68 "pollen"
+text c69 "allergicTo: testing for pollen allergy / allergic to everything"
+text s70 "cats"
+text c71 "allergicTo: testing for cats allergy / not allergic to anything"
+text s72 "cats"
+text c73 "allergicTo: testing for cats allergy / allergic only to cats"
+text s74 "cats"
+text c75 "allergicTo: testing for cats allergy / allergic to cats and something else"
+text s76 "cats"
+text c77 "allergicTo: testing for cats allergy / allergic to something, but not cats"
+text s78 "cats"
+text c79 "allergicTo: testing for cats allergy / allergic to everything"
+text c80 "list: list when: / no allergies"
+text e81 "eggs"
+text c82 "list: list when: / just eggs"
+text e83 "peanuts"
+text c84 "list: list when: / just peanuts"
+text e85 "strawberries"
+text c86 "list: list when: / just strawberries"
+text e87 "eggs,peanuts"
+text c88 "list: list when: / eggs and peanuts"
+text e89 "eggs,shellfish"
+text c90 "list: list when: / more than eggs but not peanuts"
+text e91 "strawberries,tomatoes,chocolate,pollen,cats"
+text c92 "list: list when: / lots of stuff"
+text e93 "eggs,peanuts,shellfish,strawberries,tomatoes,chocolate,pollen,cats"
+text c94 "list: list when: / everything"
+text e95 "eggs,shellfish,strawberries,tomatoes,chocolate,pollen,cats"
+text c96 "list: list when: / no allergen score parts"
+text e97 "eggs"
+text c98 "list: list when: / no allergen score parts without highest valid score"
+note canonical case 17fc7296-2440-4ac4-ad7b-d07c321bc5a0
+fn tc0 to bool
+ret eq allergicto s0 0 false
+end
+note canonical case 07ced27b-1da5-4c2e-8ae2-cb2791437546
+fn tc1 to bool
+ret eq allergicto s2 1 true
+end
+note canonical case 5035b954-b6fa-4b9b-a487-dae69d8c5f96
+fn tc2 to bool
+ret eq allergicto s4 3 true
+end
+note canonical case 64a6a83a-5723-4b5b-a896-663307403310
+fn tc3 to bool
+ret eq allergicto s6 2 false
+end
+note canonical case 90c8f484-456b-41c4-82ba-2d08d93231c6
+fn tc4 to bool
+ret eq allergicto s8 255 true
+end
+note canonical case d266a59a-fccc-413b-ac53-d57cb1f0db9d
+fn tc5 to bool
+ret eq allergicto s10 0 false
+end
+note canonical case ea210a98-860d-46b2-a5bf-50d8995b3f2a
+fn tc6 to bool
+ret eq allergicto s12 2 true
+end
+note canonical case eac69ae9-8d14-4291-ac4b-7fd2c73d3a5b
+fn tc7 to bool
+ret eq allergicto s14 7 true
+end
+note canonical case 9152058c-ce39-4b16-9b1d-283ec6d25085
+fn tc8 to bool
+ret eq allergicto s16 5 false
+end
+note canonical case d2d71fd8-63d5-40f9-a627-fbdaf88caeab
+fn tc9 to bool
+ret eq allergicto s18 255 true
+end
+note canonical case b948b0a1-cbf7-4b28-a244-73ff56687c80
+fn tc10 to bool
+ret eq allergicto s20 0 false
+end
+note canonical case 9ce9a6f3-53e9-4923-85e0-73019047c567
+fn tc11 to bool
+ret eq allergicto s22 4 true
+end
+note canonical case b272fca5-57ba-4b00-bd0c-43a737ab2131
+fn tc12 to bool
+ret eq allergicto s24 14 true
+end
+note canonical case 21ef8e17-c227-494e-8e78-470a1c59c3d8
+fn tc13 to bool
+ret eq allergicto s26 10 false
+end
+note canonical case cc789c19-2b5e-4c67-b146-625dc8cfa34e
+fn tc14 to bool
+ret eq allergicto s28 255 true
+end
+note canonical case 651bde0a-2a74-46c4-ab55-02a0906ca2f5
+fn tc15 to bool
+ret eq allergicto s30 0 false
+end
+note canonical case b649a750-9703-4f5f-b7f7-91da2c160ece
+fn tc16 to bool
+ret eq allergicto s32 8 true
+end
+note canonical case 50f5f8f3-3bac-47e6-8dba-2d94470a4bc6
+fn tc17 to bool
+ret eq allergicto s34 28 true
+end
+note canonical case 23dd6952-88c9-48d7-a7d5-5d0343deb18d
+fn tc18 to bool
+ret eq allergicto s36 20 false
+end
+note canonical case 74afaae2-13b6-43a2-837a-286cd42e7d7e
+fn tc19 to bool
+ret eq allergicto s38 255 true
+end
+note canonical case c49a91ef-6252-415e-907e-a9d26ef61723
+fn tc20 to bool
+ret eq allergicto s40 0 false
+end
+note canonical case b69c5131-b7d0-41ad-a32c-e1b2cc632df8
+fn tc21 to bool
+ret eq allergicto s42 16 true
+end
+note canonical case 1ca50eb1-f042-4ccf-9050-341521b929ec
+fn tc22 to bool
+ret eq allergicto s44 56 true
+end
+note canonical case e9846baa-456b-4eff-8025-034b9f77bd8e
+fn tc23 to bool
+ret eq allergicto s46 40 false
+end
+note canonical case b2414f01-f3ad-4965-8391-e65f54dad35f
+fn tc24 to bool
+ret eq allergicto s48 255 true
+end
+note canonical case 978467ab-bda4-49f7-b004-1d011ead947c
+fn tc25 to bool
+ret eq allergicto s50 0 false
+end
+note canonical case 59cf4e49-06ea-4139-a2c1-d7aad28f8cbc
+fn tc26 to bool
+ret eq allergicto s52 32 true
+end
+note canonical case b0a7c07b-2db7-4f73-a180-565e07040ef1
+fn tc27 to bool
+ret eq allergicto s54 112 true
+end
+note canonical case f5506893-f1ae-482a-b516-7532ba5ca9d2
+fn tc28 to bool
+ret eq allergicto s56 80 false
+end
+note canonical case 02debb3d-d7e2-4376-a26b-3c974b6595c6
+fn tc29 to bool
+ret eq allergicto s58 255 true
+end
+note canonical case 17f4a42b-c91e-41b8-8a76-4797886c2d96
+fn tc30 to bool
+ret eq allergicto s60 0 false
+end
+note canonical case 7696eba7-1837-4488-882a-14b7b4e3e399
+fn tc31 to bool
+ret eq allergicto s62 64 true
+end
+note canonical case 9a49aec5-fa1f-405d-889e-4dfc420db2b6
+fn tc32 to bool
+ret eq allergicto s64 224 true
+end
+note canonical case 3cb8e79f-d108-4712-b620-aa146b1954a9
+fn tc33 to bool
+ret eq allergicto s66 160 false
+end
+note canonical case 1dc3fe57-7c68-4043-9d51-5457128744b2
+fn tc34 to bool
+ret eq allergicto s68 255 true
+end
+note canonical case d3f523d6-3d50-419b-a222-d4dfd62ce314
+fn tc35 to bool
+ret eq allergicto s70 0 false
+end
+note canonical case eba541c3-c886-42d3-baef-c048cb7fcd8f
+fn tc36 to bool
+ret eq allergicto s72 128 true
+end
+note canonical case ba718376-26e0-40b7-bbbe-060287637ea5
+fn tc37 to bool
+ret eq allergicto s74 192 true
+end
+note canonical case 3c6dbf4a-5277-436f-8b88-15a206f2d6c4
+fn tc38 to bool
+ret eq allergicto s76 64 false
+end
+note canonical case 1faabb05-2b98-4995-9046-d83e4a48a7c1
+fn tc39 to bool
+ret eq allergicto s78 255 true
+end
+note canonical case f9c1b8e7-7dc5-4887-aa93-cebdcc29dd8f
+fn tc40 to bool
+o = new uchar 1024 0
+n = list 0 o
+ret eq n 0
+end
+note canonical case 9e1a4364-09a6-4d94-990f-541a94a4c1e8
+fn tc41 to bool
+o = new uchar 1024 0
+n = list 1 o
+ret tbeq part o 0 n e81
+end
+note canonical case 8851c973-805e-4283-9e01-d0c0da0e4695
+fn tc42 to bool
+o = new uchar 1024 0
+n = list 2 o
+ret tbeq part o 0 n e83
+end
+note canonical case 2c8943cb-005e-435f-ae11-3e8fb558ea98
+fn tc43 to bool
+o = new uchar 1024 0
+n = list 8 o
+ret tbeq part o 0 n e85
+end
+note canonical case 6fa95d26-044c-48a9-8a7b-9ee46ec32c5c
+fn tc44 to bool
+o = new uchar 1024 0
+n = list 3 o
+ret tbeq part o 0 n e87
+end
+note canonical case 19890e22-f63f-4c5c-a9fb-fb6eacddfe8e
+fn tc45 to bool
+o = new uchar 1024 0
+n = list 5 o
+ret tbeq part o 0 n e89
+end
+note canonical case 4b68f470-067c-44e4-889f-c9fe28917d2f
+fn tc46 to bool
+o = new uchar 1024 0
+n = list 248 o
+ret tbeq part o 0 n e91
+end
+note canonical case 0881b7c5-9efa-4530-91bd-68370d054bc7
+fn tc47 to bool
+o = new uchar 1024 0
+n = list 255 o
+ret tbeq part o 0 n e93
+end
+note canonical case 12ce86de-b347-42a0-ab7c-2e0570f0c65b
+fn tc48 to bool
+o = new uchar 1024 0
+n = list 509 o
+ret tbeq part o 0 n e95
+end
+note canonical case 93c2df3e-4f55-4fed-8116-7513092819cd
+fn tc49 to bool
+o = new uchar 1024 0
+n = list 257 o
+ret tbeq part o 0 n e97
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+tcheck tc7 c15
+tcheck tc8 c17
+tcheck tc9 c19
+tcheck tc10 c21
+tcheck tc11 c23
+tcheck tc12 c25
+tcheck tc13 c27
+tcheck tc14 c29
+tcheck tc15 c31
+tcheck tc16 c33
+tcheck tc17 c35
+tcheck tc18 c37
+tcheck tc19 c39
+tcheck tc20 c41
+tcheck tc21 c43
+tcheck tc22 c45
+tcheck tc23 c47
+tcheck tc24 c49
+tcheck tc25 c51
+tcheck tc26 c53
+tcheck tc27 c55
+tcheck tc28 c57
+tcheck tc29 c59
+tcheck tc30 c61
+tcheck tc31 c63
+tcheck tc32 c65
+tcheck tc33 c67
+tcheck tc34 c69
+tcheck tc35 c71
+tcheck tc36 c73
+tcheck tc37 c75
+tcheck tc38 c77
+tcheck tc39 c79
+tcheck tc40 c80
+tcheck tc41 c82
+tcheck tc42 c84
+tcheck tc43 c86
+tcheck tc44 c88
+tcheck tc45 c90
+tcheck tc46 c92
+tcheck tc47 c94
+tcheck tc48 c96
+tcheck tc49 c98
+ret int get tfails 0
+end

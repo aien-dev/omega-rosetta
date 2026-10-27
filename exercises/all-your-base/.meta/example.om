@@ -1,0 +1,37 @@
+note Exercism-style exercise "all-your-base": https://exercism.org/tracks/python/exercises/all-your-base
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note rebase converts the number whose digits ds are in base ib (most significant first) to base ob,
+note writes its digits into o and returns how many (the number 0 is the single digit 0); or -1 when
+note ib < 2, -3 when ob < 2, -2 when a digit is outside 0 .. ib-1.
+note Check it with: sh exercise.sh exercises/all-your-base
+om2
+fn rebase ib long ds view long * ob long o edit long * to long
+if lt ib 2
+ret -1
+end
+if lt ob 2
+ret -3
+end
+v = long 0
+for i ulong len ds
+d = get ds i
+if or lt d 0 ge d ib
+ret -2
+end
+v = add mul v ib d
+end
+tmp = new long 64 0
+k = ulong 0
+while true bound 64
+put tmp k rem v ob
+k = add k 1
+v = div v ob
+if eq v 0
+break
+end
+end
+for j ulong k
+put o j get tmp sub sub k 1 j
+end
+ret long k
+end

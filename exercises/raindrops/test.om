@@ -1,0 +1,225 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/raindrops/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 18 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text e0 "1"
+text c1 "convert: the sound for 1 is 1"
+text e2 "Pling"
+text c3 "convert: the sound for 3 is Pling"
+text e4 "Plang"
+text c5 "convert: the sound for 5 is Plang"
+text e6 "Plong"
+text c7 "convert: the sound for 7 is Plong"
+text e8 "Pling"
+text c9 "convert: the sound for 6 is Pling as it has a factor 3"
+text e10 "8"
+text c11 "convert: 2 to the power 3 does not make a raindrop sound as 3 is the exponent not the base"
+text e12 "Pling"
+text c13 "convert: the sound for 9 is Pling as it has a factor 3"
+text e14 "Plang"
+text c15 "convert: the sound for 10 is Plang as it has a factor 5"
+text e16 "Plong"
+text c17 "convert: the sound for 14 is Plong as it has a factor of 7"
+text e18 "PlingPlang"
+text c19 "convert: the sound for 15 is PlingPlang as it has factors 3 and 5"
+text e20 "PlingPlong"
+text c21 "convert: the sound for 21 is PlingPlong as it has factors 3 and 7"
+text e22 "Plang"
+text c23 "convert: the sound for 25 is Plang as it has a factor 5"
+text e24 "Pling"
+text c25 "convert: the sound for 27 is Pling as it has a factor 3"
+text e26 "PlangPlong"
+text c27 "convert: the sound for 35 is PlangPlong as it has factors 5 and 7"
+text e28 "Plong"
+text c29 "convert: the sound for 49 is Plong as it has a factor 7"
+text e30 "52"
+text c31 "convert: the sound for 52 is 52"
+text e32 "PlingPlangPlong"
+text c33 "convert: the sound for 105 is PlingPlangPlong as it has factors 3, 5 and 7"
+text e34 "Plang"
+text c35 "convert: the sound for 3125 is Plang as it has a factor 5"
+note canonical case 1575d549-e502-46d4-a8e1-6b7bec6123d8
+fn tc0 to bool
+o = new uchar 1024 0
+n = convert 1 o
+ret tbeq part o 0 n e0
+end
+note canonical case 1f51a9f9-4895-4539-b182-d7b0a5ab2913
+fn tc1 to bool
+o = new uchar 1024 0
+n = convert 3 o
+ret tbeq part o 0 n e2
+end
+note canonical case 2d9bfae5-2b21-4bcd-9629-c8c0e388f3e0
+fn tc2 to bool
+o = new uchar 1024 0
+n = convert 5 o
+ret tbeq part o 0 n e4
+end
+note canonical case d7e60daa-32ef-4c23-b688-2abff46c4806
+fn tc3 to bool
+o = new uchar 1024 0
+n = convert 7 o
+ret tbeq part o 0 n e6
+end
+note canonical case 6bb4947b-a724-430c-923f-f0dc3d62e56a
+fn tc4 to bool
+o = new uchar 1024 0
+n = convert 6 o
+ret tbeq part o 0 n e8
+end
+note canonical case ce51e0e8-d9d4-446d-9949-96eac4458c2d
+fn tc5 to bool
+o = new uchar 1024 0
+n = convert 8 o
+ret tbeq part o 0 n e10
+end
+note canonical case 0dd66175-e3e2-47fc-8750-d01739856671
+fn tc6 to bool
+o = new uchar 1024 0
+n = convert 9 o
+ret tbeq part o 0 n e12
+end
+note canonical case 022c44d3-2182-4471-95d7-c575af225c96
+fn tc7 to bool
+o = new uchar 1024 0
+n = convert 10 o
+ret tbeq part o 0 n e14
+end
+note canonical case 37ab74db-fed3-40ff-b7b9-04acdfea8edf
+fn tc8 to bool
+o = new uchar 1024 0
+n = convert 14 o
+ret tbeq part o 0 n e16
+end
+note canonical case 31f92999-6afb-40ee-9aa4-6d15e3334d0f
+fn tc9 to bool
+o = new uchar 1024 0
+n = convert 15 o
+ret tbeq part o 0 n e18
+end
+note canonical case ff9bb95d-6361-4602-be2c-653fe5239b54
+fn tc10 to bool
+o = new uchar 1024 0
+n = convert 21 o
+ret tbeq part o 0 n e20
+end
+note canonical case d2e75317-b72e-40ab-8a64-6734a21dece1
+fn tc11 to bool
+o = new uchar 1024 0
+n = convert 25 o
+ret tbeq part o 0 n e22
+end
+note canonical case a09c4c58-c662-4e32-97fe-f1501ef7125c
+fn tc12 to bool
+o = new uchar 1024 0
+n = convert 27 o
+ret tbeq part o 0 n e24
+end
+note canonical case bdf061de-8564-4899-a843-14b48b722789
+fn tc13 to bool
+o = new uchar 1024 0
+n = convert 35 o
+ret tbeq part o 0 n e26
+end
+note canonical case c4680bee-69ba-439d-99b5-70c5fd1a7a83
+fn tc14 to bool
+o = new uchar 1024 0
+n = convert 49 o
+ret tbeq part o 0 n e28
+end
+note canonical case 17f2bc9a-b65a-4d23-8ccd-266e8c271444
+fn tc15 to bool
+o = new uchar 1024 0
+n = convert 52 o
+ret tbeq part o 0 n e30
+end
+note canonical case e46677ed-ff1a-419f-a740-5c713d2830e4
+fn tc16 to bool
+o = new uchar 1024 0
+n = convert 105 o
+ret tbeq part o 0 n e32
+end
+note canonical case 13c6837a-0fcd-4b86-a0eb-20572f7deb0b
+fn tc17 to bool
+o = new uchar 1024 0
+n = convert 3125 o
+ret tbeq part o 0 n e34
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+tcheck tc5 c11
+tcheck tc6 c13
+tcheck tc7 c15
+tcheck tc8 c17
+tcheck tc9 c19
+tcheck tc10 c21
+tcheck tc11 c23
+tcheck tc12 c25
+tcheck tc13 c27
+tcheck tc14 c29
+tcheck tc15 c31
+tcheck tc16 c33
+tcheck tc17 c35
+ret int get tfails 0
+end

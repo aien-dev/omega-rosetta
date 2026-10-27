@@ -1,0 +1,130 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/queen-attack/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 13 cases kept, 0 skipped
+text c0 "create: Test creation of Queens with valid and invalid positions / queen with a valid position"
+text c1 "create: Test creation of Queens with valid and invalid positions / queen must have positive row"
+text c2 "create: Test creation of Queens with valid and invalid positions / queen must have row on board"
+text c3 "create: Test creation of Queens with valid and invalid positions / queen must have positive column"
+text c4 "create: Test creation of Queens with valid and invalid positions / queen must have column on board"
+text c5 "canAttack: Test the ability of one queen to attack another / cannot attack"
+text c6 "canAttack: Test the ability of one queen to attack another / can attack on same row"
+text c7 "canAttack: Test the ability of one queen to attack another / can attack on same column"
+text c8 "canAttack: Test the ability of one queen to attack another / can attack on first diagonal"
+text c9 "canAttack: Test the ability of one queen to attack another / can attack on second diagonal"
+text c10 "canAttack: Test the ability of one queen to attack another / can attack on third diagonal"
+text c11 "canAttack: Test the ability of one queen to attack another / can attack on fourth diagonal"
+text c12 "canAttack: Test the ability of one queen to attack another / cannot attack if falling diagonals are only the same when reflected across the longest falling diagonal"
+note canonical case 3ac4f735-d36c-44c4-a3e2-316f79704203
+fn tc0 to bool
+ret eq create 2 2 0
+end
+note canonical case 4e812d5d-b974-4e38-9a6b-8e0492bfa7be
+fn tc1 to bool
+ret eq create -2 2 1
+end
+note canonical case f07b7536-b66b-4f08-beb9-4d70d891d5c8
+fn tc2 to bool
+ret eq create 8 4 2
+end
+note canonical case 15a10794-36d9-4907-ae6b-e5a0d4c54ebe
+fn tc3 to bool
+ret eq create 2 -2 3
+end
+note canonical case 6907762d-0e8a-4c38-87fb-12f2f65f0ce4
+fn tc4 to bool
+ret eq create 4 8 4
+end
+note canonical case 33ae4113-d237-42ee-bac1-e1e699c0c007
+fn tc5 to bool
+ret eq canattack 2 4 6 6 false
+end
+note canonical case eaa65540-ea7c-4152-8c21-003c7a68c914
+fn tc6 to bool
+ret eq canattack 2 4 2 6 true
+end
+note canonical case bae6f609-2c0e-4154-af71-af82b7c31cea
+fn tc7 to bool
+ret eq canattack 4 5 2 5 true
+end
+note canonical case 0e1b4139-b90d-4562-bd58-dfa04f1746c7
+fn tc8 to bool
+ret eq canattack 2 2 0 4 true
+end
+note canonical case ff9b7ed4-e4b6-401b-8d16-bc894d6d3dcd
+fn tc9 to bool
+ret eq canattack 2 2 3 1 true
+end
+note canonical case 0a71e605-6e28-4cc2-aa47-d20a2e71037a
+fn tc10 to bool
+ret eq canattack 2 2 1 1 true
+end
+note canonical case 0790b588-ae73-4f1f-a968-dd0b34f45f86
+fn tc11 to bool
+ret eq canattack 1 7 0 6 true
+end
+note canonical case 543f8fd4-2597-4aad-8d77-cbdab63619f8
+fn tc12 to bool
+ret eq canattack 4 1 2 5 false
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+tcheck tc9 c9
+tcheck tc10 c10
+tcheck tc11 c11
+tcheck tc12 c12
+ret int get tfails 0
+end

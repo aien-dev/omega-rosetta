@@ -1,0 +1,105 @@
+note Exercism-style exercise "protein-translation": https://exercism.org/tracks/python/exercises/protein-translation
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note proteins translates the RNA strand codon by codon into o, protein names joined by commas:
+note AUG Methionine; UUU UUC Phenylalanine; UUA UUG Leucine; UCU UCC UCA UCG Serine; UAU UAC
+note Tyrosine; UGU UGC Cysteine; UGG Tryptophan; UAA UAG UGA stop translation. Returns the number
+note of bytes written, or -1 when a codon before the first stop is invalid or incomplete.
+note Check it with: sh exercise.sh exercises/protein-translation
+om2
+text pn0 "Methionine"
+text pn1 "Phenylalanine"
+text pn2 "Leucine"
+text pn3 "Serine"
+text pn4 "Tyrosine"
+text pn5 "Cysteine"
+text pn6 "Tryptophan"
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+note codon id: 0 .. 6 a protein as in pn0 .. pn6, 7 stop, 8 invalid
+fn codon a uchar b uchar c uchar to ulong
+if and and eq a 65 eq b 85 eq c 71
+ret 0
+end
+if ne a 85
+ret 8
+end
+if not or or or eq c 85 eq c 67 eq c 65 eq c 71
+ret 8
+end
+if eq b 85
+if or eq c 85 eq c 67
+ret 1
+end
+ret 2
+end
+if eq b 67
+ret 3
+end
+if eq b 65
+if or eq c 85 eq c 67
+ret 4
+end
+ret 7
+end
+if eq b 71
+if or eq c 85 eq c 67
+ret 5
+end
+if eq c 71
+ret 6
+end
+ret 7
+end
+ret 8
+end
+fn appname o edit uchar * p ulong k ulong to ulong
+if eq k 0
+ret app o p pn0
+end
+if eq k 1
+ret app o p pn1
+end
+if eq k 2
+ret app o p pn2
+end
+if eq k 3
+ret app o p pn3
+end
+if eq k 4
+ret app o p pn4
+end
+if eq k 5
+ret app o p pn5
+end
+ret app o p pn6
+end
+fn proteins strand view uchar * o edit uchar * to long
+p = ulong 0
+i = ulong 0
+n = len strand
+while lt i n bound 999999
+if gt add i 3 n
+ret -1
+end
+k = codon get strand i get strand add i 1 get strand add i 2
+if eq k 8
+ret -1
+end
+if eq k 7
+break
+end
+if gt p 0
+put o p 44
+p = add p 1
+end
+p = appname o p k
+i = add i 3
+end
+ret long p
+end

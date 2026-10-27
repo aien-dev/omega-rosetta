@@ -1,0 +1,47 @@
+note Exercism-style exercise "raindrops": https://exercism.org/tracks/python/exercises/raindrops
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note convert writes "Pling" if n is divisible by 3, then "Plang" if by 5, then "Plong" if by 7,
+note or the decimal digits of n when it is divisible by none of them, into o; returns the length.
+note Check it with: sh exercise.sh exercises/raindrops
+om2
+text pling "Pling"
+text plang "Plang"
+text plong "Plong"
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+fn appnum o edit uchar * p ulong n ulong to ulong
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+ret app o p part d i sub 20 i
+end
+fn convert n ulong o edit uchar * to ulong
+p = ulong 0
+if eq rem n 3 0
+p = app o p pling
+end
+if eq rem n 5 0
+p = app o p plang
+end
+if eq rem n 7 0
+p = app o p plong
+end
+if eq p 0
+p = appnum o p n
+end
+ret p
+end
