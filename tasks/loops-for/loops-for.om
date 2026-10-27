@@ -1,0 +1,26 @@
+note Rosetta Code task "Loops/For": https://rosettacode.org/wiki/Loops/For
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text star "*"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note row i has i + 1 stars, five rows
+fn main to int
+for i ulong 5
+for j ulong add i 1
+emit star
+end
+emit nl
+end
+ret 0
+end

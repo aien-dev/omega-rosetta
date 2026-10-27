@@ -1,0 +1,2 @@
+vowels 22, consonants 31
+distinct vowels 5, consonants 13

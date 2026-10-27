@@ -1,0 +1,4 @@
+alpha beta eq=no lt=yes gt=no equal-ignoring-case=no
+Hello hello eq=no lt=yes gt=no equal-ignoring-case=yes
+abc abcd eq=no lt=yes gt=no equal-ignoring-case=no
+abcd abc eq=no lt=no gt=yes equal-ignoring-case=no

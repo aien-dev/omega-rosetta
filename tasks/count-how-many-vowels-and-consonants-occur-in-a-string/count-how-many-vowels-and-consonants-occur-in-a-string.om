@@ -1,0 +1,82 @@
+note Rosetta Code task "Count how many vowels and consonants occur in a string": https://rosettacode.org/wiki/Count_how_many_vowels_and_consonants_occur_in_a_string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text tv "vowels "
+text tc ", consonants "
+text td "distinct vowels "
+text msg "Now is the time for all good men to come to the aid of their country."
+text vow "aeiou"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note letters are ASCII a..z either case; vowels a e i o u, the other letters are consonants
+fn main to int
+seen = new uchar 26 0
+v = ulong 0
+c = ulong 0
+for i ulong len msg
+x = get msg i
+if and ge x 65 le x 90
+x = add x 32
+end
+if and ge x 97 le x 122
+put seen sub x 97 1
+isv = false
+for j ulong len vow
+if eq x get vow j
+isv = true
+end
+end
+if isv
+v = add v 1
+else
+c = add c 1
+end
+end
+end
+emit tv
+emitu v
+emit tc
+emitu c
+emit nl
+dv = ulong 0
+dc = ulong 0
+for j ulong 26
+if eq get seen j 1
+dc = add dc 1
+end
+end
+for j ulong len vow
+dv = add dv ulong get seen sub get vow j 97
+end
+emit td
+emitu dv
+emit tc
+emitu sub dc dv
+emit nl
+ret 0
+end

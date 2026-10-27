@@ -1,0 +1,45 @@
+note Rosetta Code task "Loops/N plus one half": https://rosettacode.org/wiki/Loops/N_plus_one_half
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sep ", "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note the loop writes the number, leaves at 10, else the separator: the last pass is half a pass
+fn main to int
+i = ulong 1
+while true bound 100
+emitu i
+if eq i 10
+break
+end
+emit sep
+i = add i 1
+end
+emit nl
+ret 0
+end

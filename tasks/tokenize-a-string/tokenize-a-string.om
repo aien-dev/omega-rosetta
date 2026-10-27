@@ -1,0 +1,40 @@
+note Rosetta Code task "Tokenize a string": https://rosettacode.org/wiki/Tokenize_a_string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text dot "."
+text msg "Hello,How,Are,You,Today"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note splits at every comma, keeps the pieces as (start, length) pairs, then joins them with periods
+fn main to int
+st = new ulong 64 0
+ln = new ulong 64 0
+k = ulong 0
+s = ulong 0
+for i ulong add len msg 1
+if or eq i len msg eq get msg rem i len msg 44
+put st k s
+put ln k sub i s
+k = add k 1
+s = add i 1
+end
+end
+for j ulong k
+if gt j 0
+emit dot
+end
+emit part msg get st j get ln j
+end
+emit nl
+ret 0
+end

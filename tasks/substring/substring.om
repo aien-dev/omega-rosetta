@@ -1,0 +1,48 @@
+note Rosetta Code task "Substring": https://rosettacode.org/wiki/Substring
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text str "abcdefgh"
+text cd "cd"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note find returns the first index where t occurs in s; a missing t traps 9
+fn find s view uchar * t view uchar * to ulong
+for i ulong add sub len s len t 1
+m = true
+for j ulong len t
+if ne get s add i j get t j
+m = false
+end
+end
+if m
+ret i
+end
+end
+trap 9
+end
+fn line a view uchar * to void
+emit a
+emit nl
+end
+fn main to int
+n = ulong 2
+m = ulong 3
+note n characters in, m long; from n to the end; all but the last; from d, m long; from cd, m long
+line part str n m
+line part str n sub len str n
+line part str 0 sub len str 1
+c = new uchar 1 100
+line part str find str c m
+line part str find str cd m
+ret 0
+end

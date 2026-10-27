@@ -1,0 +1,85 @@
+note Rosetta Code task "Run-length encoding": https://rosettacode.org/wiki/Run-length_encoding
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text msg "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note putnum writes n in decimal into r at p and returns the offset after it
+fn putnum r edit uchar * p ulong n ulong to ulong
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+q = p
+for j ulong sub 20 i
+put r q get d add i j
+q = add q 1
+end
+ret q
+end
+note encode writes count then byte for every run of equal bytes; returns the length
+fn encode a view uchar * r edit uchar * to ulong
+p = ulong 0
+i = ulong 0
+while lt i len a bound 4096
+c = get a i
+j = i
+while lt j len a bound 4096
+if ne get a j c
+break
+end
+j = add j 1
+end
+p = putnum r p sub j i
+put r p c
+p = add p 1
+i = j
+end
+ret p
+end
+note decode reads a decimal count then one byte, and repeats the byte; returns the length
+fn decode a view uchar * r edit uchar * to ulong
+p = ulong 0
+v = ulong 0
+for i ulong len a
+c = get a i
+if and ge c 48 le c 57
+v = add mul v 10 ulong sub c 48
+else
+for k ulong v
+put r p c
+p = add p 1
+end
+v = 0
+end
+end
+ret p
+end
+fn main to int
+e = new uchar 256 0
+d = new uchar 256 0
+n = encode msg e
+emit part e 0 n
+emit nl
+m = decode part e 0 n d
+emit part d 0 m
+emit nl
+ret 0
+end

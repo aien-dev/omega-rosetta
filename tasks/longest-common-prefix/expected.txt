@@ -1,0 +1,8 @@
+[interspecies|interstellar|interstate] -> "inters"
+[throne|throne] -> "throne"
+[throne|dungeon] -> ""
+[throne||throne] -> ""
+[cheese] -> "cheese"
+[] -> ""
+[prefix|suffix] -> ""
+[foo|foobar] -> "foo"

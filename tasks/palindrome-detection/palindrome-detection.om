@@ -1,0 +1,75 @@
+note Rosetta Code task "Palindrome detection": https://rosettacode.org/wiki/Palindrome_detection
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text tq "\""
+text tex "\" exact "
+text tin " inexact "
+text tyes "yes"
+text tno "no"
+text p1 "rotor"
+text p2 "level"
+text p3 "A man, a plan, a canal: Panama!"
+text p4 "In girum imus nocte et consumimur igni"
+text p5 "hello"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+fn emitb b bool to void
+if b
+emit tyes
+else
+emit tno
+end
+end
+note exact compares bytes from both ends
+fn exact a view uchar * to bool
+n = len a
+for i ulong div n 2
+if ne get a i get a sub sub n 1 i
+ret false
+end
+end
+ret true
+end
+note inexact keeps letters only, lower-cased, then compares (strings up to 256 bytes)
+fn inexact a view uchar * to bool
+b = new uchar 256 0
+n = ulong 0
+for i ulong len a
+c = get a i
+if and ge c 65 le c 90
+c = add c 32
+end
+if and ge c 97 le c 122
+put b n c
+n = add n 1
+end
+end
+ret exact part b 0 n
+end
+fn show a view uchar * to void
+emit tq
+emit a
+emit tex
+emitb exact a
+emit tin
+emitb inexact a
+emit nl
+end
+fn main to int
+show p1
+show p2
+show p3
+show p4
+show p5
+ret 0
+end

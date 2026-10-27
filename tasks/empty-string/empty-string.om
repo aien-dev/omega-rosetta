@@ -1,0 +1,45 @@
+note Rosetta Code task "Empty string": https://rosettacode.org/wiki/Empty_string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text tempty "s is empty\n"
+text tfull "s is not empty: "
+text word "abc"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note copyto copies s into d at offset off and returns the offset after it (past the end traps 3)
+fn copyto d edit uchar * off ulong s view uchar * to ulong
+for i ulong len s
+put d add off i get s i
+end
+ret add off len s
+end
+note a string here is a buffer b and its length n; the empty string is length 0
+fn check b view uchar * to void
+if eq len b 0
+emit tempty
+else
+emit tfull
+emit b
+emit nl
+end
+end
+fn main to int
+b = new uchar 16 0
+n = ulong 0
+check part b 0 n
+n = copyto b 0 word
+check part b 0 n
+n = 0
+check part b 0 n
+ret 0
+end

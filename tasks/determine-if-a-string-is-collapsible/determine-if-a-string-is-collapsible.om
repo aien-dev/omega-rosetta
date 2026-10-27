@@ -1,0 +1,72 @@
+note Rosetta Code task "Determine if a string is collapsible": https://rosettacode.org/wiki/Determine_if_a_string_is_collapsible
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text lq "<<<"
+text rq ">>>"
+text tlen " length "
+text c0 "\"If I were two-faced, would I be wearing this one?\" --- Abraham Lincoln "
+text c1 "..1111111111111111111111111111111111111111111111111111111111111117777888"
+text c2 "I never give 'em hell, I just tell the truth, and they think it's hell. "
+text c3 "                                                    --- Harry S Truman  "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn line a view uchar * to void
+emit lq
+emit a
+emit rq
+emit tlen
+emitu len a
+emit nl
+end
+note collapse keeps a byte only when it differs from the byte before it
+fn collapse a view uchar * to void
+o = new uchar 256 0
+n = ulong 0
+for i ulong len a
+c = get a i
+k = true
+if gt i 0
+k = ne c get a sub i 1
+end
+if k
+put o n c
+n = add n 1
+end
+end
+line a
+line part o 0 n
+end
+fn main to int
+note the empty string, as a slice of length 0
+collapse part c0 0 0
+collapse c0
+collapse c1
+collapse c2
+collapse c3
+ret 0
+end

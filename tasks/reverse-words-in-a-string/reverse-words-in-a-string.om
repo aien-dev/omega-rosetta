@@ -1,0 +1,59 @@
+note Rosetta Code task "Reverse words in a string": https://rosettacode.org/wiki/Reverse_words_in_a_string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text poem "---------- Ice and Fire ------------\n\nfire, in end will world the say Some\nice. in say Some\ndesire of tasted I've what From\nfire. favor who those with hold I\n\n... elided paragraph last ...\n\nFrost Robert -----------------------\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note revline prints the space-separated words of a in reverse order, one space between them
+fn revline a view uchar * to void
+st = new ulong 64 0
+ln = new ulong 64 0
+k = ulong 0
+i = ulong 0
+while lt i len a bound 4096
+if eq get a i 32
+i = add i 1
+else
+j = i
+while lt j len a bound 4096
+if eq get a j 32
+break
+end
+j = add j 1
+end
+put st k i
+put ln k sub j i
+k = add k 1
+i = j
+end
+end
+for w ulong k
+if gt w 0
+emit sp
+end
+x = sub sub k 1 w
+emit part a get st x get ln x
+end
+emit nl
+end
+fn main to int
+s = ulong 0
+for i ulong len poem
+if eq get poem i 10
+revline part poem s sub i s
+s = add i 1
+end
+end
+ret 0
+end

@@ -1,0 +1,4 @@
+http%3A%2F%2Ffoo%20bar%2F
+http%3A%2F%2Ffoo%20bar%2F
+mailto%3Ajoe%40example%2Ecom%3Fsubject%3Da%26b%20c%7Ed%5Fe%2Ef%2Dg
+mailto%3Ajoe%40example.com%3Fsubject%3Da%26b%20c~d_e.f-g

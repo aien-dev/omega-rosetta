@@ -1,0 +1,57 @@
+note Rosetta Code task "Ordered words": https://rosettacode.org/wiki/Ordered_words
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+note the word list (Rosetta Code reads unixdict.txt; this is a fixed sample of it), newline-terminated
+text dict "almost\nabbey\naccent\nbegin\nbiopsy\nchimp\nchintz\ndeist\neffort\nfirst\nghost\nglory\nfloor\nknotty\nbillowy\nbijoux\nabhors\naegilops\nthis\nthat\nzebra\nbellow\nadder\ncello\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note ordered: every letter is at least the one before it
+fn ordered a view uchar * to bool
+for i ulong len a
+if gt i 0
+if lt get a i get a sub i 1
+ret false
+end
+end
+end
+ret true
+end
+note two passes over the list: the longest ordered length, then every ordered word of that length
+fn longest to ulong
+best = ulong 0
+s = ulong 0
+for i ulong len dict
+if eq get dict i 10
+n = sub i s
+if and ordered part dict s n gt n best
+best = n
+end
+s = add i 1
+end
+end
+ret best
+end
+fn main to int
+best = longest
+s = ulong 0
+for i ulong len dict
+if eq get dict i 10
+n = sub i s
+if and ordered part dict s n eq n best
+emit part dict s add n 1
+end
+s = add i 1
+end
+end
+ret 0
+end

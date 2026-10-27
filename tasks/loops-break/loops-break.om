@@ -1,0 +1,49 @@
+note Rosetta Code task "Loops/Break": https://rosettacode.org/wiki/Loops/Break
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a fixed linear congruential generator stands in for a random source (Rosetta asks for
+note random numbers 0..19): x' = (1103515245 x + 12345) mod 2^31, r = (x' / 65536) mod 20.
+note Print r; stop after printing 10; otherwise print the next value too
+fn main to int
+x = ulong 42
+while true bound 1000
+x = and add mul x 1103515245 12345 2147483647
+r = rem div x 65536 20
+emitu r
+emit nl
+if eq r 10
+break
+end
+x = and add mul x 1103515245 12345 2147483647
+emitu rem div x 65536 20
+emit nl
+end
+ret 0
+end

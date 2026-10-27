@@ -1,0 +1,7 @@
+<<<>>> length 0: all the same
+<<<   >>> length 3: all the same
+<<<2>>> length 1: all the same
+<<<333>>> length 3: all the same
+<<<.55>>> length 3: first different '5' at 1
+<<<tttTTT>>> length 6: first different 'T' at 3
+<<<4444 444k>>> length 9: first different ' ' at 4

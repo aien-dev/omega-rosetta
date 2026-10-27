@@ -1,0 +1,78 @@
+note Rosetta Code task "Temperature conversion": https://rosettacode.org/wiki/Temperature_conversion
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text tk "K  "
+text tc "C  "
+text tf "F  "
+text tr "R  "
+text minus "-"
+text dot "."
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitc2 writes v hundredths (signed) as a decimal with two places
+fn emitc2 v long to void
+u = ulong 0
+if lt v 0
+emit minus
+u = ulong neg v
+else
+u = ulong v
+end
+emitu div u 100
+emit dot
+f = rem u 100
+if lt f 10
+emitu 0
+end
+emitu f
+end
+note k is kelvin in hundredths, a multiple of 5 so every scale below is exact in hundredths:
+note C = K - 273.15, F = K * 9/5 - 459.67, R = K * 9/5
+fn show k long to void
+emit tk
+emitc2 k
+emit nl
+emit tc
+emitc2 sub k 27315
+emit nl
+emit tf
+emitc2 sub div mul k 9 5 45967
+emit nl
+emit tr
+emitc2 div mul k 9 5
+emit nl
+emit nl
+end
+fn main to int
+show 2100
+show 0
+show 27315
+show 37315
+show 31015
+ret 0
+end

@@ -1,0 +1,10 @@
+<<<>>> length 0
+<<<>>> length 0
+<<<"If I were two-faced, would I be wearing this one?" --- Abraham Lincoln >>> length 72
+<<<"If I were two-faced, would I be wearing this one?" - Abraham Lincoln >>> length 70
+<<<..1111111111111111111111111111111111111111111111111111111111111117777888>>> length 72
+<<<.178>>> length 4
+<<<I never give 'em hell, I just tell the truth, and they think it's hell. >>> length 72
+<<<I never give 'em hel, I just tel the truth, and they think it's hel. >>> length 69
+<<<                                                    --- Harry S Truman  >>> length 72
+<<< - Hary S Truman >>> length 17

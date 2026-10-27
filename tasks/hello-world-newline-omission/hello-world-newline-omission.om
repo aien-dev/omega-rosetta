@@ -1,0 +1,19 @@
+note Rosetta Code task "Hello world/Newline omission": https://rosettacode.org/wiki/Hello_world/Newline_omission
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text msg "Goodbye, World!"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+fn main to int
+emit msg
+ret 0
+end

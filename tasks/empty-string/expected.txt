@@ -1,0 +1,3 @@
+s is empty
+s is not empty: abc
+s is empty

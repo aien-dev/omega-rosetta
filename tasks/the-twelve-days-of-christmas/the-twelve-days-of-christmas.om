@@ -1,0 +1,60 @@
+note Rosetta Code task "The Twelve Days of Christmas": https://rosettacode.org/wiki/The_Twelve_Days_of_Christmas
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text on "On the "
+text day " day of Christmas,\nMy true love sent to me:\n"
+text last "And a partridge in a pear tree."
+text days "first\nsecond\nthird\nfourth\nfifth\nsixth\nseventh\neighth\nninth\ntenth\neleventh\ntwelfth\n"
+text gifts "A partridge in a pear tree.\nTwo turtle doves,\nThree french hens,\nFour calling birds,\nFive golden rings,\nSix geese a-laying,\nSeven swans a-swimming,\nEight maids a-milking,\nNine ladies dancing,\nTen lords a-leaping,\nEleven pipers piping,\nTwelve drummers drumming,\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note word writes element k of a newline-terminated list, without the newline
+fn word t view uchar * k ulong to void
+s = ulong 0
+m = ulong 0
+for i ulong len t
+if eq get t i 10
+if eq m k
+emit part t s sub i s
+ret
+end
+m = add m 1
+s = add i 1
+end
+end
+trap 9
+end
+note verse d lists gifts d down to 0; from the second day on the partridge line starts "And a"
+fn verse d ulong to void
+emit on
+word days d
+emit day
+for k ulong add d 1
+g = sub d k
+if and eq g 0 gt d 0
+emit last
+else
+word gifts g
+end
+emit nl
+end
+end
+fn main to int
+for d ulong 12
+if gt d 0
+emit nl
+end
+verse d
+end
+ret 0
+end

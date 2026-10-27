@@ -1,0 +1,16 @@
+"0" numeric
+"-12" numeric
+"3.14" numeric
+"+1e5" numeric
+"1e-3" numeric
+".5" numeric
+"5." numeric
+"abc" not numeric
+"" not numeric
+"12a" not numeric
+"-" not numeric
+"1.2.3" not numeric
+"e5" not numeric
+"1e" not numeric
+"--1" not numeric
+"6.02E+23" numeric

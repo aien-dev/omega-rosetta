@@ -1,0 +1,53 @@
+note Rosetta Code task "Strip whitespace from a string/Top and tail": https://rosettacode.org/wiki/Strip_whitespace_from_a_string/Top_and_tail
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text lb "["
+text rb "]"
+text msg "  \t  hello world \t\n "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note white: space, tab, newline, vertical tab, form feed, carriage return
+fn white c uchar to bool
+ret or eq c 32 and ge c 9 le c 13
+end
+fn lead a view uchar * to ulong
+for i ulong len a
+if not white get a i
+ret i
+end
+end
+ret len a
+end
+fn trail a view uchar * to ulong
+for i ulong len a
+if not white get a sub sub len a 1 i
+ret sub len a i
+end
+end
+ret 0
+end
+fn show a view uchar * to void
+emit lb
+emit a
+emit rb
+emit nl
+end
+fn main to int
+l = lead msg
+t = trail msg
+show msg
+show part msg l sub len msg l
+show part msg 0 t
+show part msg l sub t l
+ret 0
+end

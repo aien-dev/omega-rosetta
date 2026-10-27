@@ -1,0 +1,80 @@
+note Rosetta Code task "Determine if a string has all unique characters": https://rosettacode.org/wiki/Determine_if_a_string_has_all_unique_characters
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text lq "<<<"
+text rq ">>>"
+text tlen " length "
+text tuni ": all unique\n"
+text tdup ": duplicate '"
+text tat "' at "
+text tand " and "
+text u0 "."
+text u1 "abcABC"
+text u2 "XYZ ZYX"
+text u3 "1234567890ABCDEFGHIJKLMN0PQRSTUVWXYZ"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note the first byte (smallest i) that occurs again later, with the place j of its next occurrence
+fn show a view uchar * to void
+emit lq
+emit a
+emit rq
+emit tlen
+emitu len a
+for i ulong len a
+for j ulong sub sub len a i 1
+k = add add i j 1
+if eq get a i get a k
+emit tdup
+emitc get a i
+emit tat
+emitu i
+emit tand
+emitu k
+emit nl
+ret
+end
+end
+end
+emit tuni
+end
+fn main to int
+note the empty string, as a slice of length 0
+show part u0 0 0
+show u0
+show u1
+show u2
+show u3
+ret 0
+end

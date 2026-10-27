@@ -1,0 +1,7 @@
+A yes
+BARK yes
+BOOK no
+TREAT yes
+COMMON no
+SQUAD yes
+CONFUSE yes
