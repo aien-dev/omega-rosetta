@@ -1,0 +1,134 @@
+note Rosetta Code task "Knight's tour": https://rosettacode.org/wiki/Knight's_tour
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tstart "Warnsdorff tour from a1; each square shows its move number, rank 8 at the top\n"
+global board ulong 64
+global mdx long 8
+global mdy long 8
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitw writes n right-aligned in w columns (w at most 20; a wider number is not cut)
+fn emitw n ulong w ulong to void
+d = new uchar 20 32
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+if gt w sub 20 i
+i = sub 20 w
+end
+emit part d i sub 20 i
+end
+note target is the square a knight reaches from sq with move m, or 64 when it leaves the board
+fn target sq ulong m ulong to ulong
+f = add long rem sq 8 get mdx m
+r = add long div sq 8 get mdy m
+if or or lt f 0 gt f 7 or lt r 0 gt r 7
+ret 64
+end
+ret ulong add mul r 8 f
+end
+note degree counts the unvisited squares reachable from sq
+fn degree sq ulong to ulong
+d = ulong 0
+for m ulong 8
+t = target sq m
+if lt t 64
+if eq get board t 0
+d = add d 1
+end
+end
+end
+ret d
+end
+note Warnsdorff's rule: always move to the unvisited square with the fewest onward moves; ties go to
+note the first in the move order (2,1) (1,2) (-1,2) (-2,1) (-2,-1) (-1,-2) (1,-2) (2,-1)
+fn tour to bool
+sq = ulong 0
+put board 0 1
+for k ulong 63
+b = ulong 64
+bd = ulong 9
+for m ulong 8
+t = target sq m
+if lt t 64
+if eq get board t 0
+d = degree t
+if lt d bd
+b = t
+bd = d
+end
+end
+end
+end
+if eq b 64
+ret false
+end
+put board b add k 2
+sq = b
+end
+ret true
+end
+fn main to int
+put mdx 0 2
+put mdy 0 1
+put mdx 1 1
+put mdy 1 2
+put mdx 2 -1
+put mdy 2 2
+put mdx 3 -2
+put mdy 3 1
+put mdx 4 -2
+put mdy 4 -1
+put mdx 5 -1
+put mdy 5 -2
+put mdx 6 1
+put mdy 6 -2
+put mdx 7 2
+put mdy 7 -1
+if not tour
+exit 1
+end
+emit tstart
+for x ulong 8
+r = sub 7 x
+for f ulong 8
+emitw get board add mul r 8 f 3
+end
+emit nl
+end
+ret 0
+end

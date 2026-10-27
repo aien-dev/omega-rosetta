@@ -1,0 +1,54 @@
+note Rosetta Code task "Matrix with two diagonals": https://rosettacode.org/wiki/Matrix_with_two_diagonals
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note entry (i, j) is 1 on the main diagonal i = j and on the anti-diagonal i + j = n - 1, else 0
+fn twodiag n ulong to void
+for i ulong n
+for j ulong n
+if gt j 0
+emit sp
+end
+if or eq i j eq add i j sub n 1
+emitu 1
+else
+emitu 0
+end
+end
+emit nl
+end
+end
+fn main to int
+twodiag 6
+emit nl
+twodiag 7
+ret 0
+end

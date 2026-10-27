@@ -1,0 +1,13 @@
+first 15: 1 1 2 1 3 2 3 1 4 3 5 2 5 3 4
+1 first appears at 1
+2 first appears at 3
+3 first appears at 5
+4 first appears at 9
+5 first appears at 11
+6 first appears at 33
+7 first appears at 19
+8 first appears at 21
+9 first appears at 35
+10 first appears at 39
+100 first appears at 1179
+gcd of each consecutive pair of the first 1000 is 1: yes

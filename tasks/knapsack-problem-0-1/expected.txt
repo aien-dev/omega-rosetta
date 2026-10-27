@@ -1,0 +1,14 @@
+map
+compass
+water
+sandwich
+glucose
+banana
+suntan cream
+waterproof trousers
+waterproof overclothes
+note-case
+sunglasses
+socks
+total weight 396
+total value 1030

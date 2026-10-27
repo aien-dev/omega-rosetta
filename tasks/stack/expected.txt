@@ -1,0 +1,11 @@
+empty: yes
+push 10
+push -20
+push 30
+peek 30
+size 3
+pop 30
+pop -20
+empty: no
+pop 10
+empty: yes

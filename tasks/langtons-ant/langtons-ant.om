@@ -1,0 +1,140 @@
+note Rosetta Code task "Langton's ant": https://rosettacode.org/wiki/Langton's_ant
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tsteps "steps until the ant leaves the grid: "
+text tbox "black cells, rows and columns "
+text tto ".."
+text tdot "."
+text thash "#"
+global grid uchar 10000
+global box ulong 4
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note the ant starts at (50, 50) of a white 100 x 100 grid facing up; on white it turns right, on black
+note left, then flips the cell and steps forward; directions 0..3 are up, right, down, left
+fn walk to ulong
+r = long 50
+c = long 50
+d = ulong 0
+s = ulong 0
+note the ant is known to leave a grid this size after about 12000 steps (the highway starts near
+note step 10000), so 999999 is a safe bound
+while and and ge r 0 lt r 100 and ge c 0 lt c 100 bound 999999
+k = add mul ulong r 100 ulong c
+if eq get grid k 0
+d = rem add d 1 4
+put grid k 1
+else
+d = rem add d 3 4
+put grid k 0
+end
+r = add r dy d
+c = add c dx d
+s = add s 1
+end
+ret s
+end
+fn dy d ulong to long
+if eq d 0
+ret -1
+end
+if eq d 2
+ret 1
+end
+ret 0
+end
+fn dx d ulong to long
+if eq d 1
+ret 1
+end
+if eq d 3
+ret -1
+end
+ret 0
+end
+note bounds finds the smallest box holding every black cell: box = top, bottom, left, right
+fn bounds to void
+put box 0 99
+put box 1 0
+put box 2 99
+put box 3 0
+for r ulong 100
+for c ulong 100
+if eq get grid add mul r 100 c 1
+grow r c
+end
+end
+end
+end
+fn grow r ulong c ulong to void
+if lt r get box 0
+put box 0 r
+end
+if gt r get box 1
+put box 1 r
+end
+if lt c get box 2
+put box 2 c
+end
+if gt c get box 3
+put box 3 c
+end
+end
+note row prints grid row r between the box's left and right columns
+fn row r ulong to void
+for x ulong add sub get box 3 get box 2 1
+c = add x get box 2
+if eq get grid add mul r 100 c 1
+emit thash
+else
+emit tdot
+end
+end
+emit nl
+end
+fn main to int
+emit tsteps
+emitu walk
+emit nl
+bounds
+emit tbox
+emitu get box 0
+emit tto
+emitu get box 1
+emit sp
+emitu get box 2
+emit tto
+emitu get box 3
+emit nl
+for r ulong add sub get box 1 get box 0 1
+row add r get box 0
+end
+ret 0
+end

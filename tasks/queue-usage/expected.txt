@@ -1,0 +1,12 @@
+empty: yes
+push 1
+push 2
+push 3
+pop 1
+empty: no
+push 4
+pop 2
+pop 3
+pop 4
+empty: yes
+pop from an empty queue: error

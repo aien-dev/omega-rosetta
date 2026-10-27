@@ -1,0 +1,7 @@
+iced iced
+iced jam
+iced plain
+jam jam
+jam plain
+plain plain
+choices of 3 from 10 kinds: 220

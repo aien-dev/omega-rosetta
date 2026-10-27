@@ -1,0 +1,109 @@
+note Rosetta Code task "Stack": https://rosettacode.org/wiki/Stack
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tpush "push "
+text tpop "pop "
+text tpeek "peek "
+text tempty "empty: "
+text tsize "size "
+text tyes "yes"
+text tno "no"
+global stk long 16
+global top ulong 1
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note a fixed-capacity stack of 16 longs: stk[0..top-1], the top element last; push on a full stack and
+note pop on an empty one stop the program (exit 2), since there is no heap to grow into
+fn push v long to void
+t = get top 0
+if eq t 16
+exit 2
+end
+put stk t v
+put top 0 add t 1
+emit tpush
+emiti v
+emit nl
+end
+fn pop to long
+t = get top 0
+if eq t 0
+exit 2
+end
+put top 0 sub t 1
+v = get stk sub t 1
+emit tpop
+emiti v
+emit nl
+ret v
+end
+fn peek to long
+v = get stk sub get top 0 1
+emit tpeek
+emiti v
+emit nl
+ret v
+end
+fn empty to bool
+e = eq get top 0 0
+emit tempty
+if e
+emit tyes
+else
+emit tno
+end
+emit nl
+ret e
+end
+fn main to int
+e = empty
+push 10
+push -20
+push 30
+v = peek
+emit tsize
+emitu get top 0
+emit nl
+v = pop
+v = pop
+e = empty
+v = pop
+e = empty
+ret 0
+end

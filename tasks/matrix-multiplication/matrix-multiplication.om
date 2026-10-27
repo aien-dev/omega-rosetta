@@ -1,0 +1,112 @@
+note Rosetta Code task "Matrix multiplication": https://rosettacode.org/wiki/Matrix_multiplication
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text ttimes "times\n"
+text tequals "equals\n"
+global mat long 27
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitwi writes a signed n right-aligned in w columns (w at most 20)
+fn emitwi n long w ulong to void
+d = new uchar 21 32
+i = ulong 21
+v = n
+if lt n 0
+v = neg n
+end
+while true bound 20
+i = sub i 1
+put d i uchar add long 48 rem v 10
+v = div v 10
+if eq v 0
+break
+end
+end
+if lt n 0
+i = sub i 1
+put d i 45
+end
+if gt w sub 21 i
+i = sub 21 w
+end
+emit part d i sub 21 i
+end
+note mat holds the three matrices row by row: a at offset 0, b at 9 and their product at 18
+note showm writes the r x c matrix at offset o of mat, each entry right-aligned in w columns
+fn showm o ulong r ulong c ulong w ulong to void
+for i ulong r
+for j ulong c
+emitwi get mat add o add mul i c j w
+end
+emit nl
+end
+end
+note dot is row i of the m-column matrix a times column j of the p-column matrix b
+fn dot i ulong j ulong m ulong p ulong to long
+s = long 0
+for k ulong m
+x = get mat add mul i m k
+y = get mat add 9 add mul k p j
+s = add s mul x y
+end
+ret s
+end
+note matmul computes the n x p product of the n x m matrix a and the m x p matrix b
+fn matmul n ulong m ulong p ulong to void
+for i ulong n
+for j ulong p
+put mat add 18 add mul i p j dot i j m p
+end
+end
+end
+fn main to int
+for i ulong 6
+put mat i long add i 1
+put mat add 9 i long add i 7
+end
+showm 0 2 3 5
+emit ttimes
+showm 9 3 2 5
+emit tequals
+matmul 2 3 2
+showm 18 2 2 5
+emit nl
+for i ulong 9
+put mat i sub long mul i 3 10
+put mat add 9 i sub 4 long rem mul i 5 7
+end
+showm 0 3 3 5
+emit ttimes
+showm 9 3 3 5
+emit tequals
+matmul 3 3 3
+showm 18 3 3 5
+ret 0
+end

@@ -1,0 +1,90 @@
+note Rosetta Code task "Combinations with repetitions": https://rosettacode.org/wiki/Combinations_with_repetitions
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text t0 "iced"
+text t1 "jam"
+text t2 "plain"
+text tcount "choices of 3 from 10 kinds: "
+global pick ulong 4
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note nextm steps pick[0..k-1], a non-decreasing list of kinds 0..n-1, to the next one in lexicographic
+note order: raise the last pick below n-1 and set every pick after it to the same kind
+fn nextm k ulong n ulong to bool
+i = k
+while gt i 0 bound 4
+i = sub i 1
+if lt get pick i sub n 1
+v = add get pick i 1
+for x ulong sub k i
+put pick add i x v
+end
+ret true
+end
+end
+ret false
+end
+fn kind d ulong to void
+if eq d 0
+emit t0
+end
+if eq d 1
+emit t1
+end
+if eq d 2
+emit t2
+end
+end
+fn main to int
+note the two-doughnut choices from three kinds: C(3+2-1, 2) = 6
+put pick 0 0
+put pick 1 0
+while true bound 6
+kind get pick 0
+emit sp
+kind get pick 1
+emit nl
+if not nextm 2 3
+break
+end
+end
+note counted, not computed: C(10+3-1, 3) = 220 choices bound the loop
+put pick 0 0
+put pick 1 0
+put pick 2 0
+c = ulong 1
+while nextm 3 10 bound 220
+c = add c 1
+end
+emit tcount
+emitu c
+emit nl
+ret 0
+end
