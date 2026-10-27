@@ -112,7 +112,7 @@ def eval_script(path: Path, omc=None, timeout=None) -> dict:
             m = _ERROR_RE.search(err.decode("utf-8", errors="replace"))
             return {"status": "SyntaxError", "exit_code": rc, "stdout": "", "stderr": _text(err),
                     "om_status": "compile_error", "om_case": int(m.group(2)) if m else None}
-        os.chmod(exe, 0o755)
+        os.chmod(exe, 0o700)
         rc, out, err = _run(_wrap() + [exe], timeout)
     result = {"exit_code": rc if rc is not None else -1, "stdout": _text(out), "stderr": _text(err)}
     if rc is None:

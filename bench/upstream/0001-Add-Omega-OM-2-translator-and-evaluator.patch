@@ -1,4 +1,4 @@
-From a42deb991b270575ffa19df54fcd7ed62f2152c3 Mon Sep 17 00:00:00 2001
+From b29c2173d3855117b54b5c7e5bc54f94911a12ff Mon Sep 17 00:00:00 2001
 From: Drake Stapleton <aien@aienos.com>
 Date: Tue, 27 Oct 2026 06:55:03 -0500
 Subject: [PATCH] Add Omega (OM-2) translator and evaluator
@@ -500,7 +500,7 @@ index 533fb68..1401c2a 100644
  def eval_string_script(language, program):
 diff --git a/evaluation/src/eval_om.py b/evaluation/src/eval_om.py
 new file mode 100755
-index 0000000..da50c65
+index 0000000..0645893
 --- /dev/null
 +++ b/evaluation/src/eval_om.py
 @@ -0,0 +1,143 @@
@@ -618,7 +618,7 @@ index 0000000..da50c65
 +            m = _ERROR_RE.search(err.decode("utf-8", errors="replace"))
 +            return {"status": "SyntaxError", "exit_code": rc, "stdout": "", "stderr": _text(err),
 +                    "om_status": "compile_error", "om_case": int(m.group(2)) if m else None}
-+        os.chmod(exe, 0o755)
++        os.chmod(exe, 0o700)
 +        rc, out, err = _run(_wrap() + [exe], timeout)
 +    result = {"exit_code": rc if rc is not None else -1, "stdout": _text(out), "stderr": _text(err)}
 +    if rc is None:
