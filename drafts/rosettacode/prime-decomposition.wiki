@@ -1,0 +1,82 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text eqs " = "
+text times " x "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note trial division; d stays below 2^32 for these inputs, so mul d d does not wrap
+fn factor n ulong to void
+emitu n
+emit eqs
+v = n
+d = ulong 2
+first = true
+while le mul d d v bound 999999
+if eq rem v d 0
+if not first
+emit times
+end
+first = false
+emitu d
+v = div v d
+else
+d = add d 1
+end
+end
+if gt v 1
+if not first
+emit times
+end
+emitu v
+end
+emit nl
+end
+fn main to int
+factor 12
+factor 360
+factor 97
+factor 1001
+factor 2147483647
+factor 600851475143
+factor 18446744073709551615
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+12 = 2 x 2 x 3
+360 = 2 x 2 x 2 x 3 x 3 x 5
+97 = 97
+1001 = 7 x 11 x 13
+2147483647 = 2147483647
+600851475143 = 71 x 839 x 1471 x 6857
+18446744073709551615 = 3 x 5 x 17 x 257 x 641 x 65537 x 6700417
+</pre>

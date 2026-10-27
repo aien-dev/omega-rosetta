@@ -1,0 +1,53 @@
+note Rosetta Code task "Sieve of Eratosthenes": https://rosettacode.org/wiki/Sieve_of_Eratosthenes
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+global comp uchar 1001
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note primes up to 1000; comp n is 1 once n is crossed out
+fn main to int
+first = true
+for i ulong 999
+n = add i 2
+if eq get comp n 0
+if not first
+emit sp
+end
+first = false
+emitu n
+m = mul n n
+while le m 1000 bound 1000
+put comp m 1
+m = add m n
+end
+end
+end
+emit nl
+ret 0
+end

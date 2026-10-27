@@ -1,0 +1,87 @@
+note Rosetta Code task "Hailstone sequence": https://rosettacode.org/wiki/Hailstone_sequence
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text t1 "hailstone(27) has "
+text t2 " elements:"
+text dots " ..."
+text t3 "below 100000 the longest is "
+text t4 " with "
+text t5 " elements\n"
+global seq ulong 1000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note hfill stores the sequence from n in seq and returns its length; every start below 100000
+note reaches 1 in at most 351 elements, so 999 steps is a proof-backed bound (more traps 4)
+fn hfill n ulong to ulong
+c = ulong 1
+v = n
+put seq 0 v
+while ne v 1 bound 999
+if eq rem v 2 0
+v = div v 2
+else
+v = add mul v 3 1
+end
+put seq c v
+c = add c 1
+end
+ret c
+end
+fn main to int
+c = hfill 27
+emit t1
+emitu c
+emit t2
+for i ulong 4
+emit sp
+emitu get seq i
+end
+emit dots
+for i ulong 4
+emit sp
+emitu get seq add sub c 4 i
+end
+emit nl
+best = ulong 1
+bl = ulong 1
+for i ulong 99999
+n = add i 1
+l = hfill n
+if gt l bl
+bl = l
+best = n
+end
+end
+emit t3
+emitu best
+emit t4
+emitu bl
+emit t5
+ret 0
+end

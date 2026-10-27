@@ -1,0 +1,18 @@
+note Exercism-style exercise "collatz-conjecture": https://exercism.org/tracks/python/exercises/collatz-conjecture
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note Return how many steps n takes to reach 1 (n even: n / 2, n odd: 3n + 1). steps 1 is 0.
+note Check it with: sh exercise.sh exercises/collatz-conjecture
+om2
+fn steps n ulong to ulong
+v = n
+c = ulong 0
+while ne v 1 bound 999999
+if eq rem v 2 0
+v = div v 2
+else
+v = add mul v 3 1
+end
+c = add c 1
+end
+ret c
+end

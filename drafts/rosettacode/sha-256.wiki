@@ -1,0 +1,224 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text m1 "abc"
+text m2 "Rosetta code"
+text m3 "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog."
+global kt uint 64
+global hs uint 8
+global w uint 64
+global blk uchar 128
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitx writes n as 8 lowercase hex digits
+fn emitx n uint to void
+d = new uchar 8 0
+v = n
+for i ulong 8
+q = uchar and v 15
+if lt q 10
+put d sub 7 i add q 48
+else
+put d sub 7 i add q 87
+end
+v = shr v 4
+end
+emit d
+end
+note FIPS 180-4 constants, copied mechanically from aien-dev/omega-mv om/sha256/sha256-om2.om
+fn kinit to void
+put kt 0 0x428a2f98
+put kt 1 0x71374491
+put kt 2 0xb5c0fbcf
+put kt 3 0xe9b5dba5
+put kt 4 0x3956c25b
+put kt 5 0x59f111f1
+put kt 6 0x923f82a4
+put kt 7 0xab1c5ed5
+put kt 8 0xd807aa98
+put kt 9 0x12835b01
+put kt 10 0x243185be
+put kt 11 0x550c7dc3
+put kt 12 0x72be5d74
+put kt 13 0x80deb1fe
+put kt 14 0x9bdc06a7
+put kt 15 0xc19bf174
+put kt 16 0xe49b69c1
+put kt 17 0xefbe4786
+put kt 18 0x0fc19dc6
+put kt 19 0x240ca1cc
+put kt 20 0x2de92c6f
+put kt 21 0x4a7484aa
+put kt 22 0x5cb0a9dc
+put kt 23 0x76f988da
+put kt 24 0x983e5152
+put kt 25 0xa831c66d
+put kt 26 0xb00327c8
+put kt 27 0xbf597fc7
+put kt 28 0xc6e00bf3
+put kt 29 0xd5a79147
+put kt 30 0x06ca6351
+put kt 31 0x14292967
+put kt 32 0x27b70a85
+put kt 33 0x2e1b2138
+put kt 34 0x4d2c6dfc
+put kt 35 0x53380d13
+put kt 36 0x650a7354
+put kt 37 0x766a0abb
+put kt 38 0x81c2c92e
+put kt 39 0x92722c85
+put kt 40 0xa2bfe8a1
+put kt 41 0xa81a664b
+put kt 42 0xc24b8b70
+put kt 43 0xc76c51a3
+put kt 44 0xd192e819
+put kt 45 0xd6990624
+put kt 46 0xf40e3585
+put kt 47 0x106aa070
+put kt 48 0x19a4c116
+put kt 49 0x1e376c08
+put kt 50 0x2748774c
+put kt 51 0x34b0bcb5
+put kt 52 0x391c0cb3
+put kt 53 0x4ed8aa4a
+put kt 54 0x5b9cca4f
+put kt 55 0x682e6ff3
+put kt 56 0x748f82ee
+put kt 57 0x78a5636f
+put kt 58 0x84c87814
+put kt 59 0x8cc70208
+put kt 60 0x90befffa
+put kt 61 0xa4506ceb
+put kt 62 0xbef9a3f7
+put kt 63 0xc67178f2
+end
+fn iv to void
+put hs 0 0x6a09e667
+put hs 1 0xbb67ae85
+put hs 2 0x3c6ef372
+put hs 3 0xa54ff53a
+put hs 4 0x510e527f
+put hs 5 0x9b05688c
+put hs 6 0x1f83d9ab
+put hs 7 0x5be0cd19
+end
+fn bs0 x uint to uint
+ret xor xor rotr x 2 rotr x 13 rotr x 22
+end
+fn bs1 x uint to uint
+ret xor xor rotr x 6 rotr x 11 rotr x 25
+end
+fn ss0 x uint to uint
+ret xor xor rotr x 7 rotr x 18 shr x 3
+end
+fn ss1 x uint to uint
+ret xor xor rotr x 17 rotr x 19 shr x 10
+end
+fn ch e uint f uint g uint to uint
+ret xor and e f and not e g
+end
+fn maj a uint b uint c uint to uint
+ret xor xor and a b and a c and b c
+end
+note compress the 64-byte block blk[o .. o+64) into hs
+fn compress o ulong to void
+for i ulong 16
+j = add o mul i 4
+x = shl uint get blk j 24
+x = or x shl uint get blk add j 1 16
+x = or x shl uint get blk add j 2 8
+x = or x uint get blk add j 3
+put w i x
+end
+for i ulong 48
+x = add get w i ss0 get w add i 1
+x = add x get w add i 9
+x = add x ss1 get w add i 14
+put w add i 16 x
+end
+a = get hs 0
+b = get hs 1
+c = get hs 2
+d = get hs 3
+e = get hs 4
+f = get hs 5
+g = get hs 6
+h = get hs 7
+for i ulong 64
+t1 = add h bs1 e
+t1 = add t1 ch e f g
+t1 = add t1 get kt i
+t1 = add t1 get w i
+t2 = add bs0 a maj a b c
+h = g
+g = f
+f = e
+e = add d t1
+d = c
+c = b
+b = a
+a = add t1 t2
+end
+put hs 0 add get hs 0 a
+put hs 1 add get hs 1 b
+put hs 2 add get hs 2 c
+put hs 3 add get hs 3 d
+put hs 4 add get hs 4 e
+put hs 5 add get hs 5 f
+put hs 6 add get hs 6 g
+put hs 7 add get hs 7 h
+end
+note one or two blocks: messages up to 119 bytes (longer traps 3 at the first put past blk)
+fn sha a view uchar * to void
+n = len a
+for i ulong 128
+put blk i 0
+end
+for i ulong n
+put blk i get a i
+end
+put blk n 128
+total = ulong 64
+if gt n 55
+total = 128
+end
+bits = mul n 8
+for i ulong 8
+put blk sub total add i 1 uchar and shr bits mul i 8 255
+end
+iv
+compress 0
+if eq total 128
+compress 64
+end
+for i ulong 8
+emitx get hs i
+end
+emit nl
+end
+fn main to int
+kinit
+sha m1
+sha m2
+sha m3
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+764faf5c61ac315f1497f9dfa542713965b785e5cc2f707d6468d7d1124cdfcf
+635241ac823ee4a81fbb410c92be616b0a89191083d8d7b5d232c823dc8df4f5
+</pre>

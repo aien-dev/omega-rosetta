@@ -1,0 +1,14 @@
+note Exercism-style exercise "grains": https://exercism.org/tracks/python/exercises/grains
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note square n is the grains on square n (1 .. 64) of a chessboard when each square doubles the
+note last, starting from 1; total is the grains on the whole board.
+note Check it with: sh exercise.sh exercises/grains
+om2
+fn square n ulong to ulong
+note replace this line with your solution
+trap 13
+end
+fn total to ulong
+note replace this line with your solution
+trap 13
+end

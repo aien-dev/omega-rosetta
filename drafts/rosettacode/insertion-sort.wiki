@@ -1,0 +1,90 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+fn isort a edit long 10 to void
+for i ulong 9
+k = get a add i 1
+j = add i 1
+note and evaluates both sides, so the bound test and the load are separate lines
+while gt j 0 bound 10
+if le get a sub j 1 k
+break
+end
+put a j get a sub j 1
+j = sub j 1
+end
+put a j k
+end
+end
+fn show a view long 10 to void
+for i ulong 10
+if gt i 0
+emit sp
+end
+emiti get a i
+end
+emit nl
+end
+fn main to int
+a = new long 10 0
+put a 0 31
+put a 1 41
+put a 2 59
+put a 3 26
+put a 4 -41
+put a 5 58
+put a 6 0
+put a 7 -9223372036854775808
+put a 8 9223372036854775807
+put a 9 26
+show a
+isort a
+show a
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+31 41 59 26 -41 58 0 -9223372036854775808 9223372036854775807 26
+-9223372036854775808 -41 0 26 26 31 41 58 59 9223372036854775807
+</pre>

@@ -1,0 +1,58 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text msg "The quick brown fox jumps over the lazy dog"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitx writes n as 8 lowercase hex digits
+fn emitx n uint to void
+d = new uchar 8 0
+v = n
+for i ulong 8
+q = uchar and v 15
+if lt q 10
+put d sub 7 i add q 48
+else
+put d sub 7 i add q 87
+end
+v = shr v 4
+end
+emit d
+end
+note bitwise reflected CRC-32 (polynomial 0xedb88320), no table
+fn crc32 a view uchar * to uint
+c = uint 0xffffffff
+for i ulong len a
+c = xor c uint get a i
+for k ulong 8
+if eq and c 1 1
+c = xor shr c 1 0xedb88320
+else
+c = shr c 1
+end
+end
+end
+ret not c
+end
+fn main to int
+emitx crc32 msg
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+414fa339
+</pre>

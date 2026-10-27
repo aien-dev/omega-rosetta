@@ -1,0 +1,89 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text eqs " = "
+note symbols packed: even k is one letter, odd k two (M CM D CD C XC L XL X IX V IV I)
+text sym "MCMDCDCXCLXLXIXVIVI"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note 1 .. 3999; no symbol repeats more than 3 times there, so a larger n traps 4
+fn roman n ulong to void
+vals = new ulong 13 0
+put vals 0 1000
+put vals 1 900
+put vals 2 500
+put vals 3 400
+put vals 4 100
+put vals 5 90
+put vals 6 50
+put vals 7 40
+put vals 8 10
+put vals 9 9
+put vals 10 5
+put vals 11 4
+put vals 12 1
+emitu n
+emit eqs
+v = n
+for k ulong 13
+p = mul div k 2 3
+w = ulong 1
+if eq rem k 2 1
+p = add p 1
+w = 2
+end
+while ge v get vals k bound 3
+emit part sym p w
+v = sub v get vals k
+end
+end
+emit nl
+end
+fn main to int
+roman 1990
+roman 2008
+roman 1666
+roman 3999
+roman 4
+roman 14
+roman 1
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+1990 = MCMXC
+2008 = MMVIII
+1666 = MDCLXVI
+3999 = MMMCMXCIX
+4 = IV
+14 = XIV
+1 = I
+</pre>

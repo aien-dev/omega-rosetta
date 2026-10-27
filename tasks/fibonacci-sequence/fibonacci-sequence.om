@@ -1,0 +1,49 @@
+note Rosetta Code task "Fibonacci sequence": https://rosettacode.org/wiki/Fibonacci_sequence
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note fib n is F(n) with F(0) = 0 and F(1) = 1; F(93) is the largest that fits a ulong
+note (the loop computes one term past the one returned; unsigned add wraps, it never traps)
+fn fib n ulong to ulong
+a = ulong 0
+b = ulong 1
+for i ulong n
+t = add a b
+a = b
+b = t
+end
+ret a
+end
+fn main to int
+for n ulong 94
+emitu fib n
+emit nl
+end
+ret 0
+end

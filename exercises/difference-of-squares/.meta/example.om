@@ -1,0 +1,16 @@
+note Exercism-style exercise "difference-of-squares": https://exercism.org/tracks/python/exercises/difference-of-squares
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note sqsum n is the square of the sum 1 .. n, sumsq n the sum of the squares, and
+note diffsq n the first minus the second.
+note Check it with: sh exercise.sh exercises/difference-of-squares
+om2
+fn sqsum n ulong to ulong
+s = div mul n add n 1 2
+ret mul s s
+end
+fn sumsq n ulong to ulong
+ret div mul mul n add n 1 add mul 2 n 1 6
+end
+fn diffsq n ulong to ulong
+ret sub sqsum n sumsq n
+end

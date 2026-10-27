@@ -1,0 +1,10 @@
+note Exercism-style exercise "leap": https://exercism.org/tracks/python/exercises/leap
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note Return true when year y is a leap year in the Gregorian calendar: divisible by 4, except
+note centuries, except centuries divisible by 400.
+note Check it with: sh exercise.sh exercises/leap
+om2
+fn leap y ulong to bool
+note replace this line with your solution
+trap 13
+end

@@ -1,0 +1,98 @@
+name: tasks
+# Births omc from the 408-byte seed at the aien-dev/omega-mv commit in omega.ref on a GitHub-hosted
+# ubuntu-24.04-arm runner, compiles and runs every task and exercise, and runs negative controls
+# that must fail: a mutated expected.txt, a mutated task source, every exercise stub, and a wrong
+# exercise solution.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 6 * * 1'
+permissions:
+  contents: read
+jobs:
+  tasks:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Oracles reproduce every expected.txt
+        run: |
+          set -eu
+          python3 --version
+          for d in tasks/*/; do
+            n=$(basename "$d")
+            python3 "$d/oracle.py" > "$RUNNER_TEMP/oracle.out"
+            cmp "$RUNNER_TEMP/oracle.out" "$d/expected.txt" || { echo "oracle for $n disagrees with expected.txt"; exit 1; }
+          done
+          echo "every oracle reproduces its expected.txt"
+      - name: Tasks (must PASS), omc born from the seed
+        run: |
+          set -u
+          uname -srm
+          start=$(date +%s%3N)
+          rc=0; sh run.sh > "$RUNNER_TEMP/tasks.log" || rc=$?
+          echo "wall_ms $(( $(date +%s%3N) - start ))"
+          cat "$RUNNER_TEMP/tasks.log"
+          { echo '```'; cat "$RUNNER_TEMP/tasks.log"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          [ "$rc" = 0 ] || { echo "run.sh exited $rc"; exit 1; }
+          total=$(ls -d tasks/*/ | wc -l)
+          grep -qx "TASKS PASS $total/$total" "$RUNNER_TEMP/tasks.log"
+      - name: Negative control 1, a mutated expected.txt (must FAIL)
+        run: |
+          set -u
+          t="$RUNNER_TEMP/neg1"; cp -r tasks "$t"
+          sed 's/^Buzz$/Bzzz/' tasks/fizzbuzz/expected.txt > "$t/fizzbuzz/expected.txt"
+          if cmp -s tasks/fizzbuzz/expected.txt "$t/fizzbuzz/expected.txt"; then echo "edit did nothing"; exit 1; fi
+          rc=0; sh run.sh --omc build/omega-mv/seed/out/omc --tasks "$t" > "$RUNNER_TEMP/neg1.log" || rc=$?
+          cat "$RUNNER_TEMP/neg1.log"
+          [ "$rc" = 1 ] || { echo "mutated expected.txt was not caught: rc=$rc"; exit 1; }
+          grep -qx 'FAIL fizzbuzz stdout differs from expected.txt' "$RUNNER_TEMP/neg1.log"
+          [ "$(grep -c '^FAIL ' "$RUNNER_TEMP/neg1.log")" = 1 ]
+          echo "negative control 1 failed as required (rc=$rc)"
+      - name: Negative control 2, a mutated task source (must FAIL)
+        run: |
+          set -u
+          t="$RUNNER_TEMP/neg2"; cp -r tasks "$t"
+          # 0xedb88320 is the reflected CRC-32 polynomial; flipping one bit must change the checksum.
+          sed 's/0xedb88320/0xedb88321/' tasks/crc-32/crc-32.om > "$t/crc-32/crc-32.om"
+          if cmp -s tasks/crc-32/crc-32.om "$t/crc-32/crc-32.om"; then echo "edit did nothing"; exit 1; fi
+          rc=0; sh run.sh --omc build/omega-mv/seed/out/omc --tasks "$t" > "$RUNNER_TEMP/neg2.log" || rc=$?
+          cat "$RUNNER_TEMP/neg2.log"
+          [ "$rc" = 1 ] || { echo "mutated source was not caught: rc=$rc"; exit 1; }
+          grep -q '^FAIL crc-32 ' "$RUNNER_TEMP/neg2.log"
+          echo "negative control 2 failed as required (rc=$rc)"
+      - name: Exercises, every example solution (must PASS)
+        run: |
+          set -eu
+          for d in exercises/*/; do sh exercise.sh "$d" "$d.meta/example.om"; done
+      - name: Negative control 3, every unsolved stub (must FAIL)
+        run: |
+          set -u
+          for d in exercises/*/; do
+            rc=0; sh exercise.sh "$d" > "$RUNNER_TEMP/stub.log" || rc=$?
+            cat "$RUNNER_TEMP/stub.log"
+            [ "$rc" = 1 ] || { echo "stub $d was not caught: rc=$rc"; exit 1; }
+            grep -q '^EXERCISE FAIL .* trap 13 ' "$RUNNER_TEMP/stub.log"
+          done
+          echo "negative control 3: every stub failed as required"
+      - name: Negative control 4, a wrong leap solution (must FAIL on the century cases)
+        run: |
+          set -u
+          sed '/^fn leap/,$d' exercises/leap/.meta/example.om > "$RUNNER_TEMP/wrong.om"
+          printf 'fn leap y ulong to bool\nret eq rem y 4 0\nend\n' >> "$RUNNER_TEMP/wrong.om"
+          rc=0; sh exercise.sh exercises/leap "$RUNNER_TEMP/wrong.om" > "$RUNNER_TEMP/wrong.log" || rc=$?
+          cat "$RUNNER_TEMP/wrong.log"
+          [ "$rc" = 1 ] || { echo "wrong solution was not caught: rc=$rc"; exit 1; }
+          grep -qx 'EXERCISE FAIL leap failed=3' "$RUNNER_TEMP/wrong.log"
+          echo "negative control 4 failed as required (rc=$rc)"
+      - name: Keep the logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tasks-logs
+          path: |
+            ${{ runner.temp }}/*.log
+            build/seed.log

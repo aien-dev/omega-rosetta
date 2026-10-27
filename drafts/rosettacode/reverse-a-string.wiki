@@ -1,0 +1,40 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text s1 "asdf"
+text s2 "Hello, World!"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note reverses bytes, so it is correct for ASCII only; strings up to 256 bytes (longer traps 3)
+fn rev a view uchar * to void
+r = new uchar 256 0
+n = len a
+for i ulong n
+put r i get a sub sub n 1 i
+end
+emit part r 0 n
+emit nl
+end
+fn main to int
+rev s1
+rev s2
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+fdsa
+!dlroW ,olleH
+</pre>

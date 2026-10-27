@@ -1,0 +1,9 @@
+note Exercism-style exercise "armstrong-numbers": https://exercism.org/tracks/python/exercises/armstrong-numbers
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note Return true when n equals the sum of its digits, each raised to the number of digits.
+note Check it with: sh exercise.sh exercises/armstrong-numbers
+om2
+fn armstrong n ulong to bool
+note replace this line with your solution
+trap 13
+end

@@ -1,0 +1,71 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text yes " is a leap year\n"
+text no " is not a leap year\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn leap y ulong to bool
+if eq rem y 400 0
+ret true
+end
+if eq rem y 100 0
+ret false
+end
+ret eq rem y 4 0
+end
+fn show y ulong to void
+emitu y
+if leap y
+emit yes
+else
+emit no
+end
+end
+fn main to int
+show 1900
+show 1996
+show 2000
+show 2023
+show 2024
+show 2100
+show 2400
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+1900 is not a leap year
+1996 is a leap year
+2000 is a leap year
+2023 is not a leap year
+2024 is a leap year
+2100 is not a leap year
+2400 is a leap year
+</pre>

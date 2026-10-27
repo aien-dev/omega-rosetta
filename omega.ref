@@ -1,0 +1,4 @@
+# The aien-dev/omega-mv commit (parent pin) whose seed births the omc every check here uses,
+# and the sha256 that omc must have.
+commit e5b32567a7aff3ce594e3254a622a846a6cd190b
+omc_sha256 2c82480596bbdc50cda9626866209ef662d5834f278f839ff4ce0250c495029f

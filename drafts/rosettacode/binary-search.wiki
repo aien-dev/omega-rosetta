@@ -1,0 +1,111 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text minus "-"
+text found " found at index "
+text nf " not found"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note returns the index of x in the sorted a, or -1; 16 elements need at most 5 halvings
+fn bsearch a view long 16 x long to long
+lo = ulong 0
+hi = ulong 16
+while lt lo hi bound 16
+mid = add lo shr sub hi lo 1
+v = get a mid
+if eq v x
+ret long mid
+end
+if lt v x
+lo = add mid 1
+else
+hi = mid
+end
+end
+ret -1
+end
+fn query a view long 16 x long to void
+r = bsearch a x
+emiti x
+if ge r 0
+emit found
+emiti r
+else
+emit nf
+end
+emit nl
+end
+fn main to int
+a = new long 16 0
+put a 0 -40
+put a 1 -12
+put a 2 -3
+put a 3 0
+put a 4 2
+put a 5 5
+put a 6 8
+put a 7 13
+put a 8 21
+put a 9 34
+put a 10 55
+put a 11 89
+put a 12 144
+put a 13 233
+put a 14 377
+put a 15 610
+query a -40
+query a 0
+query a 21
+query a 610
+query a 7
+query a 1000
+query a -41
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+-40 found at index 0
+0 found at index 3
+21 found at index 8
+610 found at index 15
+7 not found
+1000 not found
+-41 not found
+</pre>

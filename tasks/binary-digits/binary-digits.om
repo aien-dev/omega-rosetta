@@ -1,0 +1,38 @@
+note Rosetta Code task "Binary digits": https://rosettacode.org/wiki/Binary_digits
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+fn bin n ulong to void
+d = new uchar 64 0
+i = ulong 64
+v = n
+while true bound 64
+i = sub i 1
+put d i uchar add and v 1 48
+v = shr v 1
+if eq v 0
+break
+end
+end
+emit part d i sub 64 i
+emit nl
+end
+fn main to int
+bin 0
+bin 5
+bin 50
+bin 9000
+bin 18446744073709551615
+ret 0
+end

@@ -1,0 +1,58 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+text c0 "steps 1 is 0"
+text c1 "steps 16 is 4"
+text c2 "steps 12 is 9"
+text c3 "steps 1000000 is 152"
+text c4 "steps 27 is 111"
+fn main to int
+tcheck eq steps 1 0 c0
+tcheck eq steps 16 4 c1
+tcheck eq steps 12 9 c2
+tcheck eq steps 1000000 152 c3
+tcheck eq steps 27 111 c4
+ret int get tfails 0
+end

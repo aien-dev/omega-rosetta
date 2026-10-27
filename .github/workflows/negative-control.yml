@@ -1,0 +1,22 @@
+name: negative control (red by design)
+# Manual only. Runs run.sh on a copy of tasks/ whose fizzbuzz/expected.txt has one line changed,
+# and does NOT invert the result: a correct checker makes this run fail (red). A green run here
+# would mean run.sh cannot catch a wrong answer. The tasks workflow runs the same control inverted.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mutated-expected:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mutate one expected line
+        run: |
+          set -eu
+          t="$RUNNER_TEMP/mutated"; cp -r tasks "$t"
+          sed 's/^Buzz$/Bzzz/' tasks/fizzbuzz/expected.txt > "$t/fizzbuzz/expected.txt"
+          ! cmp -s tasks/fizzbuzz/expected.txt "$t/fizzbuzz/expected.txt"
+      - name: run.sh on the mutated tree (expected to FAIL)
+        run: sh run.sh --prebuilt --tasks "$RUNNER_TEMP/mutated"

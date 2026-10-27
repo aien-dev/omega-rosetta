@@ -1,0 +1,16 @@
+{{language|Omegese
+|exec=machine
+|strength=strong
+|safety=safe
+|express=explicit
+|checking=static
+|gc=no
+|site=https://github.com/aien-dev/omega-mv
+}}
+Omegese is the source language of Omega, the language and compiler in [https://github.com/aien-dev/omega-mv aien-dev/omega-mv]. Its compiler, <code>omc</code>, writes static Linux AArch64 executables and is rebuilt from a 408-byte hand-written AArch64 Linux program through four seed rungs, with no C compiler, assembler or linker writing any byte of the chain. The 408 bytes are a binary written as 7,903 bytes of commented hex text and turned into bytes by a 1,048-byte POSIX shell script (load0.sh); the shell's printf is the one outside tool, and the chain runs only on AArch64 Linux. This is a fixed-output reproducibility match along one build path from a pinned commit; it is not diverse double compilation and does not prove omc correct.
+
+Programs are lines of prefix words (<code>add a mul b c</code>), every loop carries a bound, out-of-range array access traps, and types never convert silently. The examples here use the OM-2 profile.
+
+Not to be confused with the two other languages called [[:Category:Omega|Omega]].
+
+Every example here is also in [https://github.com/aien-dev/omega-rosetta aien-dev/omega-rosetta], where CI compiles it with the pinned compiler and checks its output against an independent reference.
