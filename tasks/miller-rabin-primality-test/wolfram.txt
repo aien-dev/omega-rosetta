@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/miller-rabin-primality-test/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 2f42e1c6ae7aabf3256b90c6107135e46b27ec51ad05c6a55ae155c7632d9c14.
+agreement: YES
+query:
+s = "primes below 100: " <> StringRiffle[ToString /@ Select[Range[0, 99], PrimeQ], " "] <> "\n" <>
+  StringJoin[(ToString[#] <> If[PrimeQ[#], ": prime\n", ": composite\n"]) & /@
+    {561, 1105, 1729, 2047, 3215031751, 2147483647, 3825123056546413051, 4611686018427387903,
+     2305843009213693951, 9223372036854775783, 18446744073709551557, 18446744073709551615}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"2f42e1c6ae7aabf3256b90c6107135e46b27ec51ad05c6a55ae155c7632d9c14", "primes below 100: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97\n561: composite\n1105: composite\n1729: composite\n2047: composite\n3215031751: composite\n2147483647: prime\n3825123056546413051: composite\n4611686018427387903: composite\n2305843009213693951: prime\n9223372036854775783: prime\n18446744073709551557: prime\n18446744073709551615: composite\n"}

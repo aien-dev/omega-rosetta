@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/lucas-lehmer-test/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 477dcd8c7c35a449e29fab6d3e4d7e152464a6dece681cbf8b7a55b906503ea2.
+agreement: YES
+query:
+s = "Mersenne primes 2^p - 1 for p <= 63, by the Lucas-Lehmer test:\n" <>
+  StringRiffle[("M" <> ToString[#]) & /@ Select[Range[2, 63], MersennePrimeExponentQ], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"477dcd8c7c35a449e29fab6d3e4d7e152464a6dece681cbf8b7a55b906503ea2", "Mersenne primes 2^p - 1 for p <= 63, by the Lucas-Lehmer test:\nM2 M3 M5 M7 M13 M17 M19 M31 M61\n"}

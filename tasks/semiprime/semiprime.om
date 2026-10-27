@@ -1,0 +1,84 @@
+note Rosetta Code task "Semiprime": https://rosettacode.org/wiki/Semiprime
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text lst "semiprimes below 100:"
+text cnt "semiprimes below 10000: "
+text tst "1679 = 23 * 73 is semiprime: "
+text yes "yes\n"
+text no "no\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note semiprime: the least factor d of n leaves a prime cofactor n / d
+fn semi n ulong to bool
+if lt n 4
+ret false
+end
+d = ulong 2
+while le mul d d n bound 100
+if eq rem n d 0
+m = div n d
+e = ulong 2
+while le mul e e m bound 100
+if eq rem m e 0
+ret false
+end
+e = add e 1
+end
+ret true
+end
+d = add d 1
+end
+ret false
+end
+fn main to int
+emit lst
+for n ulong 100
+if semi n
+emit sp
+emitu n
+end
+end
+emit nl
+c = ulong 0
+for n ulong 10000
+if semi n
+c = add c 1
+end
+end
+emit cnt
+emitu c
+emit nl
+emit tst
+if semi 1679
+emit yes
+else
+emit no
+end
+ret 0
+end

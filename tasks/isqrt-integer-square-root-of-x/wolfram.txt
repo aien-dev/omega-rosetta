@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/isqrt-integer-square-root-of-x/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = bb1a54683c3b7f4dc76994eede75dd4ff1e49e13d21ed5c1c47dffe43a6e0260.
+agreement: YES
+query:
+s = "isqrt of 0..65: " <> StringRiffle[ToString /@ Floor[Sqrt[Range[0, 65]]], " "] <> "\n" <>
+  StringJoin[Table["isqrt(7^" <> ToString[n] <> ") = " <> ToString[Floor[Sqrt[7^n]]] <> "\n", {n, 1, 21, 2}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"bb1a54683c3b7f4dc76994eede75dd4ff1e49e13d21ed5c1c47dffe43a6e0260", "isqrt of 0..65: 0 1 1 1 2 2 2 2 2 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 5 5 5 5 5 5 5 5 5 5 5 6 6 6 6 6 6 6 6 6 6 6 6 6 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 8 8\nisqrt(7^1) = 2\nisqrt(7^3) = 18\nisqrt(7^5) = 129\nisqrt(7^7) = 907\nisqrt(7^9) = 6352\nisqrt(7^11) = 44467\nisqrt(7^13) = 311269\nisqrt(7^15) = 2178889\nisqrt(7^17) = 15252229\nisqrt(7^19) = 106765608\nisqrt(7^21) = 747359260\n"}

@@ -1,0 +1,10 @@
+by loop, below 1000: 233168
+by formula, below 10^1: 23
+by formula, below 10^2: 2318
+by formula, below 10^3: 233168
+by formula, below 10^4: 23331668
+by formula, below 10^5: 2333316668
+by formula, below 10^6: 233333166668
+by formula, below 10^7: 23333331666668
+by formula, below 10^8: 2333333316666668
+by formula, below 10^9: 233333333166666668

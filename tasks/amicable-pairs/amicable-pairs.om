@@ -1,0 +1,60 @@
+note Rosetta Code task "Amicable pairs": https://rosettacode.org/wiki/Amicable_pairs
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+note ds n is the sum of the proper divisors of n, for n below 20000
+global ds ulong 20000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note each i adds itself to its multiples 2i, 3i, ... below 20000; fewer than 20000 multiples per i
+fn sieve to void
+i = ulong 1
+while lt i 10000 bound 10000
+j = mul i 2
+while lt j 20000 bound 20000
+put ds j add get ds j i
+j = add j i
+end
+i = add i 1
+end
+end
+fn main to int
+sieve
+for n ulong 20000
+m = get ds n
+if and gt m n lt m 20000
+if eq get ds m n
+emitu n
+emit sp
+emitu m
+emit nl
+end
+end
+end
+ret 0
+end

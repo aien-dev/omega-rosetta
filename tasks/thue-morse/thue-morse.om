@@ -1,0 +1,38 @@
+note Rosetta Code task "Thue-Morse": https://rosettacode.org/wiki/Thue-Morse
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes the single byte c
+fn emitc c uchar to void
+b = new uchar 1 c
+emit b
+end
+note each step appends the bitwise complement of the sequence so far; 7 steps reach 64 terms
+fn main to int
+t = new uchar 64 0
+n = ulong 1
+for s ulong 7
+for i ulong n
+emitc add get t i uchar 48
+end
+emit nl
+if lt n 64
+for i ulong n
+put t add n i sub uchar 1 get t i
+end
+n = mul n 2
+end
+end
+ret 0
+end

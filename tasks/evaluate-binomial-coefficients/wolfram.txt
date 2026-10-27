@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/evaluate-binomial-coefficients/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = c5472712109e3bfb08ee15772b58b9cfa1804c2cefa08124e8fa22e731bedf3f.
+agreement: YES
+query:
+s = StringJoin[("C(" <> ToString[#[[1]]] <> ", " <> ToString[#[[2]]] <> ") = " <> ToString[Binomial @@ #] <> "\n") & /@
+    {{5, 3}, {10, 0}, {10, 10}, {33, 17}, {60, 30}, {67, 33}}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"c5472712109e3bfb08ee15772b58b9cfa1804c2cefa08124e8fa22e731bedf3f", "C(5, 3) = 10\nC(10, 0) = 1\nC(10, 10) = 1\nC(33, 17) = 1166803110\nC(60, 30) = 118264581564861424\nC(67, 33) = 14226520737620288370\n"}

@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/modular-exponentiation/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = ee023d2d24dce4d70b433f300d3a0ffece67eaa82fe895a730a79d2f3d8cb1f7.
+agreement: YES
+query:
+a = 2988348162058574136915891421498819466320163312926952423791023078876139;
+b = 2351399303373464486466122544523690094744975233415544072992656881240319;
+s = "a^b mod 10^40 = " <> ToString[PowerMod[a, b, 10^40]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"ee023d2d24dce4d70b433f300d3a0ffece67eaa82fe895a730a79d2f3d8cb1f7", "a^b mod 10^40 = 1527229998585248450016808958343740453059\n"}

@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/fibonacci-n-step-number-sequences/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 4d3d5ca595d85f522af8aa010cb7164dd8464c18592c8a01bc0cb6014698bb30.
+agreement: YES
+query:
+nstep[n_] := LinearRecurrence[ConstantArray[1, n], Join[{1}, 2^Range[0, n - 2]], 15];
+names = {"fibonacci: ", "tribonacci:", "tetranacci:", "pentanacci:", "hexanacci: ", "heptanacci:", "octonacci: ", "nonanacci: ", "decanacci: "};
+s = StringJoin[Table[names[[n - 1]] <> StringJoin[(" " <> ToString[#]) & /@ nstep[n]] <> "\n", {n, 2, 10}]] <>
+  "lucas:     " <> StringJoin[(" " <> ToString[#]) & /@ Table[LucasL[k], {k, 0, 14}]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"4d3d5ca595d85f522af8aa010cb7164dd8464c18592c8a01bc0cb6014698bb30", "fibonacci:  1 1 2 3 5 8 13 21 34 55 89 144 233 377 610\ntribonacci: 1 1 2 4 7 13 24 44 81 149 274 504 927 1705 3136\ntetranacci: 1 1 2 4 8 15 29 56 108 208 401 773 1490 2872 5536\npentanacci: 1 1 2 4 8 16 31 61 120 236 464 912 1793 3525 6930\nhexanacci:  1 1 2 4 8 16 32 63 125 248 492 976 1936 3840 7617\nheptanacci: 1 1 2 4 8 16 32 64 127 253 504 1004 2000 3984 7936\noctonacci:  1 1 2 4 8 16 32 64 128 255 509 1016 2028 4048 8080\nnonanacci:  1 1 2 4 8 16 32 64 128 256 511 1021 2040 4076 8144\ndecanacci:  1 1 2 4 8 16 32 64 128 256 512 1023 2045 4088 8172\nlucas:      2 1 3 4 7 11 18 29 47 76 123 199 322 521 843\n"}

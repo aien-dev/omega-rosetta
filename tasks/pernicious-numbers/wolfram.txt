@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/pernicious-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = ce6a584e350fb8899870dbc726aef10cfc4458eba3fcb7ca091f6d6e204f7568.
+agreement: YES
+query:
+pern[n_] := PrimeQ[DigitCount[n, 2, 1]];
+s = "first 25 pernicious numbers: " <> StringRiffle[ToString /@ Take[Select[Range[100], pern], 25], " "] <> "\n" <>
+  "pernicious numbers from 888888877 to 888888888: " <> StringRiffle[ToString /@ Select[Range[888888877, 888888888], pern], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"ce6a584e350fb8899870dbc726aef10cfc4458eba3fcb7ca091f6d6e204f7568", "first 25 pernicious numbers: 3 5 6 7 9 10 11 12 13 14 17 18 19 20 21 22 24 25 26 28 31 33 34 35 36\npernicious numbers from 888888877 to 888888888: 888888877 888888878 888888880 888888883 888888885 888888886\n"}

@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/van-eck-sequence/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 6ac868c55af375dff6884e0129b20bb64266b9e904f2f0258fb56a4d03454b1d.
+agreement: YES
+query:
+next[l_] := Append[l, With[{p = Flatten[Position[Most[l], Last[l]]]}, If[p === {}, 0, Length[l] - Last[p]]]];
+a = Nest[next, {0}, 999];
+s = "terms 1 to 10: " <> StringRiffle[ToString /@ a[[1 ;; 10]], " "] <> "\n" <>
+  "terms 991 to 1000: " <> StringRiffle[ToString /@ a[[991 ;; 1000]], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"6ac868c55af375dff6884e0129b20bb64266b9e904f2f0258fb56a4d03454b1d", "terms 1 to 10: 0 0 1 0 2 0 2 2 1 6\nterms 991 to 1000: 4 7 30 25 67 225 488 0 10 136\n"}

@@ -1,0 +1,16 @@
+n, C(n) by C(n+1) = 2(2n+1)/(n+2) C(n), and again by C(n+1) = sum C(i) C(n-i):
+C(0) = 1 by the recurrence, 1 by the convolution sum
+C(1) = 1 by the recurrence, 1 by the convolution sum
+C(2) = 2 by the recurrence, 2 by the convolution sum
+C(3) = 5 by the recurrence, 5 by the convolution sum
+C(4) = 14 by the recurrence, 14 by the convolution sum
+C(5) = 42 by the recurrence, 42 by the convolution sum
+C(6) = 132 by the recurrence, 132 by the convolution sum
+C(7) = 429 by the recurrence, 429 by the convolution sum
+C(8) = 1430 by the recurrence, 1430 by the convolution sum
+C(9) = 4862 by the recurrence, 4862 by the convolution sum
+C(10) = 16796 by the recurrence, 16796 by the convolution sum
+C(11) = 58786 by the recurrence, 58786 by the convolution sum
+C(12) = 208012 by the recurrence, 208012 by the convolution sum
+C(13) = 742900 by the recurrence, 742900 by the convolution sum
+C(14) = 2674440 by the recurrence, 2674440 by the convolution sum

@@ -1,0 +1,8 @@
+twin prime pairs below 10: 2
+twin prime pairs below 100: 8
+twin prime pairs below 1000: 35
+twin prime pairs below 10000: 205
+twin prime pairs below 100000: 1224
+twin prime pairs below 1000000: 8169
+twin prime pairs below 10000000: 58980
+twin prime pairs below 100000000: 440312

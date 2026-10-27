@@ -1,0 +1,85 @@
+note Rosetta Code task "Least common multiple": https://rosettacode.org/wiki/Least_common_multiple
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text pre "lcm("
+text cm ", "
+text eqs ") = "
+text tup "lcm(1.."
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note Euclid: each two steps at least halve x, so 128 steps cover any 64-bit pair
+fn gcd a ulong b ulong to ulong
+x = a
+y = b
+while ne y 0 bound 128
+t = rem x y
+x = y
+y = t
+end
+ret x
+end
+note lcm(a, b) = a / gcd(a, b) * b, dividing first so the product never exceeds the result
+fn lcm a ulong b ulong to ulong
+if or eq a 0 eq b 0
+ret 0
+end
+ret mul div a gcd a b b
+end
+fn tell a ulong b ulong to void
+emit pre
+emitu a
+emit cm
+emitu b
+emit eqs
+emitu lcm a b
+emit nl
+end
+note lcm of 1..n by folding; lcm(1..40) = 5342931457063200 is below 2^64
+fn upto n ulong to void
+r = ulong 1
+k = ulong 1
+while le k n bound 40
+r = lcm r k
+k = add k 1
+end
+emit tup
+emitu n
+emit eqs
+emitu r
+emit nl
+end
+fn main to int
+tell 12 18
+tell 35 0
+tell 0 5
+tell 4294967296 6000000000
+upto 10
+upto 20
+upto 40
+ret 0
+end

@@ -1,0 +1,8 @@
+627615: additive persistence 2, digital root 9
+39390: additive persistence 2, digital root 6
+588225: additive persistence 2, digital root 3
+393900588225: additive persistence 2, digital root 9
+0: additive persistence 0, digital root 0
+9: additive persistence 0, digital root 9
+199: additive persistence 3, digital root 1
+18446744073709551615: additive persistence 3, digital root 6

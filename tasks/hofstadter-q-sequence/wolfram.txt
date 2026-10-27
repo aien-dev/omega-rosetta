@@ -1,0 +1,15 @@
+Wolfram cross-check of tasks/hofstadter-q-sequence/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = de27b38bf948ead1345c65bb3da9266300aceb854e1a42f813df336e35ba292f.
+agreement: YES
+query:
+q = ConstantArray[1, 100000];
+Do[q[[n]] = q[[n - q[[n - 1]]]] + q[[n - q[[n - 2]]]], {n, 3, 100000}];
+s = "first 10 terms: " <> StringRiffle[ToString /@ q[[1 ;; 10]], " "] <> "\n" <>
+  "the 1000th term: " <> ToString[q[[1000]]] <> "\n" <>
+  "terms up to the 100000th that are less than the term before: " <> ToString[Count[Differences[q], d_ /; d < 0]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"de27b38bf948ead1345c65bb3da9266300aceb854e1a42f813df336e35ba292f", "first 10 terms: 1 1 2 3 3 4 5 5 6 6\nthe 1000th term: 502\nterms up to the 100000th that are less than the term before: 49798\n"}

@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/least-common-multiple/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = d7d38a17de8d031b4334a64c3ef3320dd4597552ea772ff20123a4f8b67ac792.
+agreement: YES
+query:
+s = StringJoin[("lcm(" <> ToString[#[[1]]] <> ", " <> ToString[#[[2]]] <> ") = " <> ToString[LCM @@ #] <> "\n") & /@
+     {{12, 18}, {35, 0}, {0, 5}, {4294967296, 6000000000}}] <>
+  StringJoin[("lcm(1.." <> ToString[#] <> ") = " <> ToString[LCM @@ Range[#]] <> "\n") & /@ {10, 20, 40}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"d7d38a17de8d031b4334a64c3ef3320dd4597552ea772ff20123a4f8b67ac792", "lcm(12, 18) = 36\nlcm(35, 0) = 0\nlcm(0, 5) = 0\nlcm(4294967296, 6000000000) = 25165824000000000\nlcm(1..10) = 2520\nlcm(1..20) = 232792560\nlcm(1..40) = 5342931457063200\n"}

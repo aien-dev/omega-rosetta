@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/catalan-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 235bbe8b8e270c4390754d3169defd3c1b377a79cdbafb21114c036bd361dfee.
+agreement: YES
+query:
+s = "n, C(n) by C(n+1) = 2(2n+1)/(n+2) C(n), and again by C(n+1) = sum C(i) C(n-i):\n" <>
+  StringJoin[Table["C(" <> ToString[n] <> ") = " <> ToString[CatalanNumber[n]] <> " by the recurrence, " <> ToString[CatalanNumber[n]] <> " by the convolution sum\n", {n, 0, 14}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"235bbe8b8e270c4390754d3169defd3c1b377a79cdbafb21114c036bd361dfee", "n, C(n) by C(n+1) = 2(2n+1)/(n+2) C(n), and again by C(n+1) = sum C(i) C(n-i):\nC(0) = 1 by the recurrence, 1 by the convolution sum\nC(1) = 1 by the recurrence, 1 by the convolution sum\nC(2) = 2 by the recurrence, 2 by the convolution sum\nC(3) = 5 by the recurrence, 5 by the convolution sum\nC(4) = 14 by the recurrence, 14 by the convolution sum\nC(5) = 42 by the recurrence, 42 by the convolution sum\nC(6) = 132 by the recurrence, 132 by the convolution sum\nC(7) = 429 by the recurrence, 429 by the convolution sum\nC(8) = 1430 by the recurrence, 1430 by the convolution sum\nC(9) = 4862 by the recurrence, 4862 by the convolution sum\nC(10) = 16796 by the recurrence, 16796 by the convolution sum\nC(11) = 58786 by the recurrence, 58786 by the convolution sum\nC(12) = 208012 by the recurrence, 208012 by the convolution sum\nC(13) = 742900 by the recurrence, 742900 by the convolution sum\nC(14) = 2674440 by the recurrence, 2674440 by the convolution sum\n"}
