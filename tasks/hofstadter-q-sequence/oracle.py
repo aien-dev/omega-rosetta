@@ -1,10 +1,8 @@
 # Independent reference for "Hofstadter Q sequence" (Python 3, standard library only).
 # expected.txt is this program's stdout; omc never produced it.
-import sys
-sys.setrecursionlimit(10000)
 q = {1: 1, 2: 1}
 def Q(n):
-    # iterative fill so the recursion depth stays small
+    # fill Q(len(q)+1) .. Q(n) in order; each term uses only earlier ones
     for m in range(len(q) + 1, n + 1):
         q[m] = q[m - q[m - 1]] + q[m - q[m - 2]]
     return q[n]
