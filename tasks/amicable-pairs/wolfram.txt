@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/amicable-pairs/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 887ab0802e179f080fbf921a2a954d846aec410a73c5080a73d9cb5790a2fb65.
+agreement: YES
+query:
+sp[n_] := DivisorSigma[1, n] - n;
+pairs = Select[Table[{n, sp[n]}, {n, 1, 19999}], #[[1]] < #[[2]] < 20000 && sp[#[[2]]] == #[[1]] &];
+s = StringJoin[(ToString[#[[1]]] <> " " <> ToString[#[[2]]] <> "\n") & /@ pairs];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"887ab0802e179f080fbf921a2a954d846aec410a73c5080a73d9cb5790a2fb65", "220 284\n1184 1210\n2620 2924\n5020 5564\n6232 6368\n10744 10856\n12285 14595\n17296 18416\n"}

@@ -1,0 +1,15 @@
+Wolfram cross-check of tasks/kaprekar-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = f1b64f49d73a3c608576e7670f9afebea1b2f2901d9850bf5261a4c170ec6c94.
+agreement: YES
+query:
+n = Range[10^6 - 1]; sq = n^2;
+hits = Total[Table[With[{q = Quotient[sq, 10^k], r = Mod[sq, 10^k]}, (1 - Unitize[q + r - n]) Unitize[r] Unitize[q]], {k, 1, 12}]];
+ks = Union[Flatten[Position[hits, h_ /; h > 0]], {1}];
+s = "Kaprekar numbers below 10000: " <> StringRiffle[ToString /@ Select[ks, # < 10000 &], " "] <> "\n" <>
+  "count of Kaprekar numbers below 1000000: " <> ToString[Length[ks]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"f1b64f49d73a3c608576e7670f9afebea1b2f2901d9850bf5261a4c170ec6c94", "Kaprekar numbers below 10000: 1 9 45 55 99 297 703 999 2223 2728 4879 4950 5050 5292 7272 7777 9999\ncount of Kaprekar numbers below 1000000: 54\n"}

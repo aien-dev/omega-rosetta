@@ -1,0 +1,83 @@
+note Rosetta Code task "Recaman's sequence": https://rosettacode.org/wiki/Recaman%27s_sequence
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text first "first 15 terms:"
+text dup "first term already seen: a("
+text eqs ") = "
+text cov "terms a(0)..a(n) first contain every integer 0..1000 at n = "
+note sn v is 1 once v has appeared; the oracle's run shows no term before 0..1000 is covered exceeds 1942300
+global sn uchar 1942301
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a(0) = 0; a(n) = a(n-1) - n if that is positive and new, else a(n-1) + n
+note bound: the cover is complete at n = 328002, below the 999999 loop bound
+fn main to int
+emit first
+emit sp
+emitu 0
+put sn 0 1
+a = ulong 0
+n = ulong 0
+d = ulong 0
+c = ulong 1
+while lt c 1001 bound 999999
+n = add n 1
+nw = add a n
+if gt a n
+if eq get sn sub a n 0
+nw = sub a n
+end
+end
+a = nw
+if eq get sn a 0
+if le a 1000
+c = add c 1
+end
+else
+if eq d 0
+d = n
+emit nl
+emit dup
+emitu n
+emit eqs
+emitu a
+emit nl
+end
+end
+put sn a 1
+if lt n 15
+emit sp
+emitu a
+end
+end
+emit cov
+emitu n
+emit nl
+ret 0
+end

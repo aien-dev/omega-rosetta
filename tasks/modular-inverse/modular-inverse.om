@@ -1,0 +1,93 @@
+note Rosetta Code task "Modular inverse": https://rosettacode.org/wiki/Modular_inverse
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text inv "^-1 mod "
+text eqs " = "
+text none " does not exist\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n in decimal; the minimum long is turned positive as (-(n+1))+1 in ulong
+fn emiti n long to void
+m = new uchar 1 45
+if lt n 0
+emit m
+emitu add ulong neg add n 1 1
+else
+emitu ulong n
+end
+end
+note minv: extended Euclid on (m, a mod m) for m > 0; returns -1 when gcd(a, m) > 1
+note bound: Euclid on values below 2^31 takes fewer than 50 steps; q * nt and q * nr stay below m in size
+fn minv a long m long to long
+x = rem a m
+if lt x 0
+x = add x m
+end
+t = long 0
+nt = long 1
+r = m
+nr = x
+while ne nr 0 bound 100
+q = div r nr
+k = sub t mul q nt
+t = nt
+nt = k
+k = sub r mul q nr
+r = nr
+nr = k
+end
+if gt r 1
+ret -1
+end
+if lt t 0
+t = add t m
+end
+ret t
+end
+fn tell a long m long to void
+emiti a
+emit inv
+emiti m
+v = minv a m
+if lt v 0
+emit none
+else
+emit eqs
+emiti v
+emit nl
+end
+end
+fn main to int
+tell 42 2017
+tell 40 1
+tell 52 217
+tell -486 217
+tell 40 2018
+tell 1234567 1000000007
+ret 0
+end

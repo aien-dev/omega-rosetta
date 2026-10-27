@@ -1,0 +1,75 @@
+note Rosetta Code task "Perfect totient numbers": https://rosettacode.org/wiki/Perfect_totient_numbers
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text first "first 20 perfect totient numbers:"
+note ph n is Euler's totient for n below 6000 (the 20th perfect totient number is 5571)
+global ph ulong 6000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn sieve to void
+for i ulong 6000
+put ph i i
+end
+p = ulong 2
+while lt p 6000 bound 6000
+if eq get ph p p
+j = p
+while lt j 6000 bound 6000
+put ph j sub get ph j div get ph j p
+j = add j p
+end
+end
+p = add p 1
+end
+end
+note n is perfect totient when phi(n) + phi(phi(n)) + ... down to 1 adds up to n; each step at least halves
+note an even value, so 64 steps are plenty
+fn main to int
+sieve
+emit first
+c = ulong 0
+n = ulong 2
+while lt c 20 bound 5999
+s = ulong 0
+v = get ph n
+while gt v 1 bound 64
+s = add s v
+v = get ph v
+end
+s = add s 1
+if eq s n
+emit sp
+emitu n
+c = add c 1
+end
+n = add n 1
+end
+emit nl
+ret 0
+end

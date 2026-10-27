@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/harshad-or-niven-series/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = a8f0174aee10d26e9344945aed3b4b4068a31d34898c7ada437fbc8a596a5ff0.
+agreement: YES
+query:
+hQ[n_] := Divisible[n, Total[IntegerDigits[n]]];
+s = "first 20 Harshad numbers: " <> StringRiffle[ToString /@ Take[Select[Range[200], hQ], 20], " "] <> "\n" <>
+  "first Harshad number above 1000: " <> ToString[SelectFirst[Range[1001, 2000], hQ]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"a8f0174aee10d26e9344945aed3b4b4068a31d34898c7ada437fbc8a596a5ff0", "first 20 Harshad numbers: 1 2 3 4 5 6 7 8 9 10 12 18 20 21 24 27 30 36 40 42\nfirst Harshad number above 1000: 1002\n"}

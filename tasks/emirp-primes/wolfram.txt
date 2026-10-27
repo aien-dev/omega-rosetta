@@ -1,0 +1,19 @@
+Wolfram cross-check of tasks/emirp-primes/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 8e0832c232117be0f98955cc2322280dd25fab05c95b4b86bfb1ca598838a4d1.
+agreement: YES
+query:
+L[x_] := StringRiffle[ToString /@ x, " "];
+emirpQ[n_] := With[{r = IntegerReverse[n]}, PrimeQ[n] && r != n && PrimeQ[r]];
+em = Select[Range[10^6], emirpQ];
+s = "first 20 emirps: " <> L[Take[em, 20]] <> "\n" <>
+  "emirps between 7700 and 8000: " <> L[Select[Range[7700, 8000], emirpQ]] <> "\n" <>
+  "the 10000th emirp: " <> ToString[em[[10000]]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Symbol::undefined2: Warning: Global symbols "L, L, L" are undefined.
+General::messages: Messages were generated which may indicate errors.
+
+Out[1]= {"8e0832c232117be0f98955cc2322280dd25fab05c95b4b86bfb1ca598838a4d1", "first 20 emirps: 13 17 31 37 71 73 79 97 107 113 149 157 167 179 199 311 337 347 359 389\nemirps between 7700 and 8000: 7717 7757 7817 7841 7867 7879 7901 7927 7949 7951 7963\nthe 10000th emirp: 948349\n"}

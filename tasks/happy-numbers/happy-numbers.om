@@ -1,0 +1,68 @@
+note Rosetta Code task "Happy numbers": https://rosettacode.org/wiki/Happy_numbers
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text hdr "first 8 happy numbers:"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn step n ulong to ulong
+s = ulong 0
+v = n
+while gt v 0 bound 20
+d = rem v 10
+s = add s mul d d
+v = div v 10
+end
+ret s
+end
+note Floyd's tortoise and hare: the iteration is eventually periodic; n is happy when the cycle is 1 -> 1
+note bound: from n < 1000 the values stay below 1000 (a 3-digit square sum is at most 243), so the meeting comes within 1000 steps
+fn happy n ulong to bool
+s = n
+f = step n
+while ne s f bound 1000
+s = step s
+f = step step f
+end
+ret eq s 1
+end
+fn main to int
+emit hdr
+n = ulong 0
+k = ulong 0
+while lt k 8 bound 1000
+n = add n 1
+if happy n
+emit sp
+emitu n
+k = add k 1
+end
+end
+emit nl
+ret 0
+end

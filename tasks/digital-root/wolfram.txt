@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/digital-root/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 2edc13971b865534887f66aebf2b91eba3cc26ccaddd413b9e54d362d62ed2e6.
+agreement: YES
+query:
+f[n_] := Module[{l = NestWhileList[Total[IntegerDigits[#]] &, n, # > 9 &]},
+   ToString[n] <> ": additive persistence " <> ToString[Length[l] - 1] <> ", digital root " <> ToString[Last[l]] <> "\n"];
+s = StringJoin[f /@ {627615, 39390, 588225, 393900588225, 0, 9, 199, 18446744073709551615}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"2edc13971b865534887f66aebf2b91eba3cc26ccaddd413b9e54d362d62ed2e6", "627615: additive persistence 2, digital root 9\n39390: additive persistence 2, digital root 6\n588225: additive persistence 2, digital root 3\n393900588225: additive persistence 2, digital root 9\n0: additive persistence 0, digital root 0\n9: additive persistence 0, digital root 9\n199: additive persistence 3, digital root 1\n18446744073709551615: additive persistence 3, digital root 6\n"}

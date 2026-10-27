@@ -1,0 +1,60 @@
+note Rosetta Code task "Catalan numbers": https://rosettacode.org/wiki/Catalan_numbers
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text cc "C("
+text eqs ") = "
+text by " by the recurrence, "
+text sum " by the convolution sum\n"
+text hdr "n, C(n) by C(n+1) = 2(2n+1)/(n+2) C(n), and again by C(n+1) = sum C(i) C(n-i):\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note cs holds C(0)..C(14) from the convolution; all stay below 2^32, so every product fits
+fn main to int
+cs = new ulong 15 0
+put cs 0 1
+for n ulong 14
+s = ulong 0
+for i ulong add n 1
+s = add s mul get cs i get cs sub n i
+end
+put cs add n 1 s
+end
+emit hdr
+c = ulong 1
+for n ulong 15
+emit cc
+emitu n
+emit eqs
+emitu c
+emit by
+emitu get cs n
+emit sum
+c = div mul c mul 2 add mul 2 n 1 add n 2
+end
+ret 0
+end

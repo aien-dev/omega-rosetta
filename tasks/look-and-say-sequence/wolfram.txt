@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/look-and-say-sequence/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 70add033af1bfa286743a42b8576bc908c3581ca743a6d22d5815ca6505b13a7.
+agreement: YES
+query:
+las[d_] := Flatten[{Length[#], First[#]} & /@ Split[d]];
+s = StringJoin[(StringJoin[ToString /@ #] <> "\n") & /@ NestList[las, {1}, 14]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"70add033af1bfa286743a42b8576bc908c3581ca743a6d22d5815ca6505b13a7", "1\n11\n21\n1211\n111221\n312211\n13112221\n1113213211\n31131211131221\n13211311123113112211\n11131221133112132113212221\n3113112221232112111312211312113211\n1321132132111213122112311311222113111221131221\n11131221131211131231121113112221121321132132211331222113112211\n311311222113111231131112132112311321322112111312211312111322212311322113212221\n"}

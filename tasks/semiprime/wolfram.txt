@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/semiprime/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 14642a17d928ab317cada41a01feb83bf7e35bd037f137e4f31a2ebed4afe490.
+agreement: YES
+query:
+sp = Select[Range[9999], PrimeOmega[#] == 2 &];
+s = "semiprimes below 100: " <> StringRiffle[ToString /@ Select[sp, # < 100 &], " "] <> "\n" <>
+  "semiprimes below 10000: " <> ToString[Length[sp]] <> "\n" <>
+  "1679 = 23 * 73 is semiprime: " <> If[PrimeOmega[1679] == 2, "yes", "no"] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"14642a17d928ab317cada41a01feb83bf7e35bd037f137e4f31a2ebed4afe490", "semiprimes below 100: 4 6 9 10 14 15 21 22 25 26 33 34 35 38 39 46 49 51 55 57 58 62 65 69 74 77 82 85 86 87 91 93 94 95\nsemiprimes below 10000: 2625\n1679 = 23 * 73 is semiprime: yes\n"}

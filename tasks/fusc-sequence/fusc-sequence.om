@@ -1,0 +1,79 @@
+note Rosetta Code task "Fusc sequence": https://rosettacode.org/wiki/Fusc_sequence
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text first "first 61 terms:"
+text rec "first term of each decimal length, below index 1000000:\n"
+text fu "fusc("
+text eqs ") = "
+note fu n is fusc(n) for n below 10^6
+global fs ulong 1000000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn digits n ulong to ulong
+k = ulong 1
+v = div n 10
+while gt v 0 bound 20
+k = add k 1
+v = div v 10
+end
+ret k
+end
+note fusc(0) = 0, fusc(1) = 1, fusc(2n) = fusc(n), fusc(2n+1) = fusc(n) + fusc(n+1); each needs only smaller indices
+fn main to int
+put fs 1 1
+for i ulong 999998
+n = add i 2
+h = shr n 1
+if eq rem n 2 0
+put fs n get fs h
+else
+put fs n add get fs h get fs add h 1
+end
+end
+emit first
+for i ulong 61
+emit sp
+emitu get fs i
+end
+emit nl
+emit rec
+w = ulong 0
+for n ulong 1000000
+d = digits get fs n
+if gt d w
+w = d
+emit fu
+emitu n
+emit eqs
+emitu get fs n
+emit nl
+end
+end
+ret 0
+end

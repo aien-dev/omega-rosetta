@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/bell-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 473dab5cfebadf6be0108ab423ca0bb4521e2240afff3c6c5b3c6e2049b83382.
+agreement: YES
+query:
+rows = NestList[FoldList[Plus, Last[#], #] &, {1}, 9];
+s = "first 10 rows of the Bell triangle:\n" <> StringJoin[(StringRiffle[ToString /@ #, " "] <> "\n") & /@ rows] <>
+  "first 15 Bell numbers: " <> StringRiffle[ToString /@ BellB[Range[0, 14]], " "] <> "\n" <>
+  "B(49), the 50th Bell number: " <> ToString[BellB[49]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"473dab5cfebadf6be0108ab423ca0bb4521e2240afff3c6c5b3c6e2049b83382", "first 10 rows of the Bell triangle:\n1\n1 2\n2 3 5\n5 7 10 15\n15 20 27 37 52\n52 67 87 114 151 203\n203 255 322 409 523 674 877\n877 1080 1335 1657 2066 2589 3263 4140\n4140 5017 6097 7432 9089 11155 13744 17007 21147\n21147 25287 30304 36401 43833 52922 64077 77821 94828 115975\nfirst 15 Bell numbers: 1 1 2 5 15 52 203 877 4140 21147 115975 678570 4213597 27644437 190899322\nB(49), the 50th Bell number: 10726137154573358400342215518590002633917247281\n"}

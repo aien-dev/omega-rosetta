@@ -1,0 +1,18 @@
+Wolfram cross-check of tasks/extensible-prime-generator/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = efa44b38eb3e297cba3c30aba20b19c196281d6c54a42957688c0c446bc870f2.
+agreement: YES
+query:
+L[x_] := StringRiffle[ToString /@ x, " "];
+s = "first 20 primes: " <> L[Prime[Range[20]]] <> "\n" <>
+  "primes between 100 and 150: " <> L[Select[Range[100, 150], PrimeQ]] <> "\n" <>
+  "number of primes between 7700 and 8000: " <> ToString[PrimePi[8000] - PrimePi[7699]] <> "\n" <>
+  "the 10000th prime: " <> ToString[Prime[10000]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Symbol::undefined2: Warning: Global symbols "L, L, L" are undefined.
+General::messages: Messages were generated which may indicate errors.
+
+Out[1]= {"efa44b38eb3e297cba3c30aba20b19c196281d6c54a42957688c0c446bc870f2", "first 20 primes: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71\nprimes between 100 and 150: 101 103 107 109 113 127 131 137 139 149\nnumber of primes between 7700 and 8000: 30\nthe 10000th prime: 104729\n"}

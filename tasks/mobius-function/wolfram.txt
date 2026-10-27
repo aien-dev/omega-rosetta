@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/mobius-function/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 34e021d95a74264620cba845774562d76aecf6724ee94b22d21d58b1f8799a63.
+agreement: YES
+query:
+cell[0] = "   "; cell[n_] := StringPadLeft[ToString[MoebiusMu[n]], 3];
+s = "first 199 terms of the Moebius sequence (the first cell, n = 0, is blank):\n" <>
+  StringJoin[Table[StringJoin[cell /@ Range[20 r, 20 r + 19]] <> "\n", {r, 0, 9}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"34e021d95a74264620cba845774562d76aecf6724ee94b22d21d58b1f8799a63", "first 199 terms of the Moebius sequence (the first cell, n = 0, is blank):\n     1 -1 -1  0 -1  1 -1  0  0  1 -1  0 -1  1  1  0 -1  0 -1\n  0  1  1 -1  0  0  1  0  0 -1 -1 -1  0  1  1  1  0 -1  1  1\n  0 -1 -1 -1  0  0  1 -1  0  0  0  1  0 -1  0  1  0  1  1 -1\n  0 -1  1  0  0  1 -1 -1  0  1 -1 -1  0 -1  1  0  0  1 -1 -1\n  0  0  1 -1  0  1  1  1  0 -1  0  1  0  1  1  1  0 -1  0  0\n  0 -1 -1 -1  0 -1  1 -1  0 -1 -1  1  0 -1 -1  1  0  0  1  1\n  0  0  1  1  0  0  0 -1  0  1 -1 -1  0  1  1  0  0 -1 -1 -1\n  0  1  1  1  0  1  1  0  0 -1  0 -1  0  0 -1  1  0 -1  1  1\n  0  1  0 -1  0 -1  1 -1  0  0 -1  0  0 -1 -1  0  0  1  1 -1\n  0 -1 -1  1  0  1 -1  1  0  0 -1 -1  0 -1  1 -1  0 -1  0 -1\n"}

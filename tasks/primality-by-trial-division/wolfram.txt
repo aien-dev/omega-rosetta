@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/primality-by-trial-division/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 23da22a8ba264c1ffc8cd421eae1cf4b8010aa802c9d66f6da3990eb74104052.
+agreement: YES
+query:
+s = "primes below 100: " <> StringRiffle[ToString /@ Select[Range[0, 99], PrimeQ], " "] <> "\n" <>
+  StringJoin[(ToString[#] <> If[PrimeQ[#], " is prime\n", " is not prime\n"]) & /@
+    {1, 2, 9, 561, 7919, 2147483647, 999999999989, 999999999999, 1000000000039}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"23da22a8ba264c1ffc8cd421eae1cf4b8010aa802c9d66f6da3990eb74104052", "primes below 100: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97\n1 is not prime\n2 is prime\n9 is not prime\n561 is not prime\n7919 is prime\n2147483647 is prime\n999999999989 is prime\n999999999999 is not prime\n1000000000039 is prime\n"}

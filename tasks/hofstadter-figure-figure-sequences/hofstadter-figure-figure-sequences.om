@@ -1,0 +1,102 @@
+note Rosetta Code task "Hofstadter Figure-Figure sequences": https://rosettacode.org/wiki/Hofstadter_Figure-Figure_sequences
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text first "R(1) to R(10):"
+text chk "first 40 R and first 960 S cover 1..1000 exactly once: "
+text yes "yes\n"
+text no "no\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note R(1) = 1, S(1) = 2, R(n) = R(n-1) + S(n-1), S(n) = the least integer above S(n-1) not in R
+note r holds R(1..50) (R(50) = 1509 > 1000, so every R value up to 1000 is marked in ir); s holds S(1..960)
+fn main to int
+r = new ulong 51 0
+s = new ulong 961 0
+ir = new uchar 1600 0
+put r 1 1
+put s 1 2
+put ir 1 1
+for i ulong 49
+n = add i 2
+v = add get r sub n 1 get s sub n 1
+put r n v
+put ir v 1
+c = add get s sub n 1 1
+while eq get ir c 1 bound 2
+c = add c 1
+end
+put s n c
+end
+note S as the complement of R, now that R is known through 1509: the k-th unmarked integer is S(k)
+k = ulong 0
+c = ulong 1
+while lt k 960 bound 1600
+if eq get ir c 0
+k = add k 1
+put s k c
+end
+c = add c 1
+end
+emit first
+for i ulong 10
+emit sp
+emitu get r add i 1
+end
+emit nl
+cnt = new ulong 1001 0
+ok = ulong 1
+for i ulong 40
+v = get r add i 1
+if gt v 1000
+ok = ulong 0
+else
+put cnt v add get cnt v 1
+end
+end
+for i ulong 960
+v = get s add i 1
+if gt v 1000
+ok = ulong 0
+else
+put cnt v add get cnt v 1
+end
+end
+for i ulong 1000
+if ne get cnt add i 1 1
+ok = ulong 0
+end
+end
+emit chk
+if eq ok 1
+emit yes
+else
+emit no
+end
+ret 0
+end

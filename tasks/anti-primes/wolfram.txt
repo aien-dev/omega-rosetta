@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/anti-primes/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 230dc46aeac9165b9b316535e9c91384433aceb1aad903d510f3e469ca15f8a9.
+agreement: YES
+query:
+d = DivisorSigma[0, Range[10000]];
+hc = Flatten[Position[d - Prepend[Most[FoldList[Max, d]], 0], _?Positive]];
+s = "first 20 anti-primes: " <> StringRiffle[ToString /@ Take[hc, 20], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"230dc46aeac9165b9b316535e9c91384433aceb1aad903d510f3e469ca15f8a9", "first 20 anti-primes: 1 2 4 6 12 24 36 48 60 120 180 240 360 720 840 1260 1680 2520 5040 7560\n"}

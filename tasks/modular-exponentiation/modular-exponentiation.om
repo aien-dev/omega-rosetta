@@ -1,0 +1,123 @@
+note Rosetta Code task "Modular exponentiation": https://rosettacode.org/wiki/Modular_exponentiation
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text ta "2988348162058574136915891421498819466320163312926952423791023078876139"
+text tb "2351399303373464486466122544523690094744975233415544072992656881240319"
+text hdr "a^b mod 10^40 = "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a residue mod 10^40 is 5 limbs base 10^8, least significant first
+note limbs reads the last 40 decimal digits of the 70-digit text s
+fn limbs s view uchar 70 z edit ulong 5 to void
+for k ulong 5
+v = ulong 0
+o = sub 70 mul 8 add k 1
+for t ulong 8
+v = add mul v 10 sub ulong get s add o t 48
+end
+put z k v
+end
+end
+note mulm: z = x * y mod 10^40, keeping only limbs 0..4; each column sums at most 5 products below 10^16
+note plus a carry below 10^9, so no column passes 2^64
+fn mulm x view ulong 5 y view ulong 5 z edit ulong 5 to void
+c = ulong 0
+for k ulong 5
+s = c
+for i ulong add k 1
+s = add s mul get x i get y sub k i
+end
+put z k rem s 100000000
+c = div s 100000000
+end
+end
+fn cpy x view ulong 5 z edit ulong 5 to void
+for k ulong 5
+put z k get x k
+end
+end
+note bits turns the 70-digit decimal text e into binary, least significant bit first, by repeated halving
+note bound: e < 10^70 < 2^233, so at most 233 halvings; returns the bit count
+fn bits e view uchar 70 bt edit uchar 256 to ulong
+dg = new uchar 70 0
+for i ulong 70
+put dg i sub get e i uchar 48
+end
+n = ulong 0
+while true bound 256
+z = true
+for i ulong 70
+if ne get dg i 0
+z = false
+end
+end
+if z
+ret n
+end
+put bt n and get dg 69 uchar 1
+r = ulong 0
+for i ulong 70
+v = add mul r 10 ulong get dg i
+put dg i uchar div v 2
+r = rem v 2
+end
+n = add n 1
+end
+trap 4
+end
+fn main to int
+a = new ulong 5 0
+r = new ulong 5 0
+t = new ulong 5 0
+u = new ulong 5 0
+bt = new uchar 256 0
+limbs ta a
+put r 0 1
+n = bits tb bt
+for i ulong n
+if ne get bt i 0
+mulm r a t
+cpy t r
+end
+cpy a u
+mulm a u t
+cpy t a
+end
+emit hdr
+emitu get r 4
+for k ulong 4
+v = get r sub 3 k
+d = ulong 10000000
+while gt d 0 bound 8
+emitu rem div v d 10
+d = div d 10
+end
+end
+emit nl
+ret 0
+end

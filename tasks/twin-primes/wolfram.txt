@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/twin-primes/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 43773fe72f7d43cac99bcdd68f29ccac14b794d40825027aa6ea2346671224d1.
+agreement: YES
+query:
+ps = Prime[Range[PrimePi[10^8]]];
+big = Select[ps + 2, # < 10^8 && PrimeQ[#] &];
+s = StringJoin[Table["twin prime pairs below " <> ToString[10^e] <> ": " <> ToString[Count[big, x_ /; x < 10^e]] <> "\n", {e, 1, 8}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"43773fe72f7d43cac99bcdd68f29ccac14b794d40825027aa6ea2346671224d1", "twin prime pairs below 10: 2\ntwin prime pairs below 100: 8\ntwin prime pairs below 1000: 35\ntwin prime pairs below 10000: 205\ntwin prime pairs below 100000: 1224\ntwin prime pairs below 1000000: 8169\ntwin prime pairs below 10000000: 58980\ntwin prime pairs below 100000000: 440312\n"}

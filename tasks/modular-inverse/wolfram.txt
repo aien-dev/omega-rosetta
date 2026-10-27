@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/modular-inverse/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 2e2ac024552d3fce2543857498e730266f278d60f824c1758ffae7b669ac978d.
+agreement: YES
+query:
+f[{a_, m_}] := With[{g = GCD[a, m]}, ToString[a] <> "^-1 mod " <> ToString[m] <>
+   If[g == 1, " = " <> ToString[If[m == 1, 0, ModularInverse[a, m]]] <> "\n", " does not exist\n"]];
+s = StringJoin[f /@ {{42, 2017}, {40, 1}, {52, 217}, {-486, 217}, {40, 2018}, {1234567, 1000000007}}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"2e2ac024552d3fce2543857498e730266f278d60f824c1758ffae7b669ac978d", "42^-1 mod 2017 = 1969\n40^-1 mod 1 = 0\n52^-1 mod 217 = 96\n-486^-1 mod 217 = 121\n40^-1 mod 2018 does not exist\n1234567^-1 mod 1000000007 = 989145189\n"}

@@ -1,0 +1,18 @@
+Wolfram cross-check of tasks/recamans-sequence/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = db0c2a648e417ebc5b98c8477a0b7a8c0c4091e9bbb30b8261655e6dad95c1d6.
+agreement: YES
+query:
+seen = CreateDataStructure["HashSet", {0}]; a = {0}; v = 0; n = 0; dup = None; need = 1000;
+While[need > 0, n++; b = v - n;
+  v = If[b > 0 && ! seen["MemberQ", b], b, v + n];
+  If[seen["MemberQ", v], If[dup === None, dup = {n, v}], If[v <= 1000, need--]];
+  seen["Insert", v]; If[n < 15, AppendTo[a, v]]];
+s = "first 15 terms: " <> StringRiffle[ToString /@ a, " "] <> "\n" <>
+  "first term already seen: a(" <> ToString[dup[[1]]] <> ") = " <> ToString[dup[[2]]] <> "\n" <>
+  "terms a(0)..a(n) first contain every integer 0..1000 at n = " <> ToString[n] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"db0c2a648e417ebc5b98c8477a0b7a8c0c4091e9bbb30b8261655e6dad95c1d6", "first 15 terms: 0 1 3 6 2 7 13 20 12 21 11 22 10 23 9\nfirst term already seen: a(24) = 42\nterms a(0)..a(n) first contain every integer 0..1000 at n = 328002\n"}
