@@ -166,3 +166,16 @@ New tasks are welcome. Add `tasks/<name>/<name>.om`, an `oracle.py` that does no
 
 Apache-2.0 WITH LLVM-exception ([LICENSE](LICENSE), [NOTICE](NOTICE)). Code posted to Rosetta Code
 is also published there under the GNU Free Documentation License 1.3, the site's content licence.
+
+## Human-Directed Agentic Engineering
+
+Development follows Human-Directed Agentic Engineering (HDAE): humans define goals,
+architecture, constraints, acceptance criteria, and stopping points; agents implement,
+execute checks, diagnose failures, and revise within those boundaries. Human review
+retains responsibility for claims, acceptance, and release decisions. This describes
+the development method, not a change to runtime autonomy or historical evidence.
+
+For the documented method and a systems-software case study, see Gregory M. Kurtzer
+(2026), *Ginux: Building an Independent Kernel That Runs Linux Userspace through
+Human-Directed Agentic Engineering*, technical report, v1, Zenodo,
+<https://doi.org/10.5281/zenodo.23682548>.

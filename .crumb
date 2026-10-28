@@ -1,13 +1,27 @@
 {
-  "schema_version": "1.0.0",
-  "name": "omega-rosetta",
-  "parent": "aien-dev/omega-mv@e5b32567a7aff3ce594e3254a622a846a6cd190b",
-  "purpose": "Rosetta Code tasks and Exercism-style exercises written in Omegese (OM-2) and compiled by the seeded omc pinned in omega.ref; run.sh births omc from the 408-byte seed, compiles and runs every task and compares its stdout byte for byte with an expected.txt written by an independent Python oracle; CI on ubuntu-24.04-arm runs it with negative controls.",
-  "layer": "verification",
+  "extensions": {
+    "generated": {
+      "children": [],
+      "children_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiled_at": "2026-10-28T21:30:38Z",
+      "compiler": "crumb-compile/1",
+      "digest": "sha256:5103f0bc4f60590a65bbfcc244ef75e5d763537b8268e61ae4ec875205b9cb82",
+      "evidence_files": 0,
+      "evidence_root": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "files": 125,
+      "generated_at_commit": "60dcf9b2a1f3853191de39f30044a2afb71f7382",
+      "source_tree": "sha256:9d9efa84bd1b9cc6c1c95b8b3277239d1c06fe8b5404314cdfbd7e396dac3d37"
+    }
+  },
   "invariants": [
     "expected.txt is written only by the task's oracle.py, never by omc; CI re-runs every oracle and requires byte equality.",
     "run.sh refuses any omc whose sha256 differs from omega.ref.",
     "Every negative control must fail; a workflow where a control passes is broken, not green.",
     "Drafts under drafts/rosettacode are never posted by an agent; posting needs Drake's rosettacode.org account."
-  ]
+  ],
+  "layer": "verification",
+  "name": "omega-rosetta",
+  "parent": "aien-dev/omega-mv@e5b32567a7aff3ce594e3254a622a846a6cd190b",
+  "purpose": "Rosetta Code tasks and Exercism-style exercises written in Omegese (OM-2) and compiled by the seeded omc pinned in omega.ref; run.sh births omc from the 408-byte seed, compiles and runs every task and compares its stdout byte for byte with an expected.txt written by an independent Python oracle; CI on ubuntu-24.04-arm runs it with negative controls.",
+  "schema_version": "1.0.0"
 }
