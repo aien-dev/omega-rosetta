@@ -1,0 +1,9 @@
+n = len text_
+for i ulong n
+j = sub sub n 1 i
+if ne get text_ i get text_ j
+ret false
+end
+end
+ret true
+end

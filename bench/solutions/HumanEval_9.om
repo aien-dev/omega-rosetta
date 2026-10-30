@@ -1,0 +1,12 @@
+n = long 0
+m = long 0
+for i ulong len numbers
+v = get numbers i
+if or eq i 0 gt v m
+m = v
+end
+put res i m
+n = add n 1
+end
+ret n
+end

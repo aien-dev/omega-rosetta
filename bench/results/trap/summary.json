@@ -1,0 +1,90 @@
+{
+  "dir": "trap",
+  "problems": 10,
+  "pass@1": 0.0,
+  "om_status": {
+    "trap": 10
+  },
+  "per_problem": [
+    {
+      "name": "HumanEval_0_has_close_elements",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_13_greatest_common_divisor",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_16_count_distinct_characters",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_27_flip_case",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_2_truncate_number",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_30_get_positive",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_3_below_zero",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_48_is_palindrome",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_53_add",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    },
+    {
+      "name": "HumanEval_9_rolling_max",
+      "n": 1,
+      "c": 0,
+      "om_status": [
+        "trap"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,859 @@
+{
+ "benchmark": "humaneval",
+ "originals": "datasets/originals-with-cleaned-doctests",
+ "multipl_e_commit": "3025a531af7450e7df8b96fe0440e9804480bbad",
+ "omega_mv_pin": "e5b32567a7aff3ce594e3254a622a846a6cd190b",
+ "doctests": "transform",
+ "prompt_terminology": "reworded",
+ "upstream_size": 164,
+ "originals_count": 161,
+ "translated": 129,
+ "refused": 32,
+ "reasons": {
+  "type:List[str]": 17,
+  "type:List[compound]": 4,
+  "type:Optional": 3,
+  "type:Union": 3,
+  "type:Tuple[mixed]": 3,
+  "type:Dict": 2
+ },
+ "problems": [
+  {
+   "name": "HumanEval_0_has_close_elements",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_1_separate_paren_groups",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_2_truncate_number",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_3_below_zero",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_4_mean_absolute_deviation",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_5_intersperse",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_6_parse_nested_parens",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_7_filter_by_substring",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_8_sum_product",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_9_rolling_max",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_10_make_palindrome",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_11_string_xor",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_12_longest",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_13_greatest_common_divisor",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_14_all_prefixes",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_15_string_sequence",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_16_count_distinct_characters",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_17_parse_music",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_18_how_many_times",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_19_sort_numbers",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_20_find_closest_elements",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_21_rescale_to_unit",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_22_filter_integers",
+   "translated": false,
+   "reason": "type:List[compound]",
+   "detail": "List[Any]"
+  },
+  {
+   "name": "HumanEval_23_strlen",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_24_largest_divisor",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_25_factorize",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_26_remove_duplicates",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_27_flip_case",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_28_concatenate",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_29_filter_by_prefix",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_30_get_positive",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_31_is_prime",
+   "translated": true,
+   "cases": 13
+  },
+  {
+   "name": "HumanEval_33_sort_third",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_34_unique",
+   "translated": true,
+   "cases": 1
+  },
+  {
+   "name": "HumanEval_35_max_element",
+   "translated": true,
+   "cases": 2
+  },
+  {
+   "name": "HumanEval_36_fizz_buzz",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_37_sort_even",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_39_prime_fib",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_40_triples_sum_to_zero",
+   "translated": true,
+   "cases": 9
+  },
+  {
+   "name": "HumanEval_41_car_race_collision",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_42_incr_list",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_43_pairs_sum_to_zero",
+   "translated": true,
+   "cases": 9
+  },
+  {
+   "name": "HumanEval_44_change_base",
+   "translated": true,
+   "cases": 12
+  },
+  {
+   "name": "HumanEval_45_triangle_area",
+   "translated": true,
+   "cases": 3
+  },
+  {
+   "name": "HumanEval_46_fib4",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_47_median",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_48_is_palindrome",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_49_modp",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_51_remove_vowels",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_52_below_threshold",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_53_add",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_54_same_chars",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_55_fib",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_56_correct_bracketing",
+   "translated": true,
+   "cases": 12
+  },
+  {
+   "name": "HumanEval_57_monotonic",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_58_common",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_59_largest_prime_factor",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_60_sum_to_n",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_61_correct_bracketing",
+   "translated": true,
+   "cases": 12
+  },
+  {
+   "name": "HumanEval_62_derivative",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_63_fibfib",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_64_vowels_count",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_65_circular_shift",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_66_digitSum",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_67_fruit_distribution",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_68_pluck",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_69_search",
+   "translated": true,
+   "cases": 25
+  },
+  {
+   "name": "HumanEval_70_strange_sort_list",
+   "translated": true,
+   "cases": 9
+  },
+  {
+   "name": "HumanEval_71_triangle_area",
+   "translated": true,
+   "cases": 9
+  },
+  {
+   "name": "HumanEval_72_will_it_fly",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_73_smallest_change",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_74_total_match",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_75_is_multiply_prime",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_76_is_simple_power",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_77_iscube",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_78_hex_key",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_79_decimal_to_binary",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_80_is_happy",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_81_numerical_letter_grade",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_82_prime_length",
+   "translated": true,
+   "cases": 16
+  },
+  {
+   "name": "HumanEval_83_starts_one_ends",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_84_solve",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_85_add",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_86_anti_shuffle",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_87_get_row",
+   "translated": false,
+   "reason": "type:List[compound]",
+   "detail": "List[List[int]]"
+  },
+  {
+   "name": "HumanEval_88_sort_array",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_89_encrypt",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_90_next_smallest",
+   "translated": false,
+   "reason": "type:Optional",
+   "detail": "Optional[int]"
+  },
+  {
+   "name": "HumanEval_91_is_bored",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_92_any_int",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_93_encode",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_94_skjkasdkd",
+   "translated": true,
+   "cases": 9
+  },
+  {
+   "name": "HumanEval_95_check_dict_case",
+   "translated": false,
+   "reason": "type:Dict",
+   "detail": "Dict[str, str]"
+  },
+  {
+   "name": "HumanEval_96_count_up_to",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_97_multiply",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_98_count_upper",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_99_closest_integer",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_100_make_a_pile",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_101_words_string",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_102_choose_num",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_103_rounded_avg",
+   "translated": false,
+   "reason": "type:Union",
+   "detail": "Union[str, int]"
+  },
+  {
+   "name": "HumanEval_104_unique_digits",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_105_by_length",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_106_f",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_107_even_odd_palindrome",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_108_count_nums",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_109_move_one_ball",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_110_exchange",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_111_histogram",
+   "translated": false,
+   "reason": "type:Dict",
+   "detail": "Dict[str, int]"
+  },
+  {
+   "name": "HumanEval_112_reverse_delete",
+   "translated": false,
+   "reason": "type:Tuple[mixed]",
+   "detail": "Tuple[str, bool]"
+  },
+  {
+   "name": "HumanEval_113_odd_count",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_114_minSubArraySum",
+   "translated": true,
+   "cases": 12
+  },
+  {
+   "name": "HumanEval_115_max_fill",
+   "translated": false,
+   "reason": "type:List[compound]",
+   "detail": "List[List[int]]"
+  },
+  {
+   "name": "HumanEval_116_sort_array",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_117_select_words",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_118_get_closest_vowel",
+   "translated": true,
+   "cases": 13
+  },
+  {
+   "name": "HumanEval_119_match_parens",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_120_maximum",
+   "translated": true,
+   "cases": 11
+  },
+  {
+   "name": "HumanEval_121_solution",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_122_add_elements",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_123_get_odd_collatz",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_124_valid_date",
+   "translated": true,
+   "cases": 16
+  },
+  {
+   "name": "HumanEval_125_split_words",
+   "translated": false,
+   "reason": "type:Union",
+   "detail": "Union[List[str], int]"
+  },
+  {
+   "name": "HumanEval_126_is_sorted",
+   "translated": true,
+   "cases": 13
+  },
+  {
+   "name": "HumanEval_127_intersection",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_128_prod_signs",
+   "translated": false,
+   "reason": "type:Optional",
+   "detail": "Optional[int]"
+  },
+  {
+   "name": "HumanEval_129_minPath",
+   "translated": false,
+   "reason": "type:List[compound]",
+   "detail": "List[List[int]]"
+  },
+  {
+   "name": "HumanEval_130_tri",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_131_digits",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_132_is_nested",
+   "translated": true,
+   "cases": 14
+  },
+  {
+   "name": "HumanEval_133_sum_squares",
+   "translated": true,
+   "cases": 12
+  },
+  {
+   "name": "HumanEval_134_check_if_last_char_is_a_letter",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_135_can_arrange",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_136_largest_smallest_integers",
+   "translated": false,
+   "reason": "type:Tuple[mixed]",
+   "detail": "Tuple[Optional[int], Optional[int]]"
+  },
+  {
+   "name": "HumanEval_137_compare_one",
+   "translated": false,
+   "reason": "type:Union",
+   "detail": "Union[int, float, str]"
+  },
+  {
+   "name": "HumanEval_138_is_equal_to_sum_even",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_139_special_factorial",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_140_fix_spaces",
+   "translated": true,
+   "cases": 5
+  },
+  {
+   "name": "HumanEval_141_file_name_check",
+   "translated": true,
+   "cases": 26
+  },
+  {
+   "name": "HumanEval_142_sum_squares",
+   "translated": true,
+   "cases": 11
+  },
+  {
+   "name": "HumanEval_143_words_in_sentence",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_144_simplify",
+   "translated": true,
+   "cases": 13
+  },
+  {
+   "name": "HumanEval_145_order_by_points",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_146_specialFilter",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_147_get_max_triples",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_148_bf",
+   "translated": false,
+   "reason": "type:Tuple[mixed]",
+   "detail": "Tuple[str, ...]"
+  },
+  {
+   "name": "HumanEval_149_sorted_list_sum",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_150_x_or_y",
+   "translated": true,
+   "cases": 10
+  },
+  {
+   "name": "HumanEval_151_double_the_difference",
+   "translated": true,
+   "cases": 7
+  },
+  {
+   "name": "HumanEval_152_compare",
+   "translated": true,
+   "cases": 4
+  },
+  {
+   "name": "HumanEval_153_Strongest_Extension",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_154_cycpattern_check",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_155_even_odd_count",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_156_int_to_mini_roman",
+   "translated": true,
+   "cases": 14
+  },
+  {
+   "name": "HumanEval_157_right_angle_triangle",
+   "translated": true,
+   "cases": 11
+  },
+  {
+   "name": "HumanEval_158_find_max",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_159_eat",
+   "translated": true,
+   "cases": 6
+  },
+  {
+   "name": "HumanEval_160_do_algebra",
+   "translated": false,
+   "reason": "type:List[str]",
+   "detail": "OM-2 has no array-of-strings type"
+  },
+  {
+   "name": "HumanEval_161_solve",
+   "translated": true,
+   "cases": 8
+  },
+  {
+   "name": "HumanEval_162_string_to_md5",
+   "translated": false,
+   "reason": "type:Optional",
+   "detail": "Optional[str]"
+  },
+  {
+   "name": "HumanEval_163_generate_integers",
+   "translated": true,
+   "cases": 4
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "HumanEval_27_flip_case",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote For a given string, flip lowercase characters to uppercase and uppercase to lowercase.\nnote >>> flip_case \"Hello\"\nnote \"hELLO\"\nnote Result: write the bytes into res (len res >= 4096) and return how many were written.\nfn flip_case string view uchar * res edit uchar * to long\n",
+  "tests": "fn tc_0 to bool\na0 = new uchar 1 0\nres = new uchar 4096 0\nr = flip_case part a0 0 0 res\nif ne r 0\nret false\nend\nret true\nend\ntext t1_0 \"Hello!\"\nfn tc_1 to bool\nres = new uchar 4096 0\nr = flip_case t1_0 res\nif ne r 6\nret false\nend\nif ne get res 0 104\nret false\nend\nif ne get res 1 69\nret false\nend\nif ne get res 2 76\nret false\nend\nif ne get res 3 76\nret false\nend\nif ne get res 4 79\nret false\nend\nif ne get res 5 33\nret false\nend\nret true\nend\ntext t2_0 \"These violent delights have violent ends\"\nfn tc_2 to bool\nres = new uchar 4096 0\nr = flip_case t2_0 res\nif ne r 40\nret false\nend\nif ne get res 0 116\nret false\nend\nif ne get res 1 72\nret false\nend\nif ne get res 2 69\nret false\nend\nif ne get res 3 83\nret false\nend\nif ne get res 4 69\nret false\nend\nif ne get res 5 32\nret false\nend\nif ne get res 6 86\nret false\nend\nif ne get res 7 73\nret false\nend\nif ne get res 8 79\nret false\nend\nif ne get res 9 76\nret false\nend\nif ne get res 10 69\nret false\nend\nif ne get res 11 78\nret false\nend\nif ne get res 12 84\nret false\nend\nif ne get res 13 32\nret false\nend\nif ne get res 14 68\nret false\nend\nif ne get res 15 69\nret false\nend\nif ne get res 16 76\nret false\nend\nif ne get res 17 73\nret false\nend\nif ne get res 18 71\nret false\nend\nif ne get res 19 72\nret false\nend\nif ne get res 20 84\nret false\nend\nif ne get res 21 83\nret false\nend\nif ne get res 22 32\nret false\nend\nif ne get res 23 72\nret false\nend\nif ne get res 24 65\nret false\nend\nif ne get res 25 86\nret false\nend\nif ne get res 26 69\nret false\nend\nif ne get res 27 32\nret false\nend\nif ne get res 28 86\nret false\nend\nif ne get res 29 73\nret false\nend\nif ne get res 30 79\nret false\nend\nif ne get res 31 76\nret false\nend\nif ne get res 32 69\nret false\nend\nif ne get res 33 78\nret false\nend\nif ne get res 34 84\nret false\nend\nif ne get res 35 32\nret false\nend\nif ne get res 36 69\nret false\nend\nif ne get res 37 78\nret false\nend\nif ne get res 38 68\nret false\nend\nif ne get res 39 83\nret false\nend\nret true\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "completions": [
+    "n = long 0\nfor i ulong len string\nc = get string i\nif and ge c 97 le c 122\nc = sub c 32\nelse\nif and ge c 65 le c 90\nc = add c 32\nend\nend\nput res i c\nn = add n 1\nend\nret n\nend\n"
+  ],
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "hand"
+}

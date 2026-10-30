@@ -1,0 +1,10 @@
+n = long 0
+for i ulong len l
+v = get l i
+if gt v 0
+put res n v
+n = add n 1
+end
+end
+ret n
+end

@@ -1,0 +1,22 @@
+{
+  "name": "HumanEval_48_is_palindrome",
+  "language": "om",
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "max_tokens": 0,
+  "prompt": "om2\nnote Checks if given string is a palindrome\nnote >>> is_palindrome \"\"\nnote true\nnote >>> is_palindrome \"aba\"\nnote true\nnote >>> is_palindrome \"aaaaa\"\nnote true\nnote >>> is_palindrome \"zbcd\"\nnote false\nnote Omega name: text is text_ here.\nfn is_palindrome text_ view uchar * to bool\n",
+  "tests": "fn tc_0 to bool\na0 = new uchar 1 0\nr = is_palindrome part a0 0 0\nret eq r true\nend\ntext t1_0 \"aba\"\nfn tc_1 to bool\nr = is_palindrome t1_0\nret eq r true\nend\ntext t2_0 \"aaaaa\"\nfn tc_2 to bool\nr = is_palindrome t2_0\nret eq r true\nend\ntext t3_0 \"zbcd\"\nfn tc_3 to bool\nr = is_palindrome t3_0\nret eq r false\nend\ntext t4_0 \"xywyx\"\nfn tc_4 to bool\nr = is_palindrome t4_0\nret eq r true\nend\ntext t5_0 \"xywyz\"\nfn tc_5 to bool\nr = is_palindrome t5_0\nret eq r false\nend\ntext t6_0 \"xywzx\"\nfn tc_6 to bool\nr = is_palindrome t6_0\nret eq r false\nend\ntext mpe_ok \"MultiPL-E Omega: all tests passed\\n\"\nfn main to int\nif not tc_0\nret 1\nend\nif not tc_1\nret 2\nend\nif not tc_2\nret 3\nend\nif not tc_3\nret 4\nend\nif not tc_4\nret 5\nend\nif not tc_5\nret 6\nend\nif not tc_6\nret 7\nend\nw = write 1 mpe_ok 0 len mpe_ok\nret 0\nend",
+  "completions": [
+    "ret false\nend\n"
+  ],
+  "stop_tokens": [
+    "\nfn ",
+    "\nstruct ",
+    "\nglobal ",
+    "\ntext ",
+    "\nconst ",
+    "\nlayout ",
+    "\nabstract "
+  ],
+  "stub_mode": "wrong"
+}
