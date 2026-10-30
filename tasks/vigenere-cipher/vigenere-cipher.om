@@ -1,0 +1,60 @@
+note Rosetta Code task "Vigenère cipher": https://rosettacode.org/wiki/Vigen%C3%A8re_cipher
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text key "VIGENERECIPHER"
+text msg "Beware the Jabberwock, my son! The jaws that bite, the claws that catch!"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note clean keeps the letters of a, upper-cased, in r and returns how many
+fn clean a view uchar * r edit uchar * to ulong
+n = ulong 0
+for i ulong len a
+c = get a i
+if and ge c 97 le c 122
+c = sub c 32
+end
+if and ge c 65 le c 90
+put r n c
+n = add n 1
+end
+end
+ret n
+end
+note vig adds (dir 0) or subtracts (dir 1) the key letters mod 26, the key repeating
+fn vig a view uchar * r edit uchar * dir ulong to void
+for i ulong len a
+k = sub get key rem i len key 65
+c = sub get a i 65
+if eq dir 0
+c = rem add c k 26
+else
+c = rem sub add c 26 k 26
+end
+put r i add c 65
+end
+end
+fn main to int
+t = new uchar 256 0
+e = new uchar 256 0
+d = new uchar 256 0
+n = clean msg t
+emit part t 0 n
+emit nl
+vig part t 0 n part e 0 n 0
+emit part e 0 n
+emit nl
+vig part e 0 n part d 0 n 1
+emit part d 0 n
+emit nl
+ret 0
+end

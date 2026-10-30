@@ -1,0 +1,9 @@
+note Exercism-style exercise "reverse-string": https://exercism.org/tracks/python/exercises/reverse-string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note reverse writes the bytes of s into o in reverse order and returns the length.
+note Check it with: sh exercise.sh exercises/reverse-string
+om2
+fn reverse s view uchar * o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

@@ -1,0 +1,10 @@
+note Exercism-style exercise "darts": https://exercism.org/tracks/python/exercises/darts
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note score is the points of a dart landing at (x, y): 10 inside or on the circle of radius 1 around
+note the centre, 5 within radius 5, 1 within radius 10, 0 outside.
+note Check it with: sh exercise.sh exercises/darts
+om2
+fn score x f64 y f64 to ulong
+note replace this line with your solution
+trap 13
+end

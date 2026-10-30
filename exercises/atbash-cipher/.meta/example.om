@@ -1,0 +1,55 @@
+note Exercism-style exercise "atbash-cipher": https://exercism.org/tracks/python/exercises/atbash-cipher
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note encode writes the Atbash cipher of s into o (a to z, b to y, ...; letters lower case, digits
+note kept, everything else dropped) in groups of 5 separated by one space; decode writes the plain
+note text of s (spaces dropped). Both return the number of bytes written.
+note Check it with: sh exercise.sh exercises/atbash-cipher
+om2
+fn encode s view uchar * o edit uchar * to ulong
+p = ulong 0
+k = ulong 0
+for i ulong len s
+c = get s i
+if and ge c 65 le c 90
+c = add c 32
+end
+keep = false
+if and ge c 97 le c 122
+c = sub 219 c
+keep = true
+else
+if and ge c 48 le c 57
+keep = true
+end
+end
+if keep
+if and gt k 0 eq rem k 5 0
+put o p 32
+p = add p 1
+end
+put o p c
+p = add p 1
+k = add k 1
+end
+end
+ret p
+end
+fn decode s view uchar * o edit uchar * to ulong
+p = ulong 0
+for i ulong len s
+c = get s i
+if and ge c 65 le c 90
+c = add c 32
+end
+if and ge c 97 le c 122
+put o p sub 219 c
+p = add p 1
+else
+if and ge c 48 le c 57
+put o p c
+p = add p 1
+end
+end
+end
+ret p
+end

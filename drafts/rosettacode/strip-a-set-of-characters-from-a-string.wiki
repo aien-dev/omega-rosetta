@@ -1,0 +1,50 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text msg "She was a soul stripper. She took my heart!"
+text set1 "aei"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note stripchars writes the bytes of a that are not in set s
+fn strip a view uchar * s view uchar * to void
+for i ulong len a
+c = get a i
+k = true
+for j ulong len s
+if eq c get s j
+k = false
+end
+end
+if k
+emitc c
+end
+end
+emit nl
+end
+fn main to int
+strip msg set1
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+Sh ws  soul strppr. Sh took my hrt!
+</pre>

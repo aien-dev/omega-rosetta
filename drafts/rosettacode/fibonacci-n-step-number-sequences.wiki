@@ -1,0 +1,104 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text t2 "fibonacci: "
+text t3 "tribonacci:"
+text t4 "tetranacci:"
+text t5 "pentanacci:"
+text t6 "hexanacci: "
+text t7 "heptanacci:"
+text t8 "octonacci: "
+text t9 "nonanacci: "
+text t10 "decanacci: "
+text tl "lucas:     "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note the n-step sequence starts 1, 1, 2, 4, ..., 2^(n-2) (the n-step seeds) and then each term sums the
+note previous n; the Lucas numbers are the 2-step sequence seeded 2, 1. 15 terms, all below 2^15 * 15
+fn seq n ulong s0 ulong s1 ulong to void
+a = new ulong 15 0
+put a 0 s0
+put a 1 s1
+for i ulong 13
+k = add i 2
+s = ulong 0
+if le k sub n 1
+s = shl ulong 1 sub k 1
+else
+for j ulong n
+s = add s get a sub sub k 1 j
+end
+end
+put a k s
+end
+for i ulong 15
+emit sp
+emitu get a i
+end
+emit nl
+end
+fn main to int
+emit t2
+seq 2 1 1
+emit t3
+seq 3 1 1
+emit t4
+seq 4 1 1
+emit t5
+seq 5 1 1
+emit t6
+seq 6 1 1
+emit t7
+seq 7 1 1
+emit t8
+seq 8 1 1
+emit t9
+seq 9 1 1
+emit t10
+seq 10 1 1
+emit tl
+seq 2 2 1
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+fibonacci:  1 1 2 3 5 8 13 21 34 55 89 144 233 377 610
+tribonacci: 1 1 2 4 7 13 24 44 81 149 274 504 927 1705 3136
+tetranacci: 1 1 2 4 8 15 29 56 108 208 401 773 1490 2872 5536
+pentanacci: 1 1 2 4 8 16 31 61 120 236 464 912 1793 3525 6930
+hexanacci:  1 1 2 4 8 16 32 63 125 248 492 976 1936 3840 7617
+heptanacci: 1 1 2 4 8 16 32 64 127 253 504 1004 2000 3984 7936
+octonacci:  1 1 2 4 8 16 32 64 128 255 509 1016 2028 4048 8080
+nonanacci:  1 1 2 4 8 16 32 64 128 256 511 1021 2040 4076 8144
+decanacci:  1 1 2 4 8 16 32 64 128 256 512 1023 2045 4088 8172
+lucas:      2 1 3 4 7 11 18 29 47 76 123 199 322 521 843
+</pre>

@@ -1,0 +1,93 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/two-fer/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 3 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text z0 "z"
+text e1 "One for you, one for me."
+text c2 "twoFer: no name given"
+text s3 "Alice"
+text e4 "One for Alice, one for me."
+text c5 "twoFer: a name given"
+text s6 "Bob"
+text e7 "One for Bob, one for me."
+text c8 "twoFer: another name given"
+note canonical case 1cf3e15a-a3d7-4a87-aeb3-ba1b43bc8dce
+fn tc0 to bool
+o = new uchar 1024 0
+n = twofer part z0 0 0 o
+ret tbeq part o 0 n e1
+end
+note canonical case b4c6dbb8-b4fb-42c2-bafd-10785abe7709
+fn tc1 to bool
+o = new uchar 1024 0
+n = twofer s3 o
+ret tbeq part o 0 n e4
+end
+note canonical case 3549048d-1a6e-4653-9a79-b0bda163e8d5
+fn tc2 to bool
+o = new uchar 1024 0
+n = twofer s6 o
+ret tbeq part o 0 n e7
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+ret int get tfails 0
+end

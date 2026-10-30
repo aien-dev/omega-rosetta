@@ -1,0 +1,163 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/rotational-cipher/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 10 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "a"
+text e1 "a"
+text c2 "rotate: rotate a by 0, same output as input"
+text s3 "a"
+text e4 "b"
+text c5 "rotate: rotate a by 1"
+text s6 "a"
+text e7 "a"
+text c8 "rotate: rotate a by 26, same output as input"
+text s9 "m"
+text e10 "z"
+text c11 "rotate: rotate m by 13"
+text s12 "n"
+text e13 "a"
+text c14 "rotate: rotate n by 13 with wrap around alphabet"
+text s15 "OMG"
+text e16 "TRL"
+text c17 "rotate: rotate capital letters"
+text s18 "O M G"
+text e19 "T R L"
+text c20 "rotate: rotate spaces"
+text s21 "Testing 1 2 3 testing"
+text e22 "Xiwxmrk 1 2 3 xiwxmrk"
+text c23 "rotate: rotate numbers"
+text s24 "Let's eat, Grandma!"
+text e25 "Gzo'n zvo, Bmviyhv!"
+text c26 "rotate: rotate punctuation"
+text s27 "The quick brown fox jumps over the lazy dog."
+text e28 "Gur dhvpx oebja sbk whzcf bire gur ynml qbt."
+text c29 "rotate: rotate all letters"
+note canonical case 74e58a38-e484-43f1-9466-877a7515e10f
+fn tc0 to bool
+o = new uchar 1024 0
+n = rotate s0 0 o
+ret tbeq part o 0 n e1
+end
+note canonical case 7ee352c6-e6b0-4930-b903-d09943ecb8f5
+fn tc1 to bool
+o = new uchar 1024 0
+n = rotate s3 1 o
+ret tbeq part o 0 n e4
+end
+note canonical case edf0a733-4231-4594-a5ee-46a4009ad764
+fn tc2 to bool
+o = new uchar 1024 0
+n = rotate s6 26 o
+ret tbeq part o 0 n e7
+end
+note canonical case e3e82cb9-2a5b-403f-9931-e43213879300
+fn tc3 to bool
+o = new uchar 1024 0
+n = rotate s9 13 o
+ret tbeq part o 0 n e10
+end
+note canonical case 19f9eb78-e2ad-4da4-8fe3-9291d47c1709
+fn tc4 to bool
+o = new uchar 1024 0
+n = rotate s12 13 o
+ret tbeq part o 0 n e13
+end
+note canonical case a116aef4-225b-4da9-884f-e8023ca6408a
+fn tc5 to bool
+o = new uchar 1024 0
+n = rotate s15 5 o
+ret tbeq part o 0 n e16
+end
+note canonical case 71b541bb-819c-4dc6-a9c3-132ef9bb737b
+fn tc6 to bool
+o = new uchar 1024 0
+n = rotate s18 5 o
+ret tbeq part o 0 n e19
+end
+note canonical case ef32601d-e9ef-4b29-b2b5-8971392282e6
+fn tc7 to bool
+o = new uchar 1024 0
+n = rotate s21 4 o
+ret tbeq part o 0 n e22
+end
+note canonical case 32dd74f6-db2b-41a6-b02c-82eb4f93e549
+fn tc8 to bool
+o = new uchar 1024 0
+n = rotate s24 21 o
+ret tbeq part o 0 n e25
+end
+note canonical case 9fb93fe6-42b0-46e6-9ec1-0bf0a062d8c9
+fn tc9 to bool
+o = new uchar 1024 0
+n = rotate s27 13 o
+ret tbeq part o 0 n e28
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c20
+tcheck tc7 c23
+tcheck tc8 c26
+tcheck tc9 c29
+ret int get tfails 0
+end

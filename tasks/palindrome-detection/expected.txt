@@ -1,0 +1,5 @@
+"rotor" exact yes inexact yes
+"level" exact yes inexact yes
+"A man, a plan, a canal: Panama!" exact no inexact yes
+"In girum imus nocte et consumimur igni" exact no inexact yes
+"hello" exact no inexact no

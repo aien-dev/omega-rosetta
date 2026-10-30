@@ -1,0 +1,118 @@
+note Rosetta Code task "Tree traversal": https://rosettacode.org/wiki/Tree_traversal
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tpre "preorder:   "
+text tin "inorder:    "
+text tpost "postorder:  "
+text tlevel "level-order:"
+global lft ulong 10
+global rgt ulong 10
+global queue ulong 10
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note the task's tree, nodes 1..9 with 0 for no child:
+note         1
+note        / \
+note       2   3
+note      / \  /
+note     4   5 6
+note    /     / \
+note   7     8   9
+fn kids n ulong l ulong r ulong to void
+put lft n l
+put rgt n r
+end
+fn pre n ulong to void
+if eq n 0
+ret
+end
+emit sp
+emitu n
+pre get lft n
+pre get rgt n
+end
+fn ino n ulong to void
+if eq n 0
+ret
+end
+ino get lft n
+emit sp
+emitu n
+ino get rgt n
+end
+fn post n ulong to void
+if eq n 0
+ret
+end
+post get lft n
+post get rgt n
+emit sp
+emitu n
+end
+note level order reads nodes from a queue; each node enters it once, so 9 passes suffice
+fn level n ulong to void
+put queue 0 n
+h = ulong 0
+t = ulong 1
+while lt h t bound 9
+v = get queue h
+h = add h 1
+emit sp
+emitu v
+if ne get lft v 0
+put queue t get lft v
+t = add t 1
+end
+if ne get rgt v 0
+put queue t get rgt v
+t = add t 1
+end
+end
+end
+fn main to int
+kids 1 2 3
+kids 2 4 5
+kids 3 6 0
+kids 4 7 0
+kids 6 8 9
+emit tpre
+pre 1
+emit nl
+emit tin
+ino 1
+emit nl
+emit tpost
+post 1
+emit nl
+emit tlevel
+level 1
+emit nl
+ret 0
+end

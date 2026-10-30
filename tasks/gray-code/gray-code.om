@@ -1,0 +1,94 @@
+note Rosetta Code task "Gray code": https://rosettacode.org/wiki/Gray_code
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text thead "number  binary  gray   decoded\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitw writes n right-aligned in w columns (w at most 20; a wider number is not cut)
+fn emitw n ulong w ulong to void
+d = new uchar 20 32
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+if gt w sub 20 i
+i = sub 20 w
+end
+emit part d i sub 20 i
+end
+note bin5 writes the low 5 bits of v, most significant first
+fn bin5 v ulong to void
+d = new uchar 5 48
+for i ulong 5
+if ne and shr v sub 4 i 1 0
+put d i 49
+end
+end
+emit d
+end
+note encode is n xor (n >> 1); decode undoes it by xoring in every right shift of g
+fn encode n ulong to ulong
+ret xor n shr n 1
+end
+note one xor per bit of g: a ulong has 64, so 64 shifts empty s
+fn decode g ulong to ulong
+n = g
+s = shr g 1
+while ne s 0 bound 64
+n = xor n s
+s = shr s 1
+end
+ret n
+end
+fn main to int
+emit thead
+for n ulong 32
+g = encode n
+emitw n 6
+emit sp
+emit sp
+bin5 n
+emit sp
+emit sp
+emit sp
+bin5 g
+emit sp
+emit sp
+emitw decode g 7
+emit nl
+end
+ret 0
+end

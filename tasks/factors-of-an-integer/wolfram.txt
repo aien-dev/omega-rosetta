@@ -1,0 +1,11 @@
+Wolfram cross-check of tasks/factors-of-an-integer/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 10664baf5b20e337ad0dd1baedd49c330821bfa509e749ca6cc702100709284a.
+agreement: YES
+query:
+s = StringJoin[("factors of " <> ToString[#] <> ": " <> StringRiffle[ToString /@ Divisors[#], " "] <> "\n") & /@ {1, 45, 53, 64, 720, 1000000, 600851475143}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"10664baf5b20e337ad0dd1baedd49c330821bfa509e749ca6cc702100709284a", "factors of 1: 1\nfactors of 45: 1 3 5 9 15 45\nfactors of 53: 1 53\nfactors of 64: 1 2 4 8 16 32 64\nfactors of 720: 1 2 3 4 5 6 8 9 10 12 15 16 18 20 24 30 36 40 45 48 60 72 80 90 120 144 180 240 360 720\nfactors of 1000000: 1 2 4 5 8 10 16 20 25 32 40 50 64 80 100 125 160 200 250 320 400 500 625 800 1000 1250 1600 2000 2500 3125 4000 5000 6250 8000 10000 12500 15625 20000 25000 31250 40000 50000 62500 100000 125000 200000 250000 500000 1000000\nfactors of 600851475143: 1 71 839 1471 6857 59569 104441 486847 1234169 5753023 10086647 87625999 408464633 716151937 8462696833 600851475143\n"}

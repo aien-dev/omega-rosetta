@@ -1,0 +1,34 @@
+note Rosetta Code task "String concatenation": https://rosettacode.org/wiki/String_concatenation
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text str "hello"
+text lit " literal"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note copyto copies s into d at offset off and returns the offset after it (past the end traps 3)
+fn copyto d edit uchar * off ulong s view uchar * to ulong
+for i ulong len s
+put d add off i get s i
+end
+ret add off len s
+end
+fn main to int
+emit str
+emit nl
+b = new uchar 64 0
+p = copyto b 0 str
+p = copyto b p lit
+emit part b 0 p
+emit nl
+ret 0
+end

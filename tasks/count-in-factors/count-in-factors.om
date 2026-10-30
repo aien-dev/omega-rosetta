@@ -1,0 +1,76 @@
+note Rosetta Code task "Count in factors": https://rosettacode.org/wiki/Count_in_factors
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text x " x "
+text eqs " = "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note prime factors in ascending order by trial division; 1 is shown as itself
+note bound: each pass divides v or steps d, and d * d <= v; for the inputs here d never passes 6857
+fn tell n ulong to void
+emitu n
+emit eqs
+if eq n 1
+emitu 1
+emit nl
+ret
+end
+v = n
+d = ulong 2
+f = ulong 0
+while le mul d d v bound 999999
+if eq rem v d 0
+if gt f 0
+emit x
+end
+emitu d
+f = add f 1
+v = div v d
+else
+d = add d 1
+end
+end
+if gt v 1
+if gt f 0
+emit x
+end
+emitu v
+end
+emit nl
+end
+fn main to int
+for i ulong 25
+tell add i 1
+end
+for i ulong 13
+tell add 2144 i
+end
+tell 600851475143
+tell 1000000000000
+ret 0
+end

@@ -1,0 +1,60 @@
+note Rosetta Code task "Van Eck sequence": https://rosettacode.org/wiki/Van_Eck_sequence
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text first "terms 1 to 10:"
+text last "terms 991 to 1000:"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a(0) = 0; a(n+1) = n - m where m < n is the last earlier index with a(m) = a(n), else 0
+note ls v is one more than the last index holding v (0: not seen); every term is below 1000, its index
+fn main to int
+a = new ulong 1000 0
+ls = new ulong 1000 0
+for n ulong 999
+v = get a n
+w = get ls v
+if gt w 0
+put a add n 1 sub n sub w 1
+end
+put ls v add n 1
+end
+emit first
+for i ulong 10
+emit sp
+emitu get a i
+end
+emit nl
+emit last
+for i ulong 10
+emit sp
+emitu get a add 990 i
+end
+emit nl
+ret 0
+end

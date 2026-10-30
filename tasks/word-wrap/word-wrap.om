@@ -1,0 +1,57 @@
+note Rosetta Code task "Word wrap": https://rosettacode.org/wiki/Word_wrap
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text rule "----\n"
+text para "In olden times when wishing still helped one, there lived a king whose daughters were all beautiful, but the youngest was so beautiful that the sun itself, which has seen so much, was astonished whenever it shone in her face. Close by the king's castle lay a great dark forest, and under an old lime-tree in the forest was a well, and when the day was very warm, the king's child went out into the forest and sat down by the side of the cool fountain, and when she was bored she took a golden ball, and threw it up on high and caught it, and this ball was her favorite plaything."
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note greedy wrap: a word goes on the current line when it still fits in width w, else starts a new one
+fn wrap a view uchar * w ulong to void
+cur = ulong 0
+i = ulong 0
+while lt i len a bound 4096
+if eq get a i 32
+i = add i 1
+else
+j = i
+while lt j len a bound 4096
+if eq get a j 32
+break
+end
+j = add j 1
+end
+l = sub j i
+if eq cur 0
+cur = l
+else
+if le add add cur 1 l w
+emit sp
+cur = add add cur 1 l
+else
+emit nl
+cur = l
+end
+end
+emit part a i l
+i = j
+end
+end
+emit nl
+end
+fn main to int
+wrap para 72
+emit rule
+wrap para 40
+ret 0
+end

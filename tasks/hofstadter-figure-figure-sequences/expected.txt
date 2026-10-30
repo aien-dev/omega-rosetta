@@ -1,0 +1,2 @@
+R(1) to R(10): 1 3 7 12 18 26 35 45 56 69
+first 40 R and first 960 S cover 1..1000 exactly once: yes

@@ -1,0 +1,16 @@
+Wolfram cross-check of tasks/smith-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 3774404002938e87d724cdf9c23973c3380bb6155e2bc1d42e06d8d370da71c4.
+agreement: YES
+query:
+ds[n_] := Total[IntegerDigits[n]];
+smithQ[n_] := CompositeQ[n] && ds[n] == Total[(ds[#[[1]]] #[[2]]) & /@ FactorInteger[n]];
+sm = Select[Range[2, 9999], smithQ];
+s = "Smith numbers below 10000: " <> ToString[Length[sm]] <> "\n" <>
+  "first 20: " <> StringRiffle[ToString /@ Take[sm, 20], " "] <> "\n" <>
+  "last 10: " <> StringRiffle[ToString /@ Take[sm, -10], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"3774404002938e87d724cdf9c23973c3380bb6155e2bc1d42e06d8d370da71c4", "Smith numbers below 10000: 376\nfirst 20: 4 22 27 58 85 94 121 166 202 265 274 319 346 355 378 382 391 438 454 483\nlast 10: 9843 9849 9861 9880 9895 9924 9942 9968 9975 9985\n"}

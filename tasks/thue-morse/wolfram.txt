@@ -1,0 +1,11 @@
+Wolfram cross-check of tasks/thue-morse/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = b79f272ebc2af3b3a700417016e8f75b1b66bc463375254f8928c3430fa0d9ab.
+agreement: YES
+query:
+s = StringJoin[Table[StringJoin[ToString /@ ThueMorse[Range[0, 2^k - 1]]] <> "\n", {k, 0, 6}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"b79f272ebc2af3b3a700417016e8f75b1b66bc463375254f8928c3430fa0d9ab", "0\n01\n0110\n01101001\n0110100110010110\n01101001100101101001011001101001\n0110100110010110100101100110100110010110011010010110100110010110\n"}

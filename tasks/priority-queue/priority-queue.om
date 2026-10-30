@@ -1,0 +1,123 @@
+note Rosetta Code task "Priority queue": https://rosettacode.org/wiki/Priority_queue
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tins "insert "
+text tpop "pop "
+text tdata "3 Clear drains|4 Feed cat|5 Make tea|1 Solve RC tasks|2 Tax return"
+global heap ulong 16
+global pri ulong 16
+global hn ulong 1
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a binary min-heap of task numbers keyed by priority: heap[0] has the smallest pri; the five tasks
+note are the |-separated entries of tdata, each a priority digit and a name
+fn entry k ulong to void
+f = ulong 0
+st = ulong 0
+for i ulong len tdata
+if eq get tdata i 124
+if eq f k
+emit part tdata st sub i st
+ret
+end
+f = add f 1
+st = add i 1
+end
+end
+emit part tdata st sub len tdata st
+end
+fn swap i ulong j ulong to void
+t = get heap i
+put heap i get heap j
+put heap j t
+end
+fn less i ulong j ulong to bool
+ret lt get pri get heap i get pri get heap j
+end
+note insert sifts the new task up; the index halves each step, so 16 steps bound it
+fn insert k ulong p ulong to void
+put pri k p
+n = get hn 0
+put heap n k
+put hn 0 add n 1
+i = n
+while gt i 0 bound 16
+u = shr sub i 1 1
+if not less i u
+break
+end
+swap i u
+i = u
+end
+emit tins
+entry k
+emit nl
+end
+note popmin moves the last task to the root and sifts it down; the index doubles each step
+fn popmin to void
+n = sub get hn 0 1
+k = get heap 0
+put heap 0 get heap n
+put hn 0 n
+i = ulong 0
+while lt add mul i 2 1 n bound 16
+c = add mul i 2 1
+if lt add c 1 n
+if less add c 1 c
+c = add c 1
+end
+end
+if not less c i
+break
+end
+swap i c
+i = c
+end
+emit tpop
+entry k
+emit nl
+end
+fn main to int
+st = ulong 0
+k = ulong 0
+for i ulong len tdata
+if eq i st
+insert k ulong sub get tdata i 48
+k = add k 1
+end
+if eq get tdata i 124
+st = add i 1
+end
+end
+for x ulong k
+popmin
+end
+ret 0
+end

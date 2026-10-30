@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/additive-primes/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = f27aec6e75dc0416472a47c065183e66bfc1c011b937e7e60f4f97d3f6a7e83b.
+agreement: YES
+query:
+ap = Select[Prime[Range[PrimePi[499]]], PrimeQ[Total[IntegerDigits[#]]] &];
+s = "additive primes below 500 (prime, and the digit sum is prime):\n" <>
+  StringJoin[(StringJoin[StringPadLeft[ToString[#], 4] & /@ #] <> "\n") & /@ Partition[ap, UpTo[10]]] <>
+  "count: " <> ToString[Length[ap]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"f27aec6e75dc0416472a47c065183e66bfc1c011b937e7e60f4f97d3f6a7e83b", "additive primes below 500 (prime, and the digit sum is prime):\n   2   3   5   7  11  23  29  41  43  47\n  61  67  83  89 101 113 131 137 139 151\n 157 173 179 191 193 197 199 223 227 229\n 241 263 269 281 283 311 313 317 331 337\n 353 359 373 379 397 401 409 421 443 449\n 461 463 467 487\ncount: 54\n"}

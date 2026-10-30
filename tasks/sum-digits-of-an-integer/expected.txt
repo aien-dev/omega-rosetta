@@ -1,0 +1,7 @@
+1 (base 10): digit sum 1
+1234 (base 10): digit sum 10
+fe (base 16): digit sum 29
+f0e (base 16): digit sum 29
+377 (base 8): digit sum 17
+1111111111111111111111111111111111111111111111111111111111111111 (base 2): digit sum 64
+3w5e11264sgsf (base 36): digit sum 155

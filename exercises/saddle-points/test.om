@@ -1,0 +1,238 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/saddle-points/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 9 cases kept, 0 skipped
+fn tueq a view ulong * b view ulong * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text c0 "saddlePoints: Can identify single saddle point"
+text c1 "saddlePoints: Can identify that empty matrix has no saddle points"
+text c2 "saddlePoints: Can identify lack of saddle points when there are none"
+text c3 "saddlePoints: Can identify multiple saddle points in a column"
+text c4 "saddlePoints: Can identify multiple saddle points in a row"
+text c5 "saddlePoints: Can identify saddle point in bottom right corner"
+text c6 "saddlePoints: Can identify saddle points in a non square matrix"
+text c7 "saddlePoints: Can identify that saddle points in a single column matrix are those with the minimum value"
+text c8 "saddlePoints: Can identify that saddle points in a single row matrix are those with the maximum value"
+note canonical case 3e374e63-a2e0-4530-a39a-d53c560382bd
+fn tc0 to bool
+a0 = new ulong 9 0
+put a0 0 9
+put a0 1 8
+put a0 2 7
+put a0 3 5
+put a0 4 3
+put a0 5 2
+put a0 6 6
+put a0 7 6
+put a0 8 7
+o = new ulong 256 0
+n = saddlepoints a0 3 3 o
+a1 = new ulong 2 0
+put a1 0 2
+put a1 1 1
+ret tueq part o 0 mul n 2 a1
+end
+note canonical case 6b501e2b-6c1f-491f-b1bb-7f278f760534
+fn tc1 to bool
+a0 = new ulong 1 0
+o = new ulong 256 0
+n = saddlepoints part a0 0 0 1 0 o
+ret eq mul n 2 0
+end
+note canonical case 8c27cc64-e573-4fcb-a099-f0ae863fb02f
+fn tc2 to bool
+a0 = new ulong 9 0
+put a0 0 1
+put a0 1 2
+put a0 2 3
+put a0 3 3
+put a0 4 1
+put a0 5 2
+put a0 6 2
+put a0 7 3
+put a0 8 1
+o = new ulong 256 0
+n = saddlepoints a0 3 3 o
+ret eq mul n 2 0
+end
+note canonical case 6d1399bd-e105-40fd-a2c9-c6609507d7a3
+fn tc3 to bool
+a0 = new ulong 9 0
+put a0 0 4
+put a0 1 5
+put a0 2 4
+put a0 3 3
+put a0 4 5
+put a0 5 5
+put a0 6 1
+put a0 7 5
+put a0 8 4
+o = new ulong 256 0
+n = saddlepoints a0 3 3 o
+a1 = new ulong 6 0
+put a1 0 1
+put a1 1 2
+put a1 2 2
+put a1 3 2
+put a1 4 3
+put a1 5 2
+ret tueq part o 0 mul n 2 a1
+end
+note canonical case 3e81dce9-53b3-44e6-bf26-e328885fd5d1
+fn tc4 to bool
+a0 = new ulong 9 0
+put a0 0 6
+put a0 1 7
+put a0 2 8
+put a0 3 5
+put a0 4 5
+put a0 5 5
+put a0 6 7
+put a0 7 5
+put a0 8 6
+o = new ulong 256 0
+n = saddlepoints a0 3 3 o
+a1 = new ulong 6 0
+put a1 0 2
+put a1 1 1
+put a1 2 2
+put a1 3 2
+put a1 4 2
+put a1 5 3
+ret tueq part o 0 mul n 2 a1
+end
+note canonical case 88868621-b6f4-4837-bb8b-3fad8b25d46b
+fn tc5 to bool
+a0 = new ulong 9 0
+put a0 0 8
+put a0 1 7
+put a0 2 9
+put a0 3 6
+put a0 4 7
+put a0 5 6
+put a0 6 3
+put a0 7 2
+put a0 8 5
+o = new ulong 256 0
+n = saddlepoints a0 3 3 o
+a1 = new ulong 2 0
+put a1 0 3
+put a1 1 3
+ret tueq part o 0 mul n 2 a1
+end
+note canonical case 5b9499ca-fcea-4195-830a-9c4584a0ee79
+fn tc6 to bool
+a0 = new ulong 6 0
+put a0 0 3
+put a0 1 1
+put a0 2 3
+put a0 3 3
+put a0 4 2
+put a0 5 4
+o = new ulong 256 0
+n = saddlepoints a0 2 3 o
+a1 = new ulong 4 0
+put a1 0 1
+put a1 1 1
+put a1 2 1
+put a1 3 3
+ret tueq part o 0 mul n 2 a1
+end
+note canonical case ee99ccd2-a1f1-4283-ad39-f8c70f0cf594
+fn tc7 to bool
+a0 = new ulong 4 0
+put a0 0 2
+put a0 1 1
+put a0 2 4
+put a0 3 1
+o = new ulong 256 0
+n = saddlepoints a0 4 1 o
+a1 = new ulong 4 0
+put a1 0 2
+put a1 1 1
+put a1 2 4
+put a1 3 1
+ret tueq part o 0 mul n 2 a1
+end
+note canonical case 63abf709-a84b-407f-a1b3-456638689713
+fn tc8 to bool
+a0 = new ulong 4 0
+put a0 0 2
+put a0 1 5
+put a0 2 3
+put a0 3 5
+o = new ulong 256 0
+n = saddlepoints a0 1 4 o
+a1 = new ulong 4 0
+put a1 0 1
+put a1 1 2
+put a1 2 1
+put a1 3 4
+ret tueq part o 0 mul n 2 a1
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+tcheck tc5 c5
+tcheck tc6 c6
+tcheck tc7 c7
+tcheck tc8 c8
+ret int get tfails 0
+end

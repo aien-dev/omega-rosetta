@@ -1,0 +1,86 @@
+note Rosetta Code task "Longest common prefix": https://rosettacode.org/wiki/Longest_common_prefix
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text tarr " -> \""
+text tq "\"\n"
+text lb "["
+text rb "]"
+text l0 "interspecies|interstellar|interstate"
+text l1 "throne|throne"
+text l2 "throne|dungeon"
+text l3 "throne||throne"
+text l4 "cheese"
+text l6 "prefix|suffix"
+text l7 "foo|foobar"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note a list is its elements separated by '|'; an empty text is the empty list.
+note split records each element as (start, length) and returns how many
+fn split a view uchar * st edit ulong 16 ln edit ulong 16 to ulong
+k = ulong 0
+s = ulong 0
+for i ulong add len a 1
+e = eq i len a
+if not e
+e = eq get a i 124
+end
+if e
+put st k s
+put ln k sub i s
+k = add k 1
+s = add i 1
+end
+end
+ret k
+end
+note common walks the first element and stops where any other element ends or differs
+fn common a view uchar * st view ulong 16 ln view ulong 16 k ulong to ulong
+p = ulong 0
+while lt p get ln 0 bound 4096
+for w ulong k
+if eq p get ln w
+ret p
+end
+c = get a add get st 0 p
+if ne get a add get st w p c
+ret p
+end
+end
+p = add p 1
+end
+ret p
+end
+fn lcp a view uchar * to void
+st = new ulong 16 0
+ln = new ulong 16 0
+emit lb
+emit a
+emit rb
+emit tarr
+if gt len a 0
+k = split a st ln
+emit part a get st 0 common a st ln k
+end
+emit tq
+end
+fn main to int
+lcp l0
+lcp l1
+lcp l2
+lcp l3
+lcp l4
+lcp part l0 0 0
+lcp l6
+lcp l7
+ret 0
+end

@@ -1,0 +1,56 @@
+note Rosetta Code task "Substitution cipher": https://rosettacode.org/wiki/Substitution_cipher
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+note key: plain letter a..z maps to the letter at the same place here
+text key "phqgiumeaylnofdxjkrcvstzwb"
+text msg "the quick brown fox jumps over the lazy dog, 42 times"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note enc maps each lower-case letter through key; other bytes are copied
+fn enc a view uchar * r edit uchar * to void
+for i ulong len a
+c = get a i
+if and ge c 97 le c 122
+c = get key sub c 97
+end
+put r i c
+end
+end
+note dec builds the inverse table first, then maps through it
+fn dec a view uchar * r edit uchar * to void
+inv = new uchar 26 0
+for j ulong 26
+put inv sub get key j 97 add uchar j 97
+end
+for i ulong len a
+c = get a i
+if and ge c 97 le c 122
+c = get inv sub c 97
+end
+put r i c
+end
+end
+fn main to int
+n = len msg
+e = new uchar 256 0
+d = new uchar 256 0
+emit msg
+emit nl
+enc msg part e 0 n
+emit part e 0 n
+emit nl
+dec part e 0 n part d 0 n
+emit part d 0 n
+emit nl
+ret 0
+end

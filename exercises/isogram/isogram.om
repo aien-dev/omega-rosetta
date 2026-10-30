@@ -1,0 +1,9 @@
+note Exercism-style exercise "isogram": https://exercism.org/tracks/python/exercises/isogram
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note isisogram is true when no letter occurs twice in s, ignoring case; spaces and hyphens may repeat.
+note Check it with: sh exercise.sh exercises/isogram
+om2
+fn isisogram s view uchar * to bool
+note replace this line with your solution
+trap 13
+end

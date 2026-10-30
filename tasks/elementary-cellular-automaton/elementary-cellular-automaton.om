@@ -1,0 +1,81 @@
+note Rosetta Code task "Elementary cellular automaton": https://rosettacode.org/wiki/Elementary_cellular_automaton
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text trule "rule "
+text tdot "."
+text thash "#"
+global cur uchar 32
+global nxt uchar 32
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note 31 cells on a ring; a cell's next state is bit (4*left + 2*self + right) of the rule number
+fn line to void
+for i ulong 31
+if eq get cur i 1
+emit thash
+else
+emit tdot
+end
+end
+emit nl
+end
+fn step rule ulong to void
+for i ulong 31
+l = ulong get cur rem add i 30 31
+c = ulong get cur i
+r = ulong get cur rem add i 1 31
+k = add add mul l 4 mul c 2 r
+put nxt i uchar and shr rule k 1
+end
+for i ulong 31
+put cur i get nxt i
+end
+end
+fn run rule ulong to void
+emit trule
+emitu rule
+emit nl
+for i ulong 31
+put cur i 0
+end
+put cur 15 1
+for g ulong 16
+line
+step rule
+end
+end
+fn main to int
+run 90
+emit nl
+run 30
+emit nl
+run 110
+ret 0
+end

@@ -1,0 +1,29 @@
+note Exercism-style exercise "knapsack": https://exercism.org/tracks/python/exercises/knapsack
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note Item i weighs ws[i] and is worth vs[i]. maximumvalue is the largest total worth of items (each
+note taken at most once) whose total weight is at most cap (cap at most 1000).
+note Check it with: sh exercise.sh exercises/knapsack
+om2
+const KMAX ulong 1001
+global kdp ulong KMAX
+fn additem w ulong v ulong cap ulong to void
+for k ulong add sub cap w 1
+d = sub cap k
+x = add get kdp sub d w v
+if gt x get kdp d
+put kdp d x
+end
+end
+end
+fn maximumvalue ws view ulong * vs view ulong * cap ulong to ulong
+for c ulong add cap 1
+put kdp c 0
+end
+for i ulong len ws
+w = get ws i
+if le w cap
+additem w get vs i cap
+end
+end
+ret get kdp cap
+end

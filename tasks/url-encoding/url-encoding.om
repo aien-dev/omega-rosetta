@@ -1,0 +1,56 @@
+note Rosetta Code task "URL encoding": https://rosettacode.org/wiki/URL_encoding
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text pct "%"
+text hexd "0123456789ABCDEF"
+text u1 "http://foo bar/"
+text u2 "mailto:joe@example.com?subject=a&b c~d_e.f-g"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+note keep says whether c is written as itself: letters and digits always, - . _ ~ only in the
+note RFC 3986 variant (rfc true); every other byte becomes % and two upper-case hex digits
+fn keep c uchar rfc bool to bool
+if or or and ge c 48 le c 57 and ge c 65 le c 90 and ge c 97 le c 122
+ret true
+end
+if and rfc or or eq c 45 eq c 46 or eq c 95 eq c 126
+ret true
+end
+ret false
+end
+fn enc a view uchar * rfc bool to void
+for i ulong len a
+c = get a i
+if keep c rfc
+emitc c
+else
+emit pct
+emitc get hexd shr c 4
+emitc get hexd and c 15
+end
+end
+emit nl
+end
+fn main to int
+enc u1 false
+enc u1 true
+enc u2 false
+enc u2 true
+ret 0
+end

@@ -1,0 +1,38 @@
+note Rosetta Code task "Copy a string": https://rosettacode.org/wiki/Copy_a_string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text src "Hello"
+text tsrc "source: "
+text tcp "copy:   "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note copyto copies s into d at offset off and returns the offset after it (past the end traps 3)
+fn copyto d edit uchar * off ulong s view uchar * to ulong
+for i ulong len s
+put d add off i get s i
+end
+ret add off len s
+end
+fn main to int
+note a text is read-only; copying it into a local array gives an independent, writable string
+c = new uchar 16 0
+n = copyto c 0 src
+put c 0 74
+emit tsrc
+emit src
+emit nl
+emit tcp
+emit part c 0 n
+emit nl
+ret 0
+end

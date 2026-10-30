@@ -1,0 +1,5 @@
+<<<>>> length 0: all unique
+<<<.>>> length 1: all unique
+<<<abcABC>>> length 6: all unique
+<<<XYZ ZYX>>> length 7: duplicate 'X' at 0 and 6
+<<<1234567890ABCDEFGHIJKLMN0PQRSTUVWXYZ>>> length 36: duplicate '0' at 9 and 24

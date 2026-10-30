@@ -1,0 +1,56 @@
+note Rosetta Code task "URL decoding": https://rosettacode.org/wiki/URL_decoding
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text u1 "http%3A%2F%2Ffoo%20bar%2F"
+text u2 "google.com/search?q=%60Abdu%27l-Bah%C3%A1"
+text u3 "%25%32%35"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note hexv gives the value of one hex digit, either case; anything else traps 9
+fn hexv c uchar to uchar
+if and ge c 48 le c 57
+ret sub c 48
+end
+if and ge c 65 le c 70
+ret sub c 55
+end
+if and ge c 97 le c 102
+ret sub c 87
+end
+trap 9
+end
+note dec turns every %XY into the byte 0xXY; the result bytes are written as they are (here UTF-8)
+fn dec a view uchar * to void
+o = new uchar 256 0
+p = ulong 0
+i = ulong 0
+while lt i len a bound 4096
+c = get a i
+if eq c 37
+c = or shl hexv get a add i 1 4 hexv get a add i 2
+i = add i 3
+else
+i = add i 1
+end
+put o p c
+p = add p 1
+end
+emit part o 0 p
+emit nl
+end
+fn main to int
+dec u1
+dec u2
+dec u3
+ret 0
+end

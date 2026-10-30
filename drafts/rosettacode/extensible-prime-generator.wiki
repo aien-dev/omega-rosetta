@@ -1,0 +1,114 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text first "first 20 primes:"
+text betw "primes between 100 and 150:"
+text cnt "number of primes between 7700 and 8000: "
+text nth "the 10000th prime: "
+note the generator's state: pr holds every prime found so far, st 0 their count, st 1 the last candidate
+note pr has room for 20000 primes; asking for more traps 3 at put, never a wild write
+global pr ulong 20000
+global st ulong 2
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note nextp extends the stored list by one prime: the next candidate is tried against stored primes p while p * p <= c
+note bound: a prime gap below 2^32 is far below 999999 candidates; the stored primes checked are at most st 0
+fn nextp to ulong
+c = get st 1
+while true bound 999999
+c = add c 1
+ok = true
+j = ulong 0
+while lt j get st 0 bound 20000
+p = get pr j
+if gt mul p p c
+break
+end
+if eq rem c p 0
+ok = false
+break
+end
+j = add j 1
+end
+if ok
+put pr get st 0 c
+put st 0 add get st 0 1
+put st 1 c
+ret c
+end
+end
+trap 4
+end
+fn main to int
+put st 1 1
+emit first
+for i ulong 20
+emit sp
+emitu nextp
+end
+emit nl
+emit betw
+p = nextp
+while le p 150 bound 1000
+if ge p 100
+emit sp
+emitu p
+end
+p = nextp
+end
+emit nl
+while lt p 7700 bound 10000
+p = nextp
+end
+n = ulong 0
+while le p 8000 bound 10000
+n = add n 1
+p = nextp
+end
+emit cnt
+emitu n
+emit nl
+while lt get st 0 10000 bound 10000
+p = nextp
+end
+emit nth
+emitu get pr 9999
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 20 primes: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71
+primes between 100 and 150: 101 103 107 109 113 127 131 137 139 149
+number of primes between 7700 and 8000: 30
+the 10000th prime: 104729
+</pre>

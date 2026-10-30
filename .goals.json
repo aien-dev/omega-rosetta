@@ -4,7 +4,7 @@
     {
       "id": "goal-corpus",
       "title": "Rosetta corpus checked in CI",
-      "description": "24 Rosetta Code tasks and 5 exercises compiled by the pinned seeded omc, checked against independent oracles on ubuntu-24.04-arm, with negative controls.",
+      "description": "216 Rosetta Code tasks and 47 exercises compiled by the pinned seeded omc, checked against independent oracles on ubuntu-24.04-arm, with negative controls.",
       "status": "Active",
       "milestones": [
         {

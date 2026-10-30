@@ -1,0 +1,87 @@
+note Rosetta Code task "String comparison": https://rosettacode.org/wiki/String_comparison
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text a1 "alpha"
+text b1 "beta"
+text a2 "Hello"
+text b2 "hello"
+text a3 "abc"
+text b3 "abcd"
+text teq " eq="
+text tlt " lt="
+text tgt " gt="
+text tci " equal-ignoring-case="
+text tyes "yes"
+text tno "no"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+fn emitb b bool to void
+if b
+emit tyes
+else
+emit tno
+end
+end
+note cmp is byte order: -1, 0 or 1; a proper prefix sorts first; ci folds ASCII case first
+fn cmp a view uchar * b view uchar * ci bool to int
+n = len a
+if lt len b n
+n = len b
+end
+for i ulong n
+x = get a i
+y = get b i
+if and ci and ge x 65 le x 90
+x = add x 32
+end
+if and ci and ge y 65 le y 90
+y = add y 32
+end
+if lt x y
+ret -1
+end
+if gt x y
+ret 1
+end
+end
+if lt len a len b
+ret -1
+end
+if gt len a len b
+ret 1
+end
+ret 0
+end
+fn show a view uchar * b view uchar * to void
+c = cmp a b false
+emit a
+emit sp
+emit b
+emit teq
+emitb eq c 0
+emit tlt
+emitb lt c 0
+emit tgt
+emitb gt c 0
+emit tci
+emitb eq cmp a b true 0
+emit nl
+end
+fn main to int
+show a1 b1
+show a2 b2
+show a3 b3
+show b3 a3
+ret 0
+end

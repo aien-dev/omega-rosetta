@@ -1,0 +1,10 @@
+insert 3 Clear drains
+insert 4 Feed cat
+insert 5 Make tea
+insert 1 Solve RC tasks
+insert 2 Tax return
+pop 1 Solve RC tasks
+pop 2 Tax return
+pop 3 Clear drains
+pop 4 Feed cat
+pop 5 Make tea

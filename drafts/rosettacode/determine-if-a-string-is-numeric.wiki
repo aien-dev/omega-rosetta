@@ -1,0 +1,134 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text tq "\""
+text tyes "\" numeric\n"
+text tno "\" not numeric\n"
+text s0 "0"
+text s1 "-12"
+text s2 "3.14"
+text s3 "+1e5"
+text s4 "1e-3"
+text s5 ".5"
+text s6 "5."
+text s7 "abc"
+text s9 "12a"
+text s10 "-"
+text s11 "1.2.3"
+text s12 "e5"
+text s13 "1e"
+text s14 "--1"
+text s15 "6.02E+23"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note digits returns the offset after a run of decimal digits starting at i
+fn digits a view uchar * i ulong to ulong
+j = i
+while lt j len a bound 4096
+c = get a j
+if or lt c 48 gt c 57
+ret j
+end
+j = add j 1
+end
+ret j
+end
+note sign returns the offset after an optional + or - at i
+fn sign a view uchar * i ulong to ulong
+if lt i len a
+c = get a i
+if or eq c 43 eq c 45
+ret add i 1
+end
+end
+ret i
+end
+note numeric accepts [+-] then digits with an optional fraction (at least one digit in all), then an
+note optional exponent e or E, [+-], at least one digit; nothing else, no spaces
+fn numeric a view uchar * to bool
+i = sign a 0
+j = digits a i
+m = sub j i
+if lt j len a
+if eq get a j 46
+i = add j 1
+j = digits a i
+m = add m sub j i
+end
+end
+if eq m 0
+ret false
+end
+if lt j len a
+c = get a j
+if or eq c 101 eq c 69
+i = sign a add j 1
+j = digits a i
+if eq j i
+ret false
+end
+end
+end
+ret eq j len a
+end
+fn show a view uchar * to void
+emit tq
+emit a
+if numeric a
+emit tyes
+else
+emit tno
+end
+end
+fn main to int
+show s0
+show s1
+show s2
+show s3
+show s4
+show s5
+show s6
+show s7
+note the empty string: an empty text literal would read as unsized at this pin, so slice one
+show part s7 0 0
+show s9
+show s10
+show s11
+show s12
+show s13
+show s14
+show s15
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+"0" numeric
+"-12" numeric
+"3.14" numeric
+"+1e5" numeric
+"1e-3" numeric
+".5" numeric
+"5." numeric
+"abc" not numeric
+"" not numeric
+"12a" not numeric
+"-" not numeric
+"1.2.3" not numeric
+"e5" not numeric
+"1e" not numeric
+"--1" not numeric
+"6.02E+23" numeric
+</pre>

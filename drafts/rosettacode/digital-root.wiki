@@ -1,0 +1,82 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text per ": additive persistence "
+text dr ", digital root "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note a ulong has at most 20 digits
+fn dsum n ulong to ulong
+s = ulong 0
+v = n
+while gt v 0 bound 20
+s = add s rem v 10
+v = div v 10
+end
+ret s
+end
+note bound: one digit sum takes any ulong below 181, the next below 19, then a single digit, so 4 rounds suffice
+fn tell n ulong to void
+v = n
+p = ulong 0
+while gt v 9 bound 4
+v = dsum v
+p = add p 1
+end
+emitu n
+emit per
+emitu p
+emit dr
+emitu v
+emit nl
+end
+fn main to int
+tell 627615
+tell 39390
+tell 588225
+tell 393900588225
+tell 0
+tell 9
+tell 199
+tell 18446744073709551615
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+627615: additive persistence 2, digital root 9
+39390: additive persistence 2, digital root 6
+588225: additive persistence 2, digital root 3
+393900588225: additive persistence 2, digital root 9
+0: additive persistence 0, digital root 0
+9: additive persistence 0, digital root 9
+199: additive persistence 3, digital root 1
+18446744073709551615: additive persistence 3, digital root 6
+</pre>

@@ -1,0 +1,130 @@
+note Exercism-style exercise "resistor-color-trio": https://exercism.org/tracks/python/exercises/resistor-color-trio
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note colors holds band color names joined by commas (black 0, brown 1, red 2, orange 3, yellow 4,
+note green 5, blue 6, violet 7, grey 8, white 9). The first two bands give a two-digit number, the
+note third the count of zeros after it; further bands are ignored. label writes the resistance as
+note "<number> <unit>" into o, with the largest of ohms, kiloohms, megaohms, gigaohms that keeps the
+note number whole, and returns the number of bytes written.
+note Check it with: sh exercise.sh exercises/resistor-color-trio
+om2
+text rc0 "black"
+text rc1 "brown"
+text rc2 "red"
+text rc3 "orange"
+text rc4 "yellow"
+text rc5 "green"
+text rc6 "blue"
+text rc7 "violet"
+text rc8 "grey"
+text rc9 "white"
+text u0 " ohms"
+text u1 " kiloohms"
+text u2 " megaohms"
+text u3 " gigaohms"
+fn same a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+fn app o edit uchar * p ulong s view uchar * to ulong
+q = p
+for i ulong len s
+put o q get s i
+q = add q 1
+end
+ret q
+end
+fn appnum o edit uchar * p ulong n ulong to ulong
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+ret app o p part d i sub 20 i
+end
+fn code color view uchar * to ulong
+if same color rc0
+ret 0
+end
+if same color rc1
+ret 1
+end
+if same color rc2
+ret 2
+end
+if same color rc3
+ret 3
+end
+if same color rc4
+ret 4
+end
+if same color rc5
+ret 5
+end
+if same color rc6
+ret 6
+end
+if same color rc7
+ret 7
+end
+if same color rc8
+ret 8
+end
+if same color rc9
+ret 9
+end
+ret 10
+end
+fn band cs view uchar * n ulong to ulong
+s = ulong 0
+f = ulong 0
+for i ulong add len cs 1
+stop = eq i len cs
+if not stop
+stop = eq get cs i 44
+end
+if stop
+if eq f n
+ret code part cs s sub i s
+end
+f = add f 1
+s = add i 1
+end
+end
+ret 10
+end
+fn label colors view uchar * o edit uchar * to ulong
+v = add mul band colors 0 10 band colors 1
+z = band colors 2
+for i ulong z
+v = mul v 10
+end
+u = ulong 0
+while and and ge v 1000 eq rem v 1000 0 lt u 3 bound 4
+v = div v 1000
+u = add u 1
+end
+p = appnum o 0 v
+if eq u 0
+ret app o p u0
+end
+if eq u 1
+ret app o p u1
+end
+if eq u 2
+ret app o p u2
+end
+ret app o p u3
+end

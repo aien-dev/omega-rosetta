@@ -1,0 +1,2 @@
+Mersenne primes 2^p - 1 for p <= 63, by the Lucas-Lehmer test:
+M2 M3 M5 M7 M13 M17 M19 M31 M61

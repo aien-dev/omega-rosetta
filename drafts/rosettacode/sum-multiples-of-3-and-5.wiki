@@ -1,0 +1,76 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text loop "by loop, below 1000: "
+text pre "by formula, below 10^"
+text col ": "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note the multiples of k below n add up to k * m * (m + 1) / 2 with m = (n - 1) / k; inclusion-exclusion
+note removes the multiples of 15 counted twice. Below 10^9 every product stays under 2^64
+fn sm k ulong n ulong to ulong
+m = div sub n 1 k
+ret div mul mul k m add m 1 2
+end
+fn main to int
+s = ulong 0
+for i ulong 1000
+if or eq rem i 3 0 eq rem i 5 0
+s = add s i
+end
+end
+emit loop
+emitu s
+emit nl
+n = ulong 10
+for e ulong 9
+emit pre
+emitu add e 1
+emit col
+emitu sub add sm 3 n sm 5 n sm 15 n
+emit nl
+n = mul n 10
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+by loop, below 1000: 233168
+by formula, below 10^1: 23
+by formula, below 10^2: 2318
+by formula, below 10^3: 233168
+by formula, below 10^4: 23331668
+by formula, below 10^5: 2333316668
+by formula, below 10^6: 233333166668
+by formula, below 10^7: 23333331666668
+by formula, below 10^8: 2333333316666668
+by formula, below 10^9: 233333333166666668
+</pre>

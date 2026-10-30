@@ -1,0 +1,18 @@
+squeeze '-'
+<<<..1111111111111111111111111111111111111111111111111111111111111117777888>>> length 72
+<<<..1111111111111111111111111111111111111111111111111111111111111117777888>>> length 72
+squeeze '7'
+<<<..1111111111111111111111111111111111111111111111111111111111111117777888>>> length 72
+<<<..1111111111111111111111111111111111111111111111111111111111111117888>>> length 69
+squeeze '.'
+<<<I never give 'em hell, I just tell the truth, and they think it's hell. >>> length 72
+<<<I never give 'em hell, I just tell the truth, and they think it's hell. >>> length 72
+squeeze ' '
+<<<                                                    --- Harry S Truman  >>> length 72
+<<< --- Harry S Truman >>> length 20
+squeeze '-'
+<<<                                                    --- Harry S Truman  >>> length 72
+<<<                                                    - Harry S Truman  >>> length 70
+squeeze 'r'
+<<<                                                    --- Harry S Truman  >>> length 72
+<<<                                                    --- Hary S Truman  >>> length 71

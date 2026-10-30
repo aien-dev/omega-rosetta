@@ -1,0 +1,60 @@
+note Rosetta Code task "Base64 encode data": https://rosettacode.org/wiki/Base64_encode_data
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text abc "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+text m0 "M"
+text m1 "Ma"
+text m2 "Man"
+text m3 "Hello, World!"
+text m4 "To err is human, but to really foul things up you need a computer.\n    -- Paul R. Ehrlich"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note b64 takes the input 3 bytes (24 bits) at a time and writes 4 alphabet characters, '=' padding
+note a short last group; output up to 512 bytes (input up to 384, longer traps 3)
+fn b64 a view uchar * to void
+o = new uchar 512 0
+p = ulong 0
+i = ulong 0
+while lt i len a bound 200
+r = sub len a i
+v = shl ulong get a i 16
+if gt r 1
+v = or v shl ulong get a add i 1 8
+end
+if gt r 2
+v = or v ulong get a add i 2
+end
+put o p get abc shr v 18
+put o add p 1 get abc and shr v 12 63
+put o add p 2 61
+put o add p 3 61
+if gt r 1
+put o add p 2 get abc and shr v 6 63
+end
+if gt r 2
+put o add p 3 get abc and v 63
+end
+p = add p 4
+i = add i 3
+end
+emit part o 0 p
+emit nl
+end
+fn main to int
+b64 m0
+b64 m1
+b64 m2
+b64 m3
+b64 m4
+ret 0
+end

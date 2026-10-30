@@ -1,0 +1,10 @@
+note Exercism-style exercise "scrabble-score": https://exercism.org/tracks/python/exercises/scrabble-score
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note score is the Scrabble score of word, ignoring case: AEIOULNRST 1, DG 2, BCMP 3, FHVWY 4, K 5,
+note JX 8, QZ 10.
+note Check it with: sh exercise.sh exercises/scrabble-score
+om2
+fn score word view uchar * to ulong
+note replace this line with your solution
+trap 13
+end

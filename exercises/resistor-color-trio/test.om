@@ -1,0 +1,163 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/resistor-color-trio/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 10 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "orange,orange,black"
+text e1 "33 ohms"
+text c2 "label: Orange and orange and black"
+text s3 "blue,grey,brown"
+text e4 "680 ohms"
+text c5 "label: Blue and grey and brown"
+text s6 "red,black,red"
+text e7 "2 kiloohms"
+text c8 "label: Red and black and red"
+text s9 "green,brown,orange"
+text e10 "51 kiloohms"
+text c11 "label: Green and brown and orange"
+text s12 "yellow,violet,yellow"
+text e13 "470 kiloohms"
+text c14 "label: Yellow and violet and yellow"
+text s15 "blue,violet,blue"
+text e16 "67 megaohms"
+text c17 "label: Blue and violet and blue"
+text s18 "black,black,black"
+text e19 "0 ohms"
+text c20 "label: Minimum possible value"
+text s21 "white,white,white"
+text e22 "99 gigaohms"
+text c23 "label: Maximum possible value"
+text s24 "black,grey,black"
+text e25 "8 ohms"
+text c26 "label: First two colors make an invalid octal number"
+text s27 "blue,green,yellow,orange"
+text e28 "650 kiloohms"
+text c29 "label: Ignore extra colors"
+note canonical case d6863355-15b7-40bb-abe0-bfb1a25512ed
+fn tc0 to bool
+o = new uchar 1024 0
+n = label s0 o
+ret tbeq part o 0 n e1
+end
+note canonical case 1224a3a9-8c8e-4032-843a-5224e04647d6
+fn tc1 to bool
+o = new uchar 1024 0
+n = label s3 o
+ret tbeq part o 0 n e4
+end
+note canonical case b8bda7dc-6b95-4539-abb2-2ad51d66a207
+fn tc2 to bool
+o = new uchar 1024 0
+n = label s6 o
+ret tbeq part o 0 n e7
+end
+note canonical case 5b1e74bc-d838-4eda-bbb3-eaba988e733b
+fn tc3 to bool
+o = new uchar 1024 0
+n = label s9 o
+ret tbeq part o 0 n e10
+end
+note canonical case f5d37ef9-1919-4719-a90d-a33c5a6934c9
+fn tc4 to bool
+o = new uchar 1024 0
+n = label s12 o
+ret tbeq part o 0 n e13
+end
+note canonical case 5f6404a7-5bb3-4283-877d-3d39bcc33854
+fn tc5 to bool
+o = new uchar 1024 0
+n = label s15 o
+ret tbeq part o 0 n e16
+end
+note canonical case 7d3a6ab8-e40e-46c3-98b1-91639fff2344
+fn tc6 to bool
+o = new uchar 1024 0
+n = label s18 o
+ret tbeq part o 0 n e19
+end
+note canonical case ca0aa0ac-3825-42de-9f07-dac68cc580fd
+fn tc7 to bool
+o = new uchar 1024 0
+n = label s21 o
+ret tbeq part o 0 n e22
+end
+note canonical case 0061a76c-903a-4714-8ce2-f26ce23b0e09
+fn tc8 to bool
+o = new uchar 1024 0
+n = label s24 o
+ret tbeq part o 0 n e25
+end
+note canonical case 30872c92-f567-4b69-a105-8455611c10c4
+fn tc9 to bool
+o = new uchar 1024 0
+n = label s27 o
+ret tbeq part o 0 n e28
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c20
+tcheck tc7 c23
+tcheck tc8 c26
+tcheck tc9 c29
+ret int get tfails 0
+end

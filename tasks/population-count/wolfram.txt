@@ -1,0 +1,14 @@
+Wolfram cross-check of tasks/population-count/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 6a02e4ea3fdb442b6ff091f2bd9eeb511ee21af495890d3f4dfee7c315b11a63.
+agreement: YES
+query:
+pc[n_] := DigitCount[n, 2, 1];
+s = "popcount of 3^0 .. 3^29: " <> StringRiffle[ToString /@ pc /@ (3^Range[0, 29]), " "] <> "\n" <>
+  "first 30 evil numbers:   " <> StringRiffle[ToString /@ Take[Select[Range[0, 100], EvenQ[pc[#]] &], 30], " "] <> "\n" <>
+  "first 30 odious numbers: " <> StringRiffle[ToString /@ Take[Select[Range[0, 100], OddQ[pc[#]] &], 30], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"6a02e4ea3fdb442b6ff091f2bd9eeb511ee21af495890d3f4dfee7c315b11a63", "popcount of 3^0 .. 3^29: 1 2 2 4 3 6 6 5 6 8 9 13 10 11 14 15 11 14 14 17 17 20 19 22 16 18 24 30 25 25\nfirst 30 evil numbers:   0 3 5 6 9 10 12 15 17 18 20 23 24 27 29 30 33 34 36 39 40 43 45 46 48 51 53 54 57 58\nfirst 30 odious numbers: 1 2 4 7 8 11 13 14 16 19 21 22 25 26 28 31 32 35 37 38 41 42 44 47 49 50 52 55 56 59\n"}

@@ -1,0 +1,131 @@
+note Rosetta Code task "Topswops": https://rosettacode.org/wiki/Topswops
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text thead "n  most swops\n"
+global perm ulong 10
+global deck ulong 10
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitw writes n right-aligned in w columns (w at most 20; a wider number is not cut)
+fn emitw n ulong w ulong to void
+d = new uchar 20 32
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+if gt w sub 20 i
+i = sub 20 w
+end
+emit part d i sub 20 i
+end
+note nextp: the next permutation in lexicographic order, false after the last
+fn nextp n ulong to bool
+if lt n 2
+ret false
+end
+i = sub n 1
+while gt i 0 bound 10
+if lt get perm sub i 1 get perm i
+break
+end
+i = sub i 1
+end
+if eq i 0
+ret false
+end
+j = sub n 1
+while le get perm j get perm sub i 1 bound 10
+j = sub j 1
+end
+t = get perm sub i 1
+put perm sub i 1 get perm j
+put perm j t
+k = sub n 1
+while lt i k bound 10
+t2 = get perm i
+put perm i get perm k
+put perm k t2
+i = add i 1
+k = sub k 1
+end
+ret true
+end
+note swops plays the game on a copy of perm (cards 1..n): while the top card is m > 1, reverse the top
+note m cards; it ends because the deck's lexicographic order rises with each reversal, and the known
+note maxima for n <= 9 are at most 30, so 1000 rounds are plenty
+fn swops n ulong to ulong
+for i ulong n
+put deck i get perm i
+end
+c = ulong 0
+while ne get deck 0 1 bound 1000
+m = get deck 0
+for x ulong shr m 1
+t = get deck x
+put deck x get deck sub sub m x 1
+put deck sub sub m x 1 t
+end
+c = add c 1
+end
+ret c
+end
+note most tries every one of the n! decks (9! = 362880 at most)
+fn most n ulong to ulong
+for i ulong n
+put perm i add i 1
+end
+b = ulong 0
+while true bound 362880
+s = swops n
+if gt s b
+b = s
+end
+if not nextp n
+break
+end
+end
+ret b
+end
+fn main to int
+emit thead
+for x ulong 9
+n = add x 1
+emitu n
+emitw most n 12
+emit nl
+end
+ret 0
+end

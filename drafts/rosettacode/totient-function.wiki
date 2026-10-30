@@ -1,0 +1,117 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text phi "phi("
+text eqs ") = "
+text prm ", prime"
+text cnt "primes up to "
+text col ": "
+note ph n is Euler's totient of n for n up to 100000
+global ph ulong 100001
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note sieve: start with ph n = n; each prime p (still ph p = p when reached) scales its multiples by (1 - 1/p)
+note bound: each p touches at most 100000 / p multiples
+fn sieve to void
+for i ulong 100001
+put ph i i
+end
+p = ulong 2
+while le p 100000 bound 100000
+if eq get ph p p
+j = p
+while le j 100000 bound 100000
+put ph j sub get ph j div get ph j p
+j = add j p
+end
+end
+p = add p 1
+end
+end
+note n > 1 is prime exactly when phi(n) = n - 1
+fn main to int
+sieve
+for i ulong 25
+n = add i 1
+emit phi
+emitu n
+emit eqs
+emitu get ph n
+if eq get ph n sub n 1
+emit prm
+end
+emit nl
+end
+lim = ulong 100
+c = ulong 0
+for i ulong 99999
+n = add i 2
+if eq get ph n sub n 1
+c = add c 1
+end
+if eq n lim
+emit cnt
+emitu lim
+emit col
+emitu c
+emit nl
+lim = mul lim 10
+end
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+phi(1) = 1
+phi(2) = 1, prime
+phi(3) = 2, prime
+phi(4) = 2
+phi(5) = 4, prime
+phi(6) = 2
+phi(7) = 6, prime
+phi(8) = 4
+phi(9) = 6
+phi(10) = 4
+phi(11) = 10, prime
+phi(12) = 4
+phi(13) = 12, prime
+phi(14) = 6
+phi(15) = 8
+...
+phi(22) = 10
+phi(23) = 22, prime
+phi(24) = 8
+phi(25) = 20
+primes up to 100: 25
+primes up to 1000: 168
+primes up to 10000: 1229
+primes up to 100000: 9592
+</pre>

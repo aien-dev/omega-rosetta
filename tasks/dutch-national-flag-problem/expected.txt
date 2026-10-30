@@ -1,0 +1,4 @@
+blue red white white blue blue blue blue red red white red
+in flag order: no
+red red red red white white white blue blue blue blue blue
+in flag order: yes

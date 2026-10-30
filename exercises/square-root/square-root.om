@@ -1,0 +1,9 @@
+note Exercism-style exercise "square-root": https://exercism.org/tracks/python/exercises/square-root
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note squareroot is the integer square root of n: the largest r with r * r <= n.
+note Check it with: sh exercise.sh exercises/square-root
+om2
+fn squareroot n ulong to ulong
+note replace this line with your solution
+trap 13
+end

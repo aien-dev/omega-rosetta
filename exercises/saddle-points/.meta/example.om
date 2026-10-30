@@ -1,0 +1,38 @@
+note Exercism-style exercise "saddle-points": https://exercism.org/tracks/python/exercises/saddle-points
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note m is a matrix of nr rows and nc columns, row after row. A saddle point is a value that is the
+note largest in its row and the smallest in its column. saddlepoints writes the 1-based row and
+note column of each saddle point into o as pairs, in row-major order, and returns the number of points.
+note Check it with: sh exercise.sh exercises/saddle-points
+om2
+fn isrowmax m view ulong * nc ulong r ulong c ulong to bool
+v = get m add mul r nc c
+for j ulong nc
+if gt get m add mul r nc j v
+ret false
+end
+end
+ret true
+end
+fn iscolmin m view ulong * nr ulong nc ulong r ulong c ulong to bool
+v = get m add mul r nc c
+for i ulong nr
+if lt get m add mul i nc c v
+ret false
+end
+end
+ret true
+end
+fn saddlepoints m view ulong * nr ulong nc ulong o edit ulong * to ulong
+k = ulong 0
+for r ulong nr
+for c ulong nc
+if and isrowmax m nc r c iscolmin m nr nc r c
+put o mul k 2 add r 1
+put o add mul k 2 1 add c 1
+k = add k 1
+end
+end
+end
+ret k
+end

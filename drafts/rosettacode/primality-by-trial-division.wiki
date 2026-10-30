@@ -1,0 +1,96 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text hdr "primes below 100:"
+text yes " is prime\n"
+text no " is not prime\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note trial division by 2, then by odd d while d * d <= n
+note bound: the largest input is below 10^12 + 40, so d stays below 10^6 + 2 (at most 500001 odd values) and mul d d does not wrap
+fn prime n ulong to bool
+if lt n 2
+ret false
+end
+if eq rem n 2 0
+ret eq n 2
+end
+d = ulong 3
+while le mul d d n bound 999999
+if eq rem n d 0
+ret false
+end
+d = add d 2
+end
+ret true
+end
+fn tell n ulong to void
+emitu n
+if prime n
+emit yes
+else
+emit no
+end
+end
+fn main to int
+emit hdr
+for i ulong 100
+if prime i
+emit sp
+emitu i
+end
+end
+emit nl
+tell 1
+tell 2
+tell 9
+tell 561
+tell 7919
+tell 2147483647
+tell 999999999989
+tell 999999999999
+tell 1000000000039
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+primes below 100: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97
+1 is not prime
+2 is prime
+9 is not prime
+561 is not prime
+7919 is prime
+2147483647 is prime
+999999999989 is prime
+999999999999 is not prime
+1000000000039 is prime
+</pre>

@@ -1,0 +1,17 @@
+Wolfram cross-check of tasks/ludic-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = e5435280ad1a05d299153d9e18bbb035596ae111e48d5e69685d7b77e62f4eb3.
+agreement: YES
+query:
+lud = Module[{l = Range[2, 21999], out = {1}}, While[l =!= {}, AppendTo[out, First[l]]; l = Delete[l, List /@ Range[1, Length[l], First[l]]]]; out];
+sl = Association[(# -> True) & /@ lud];
+s = "first 25 ludic numbers: " <> StringRiffle[ToString /@ Take[lud, 25], " "] <> "\n" <>
+  "ludic numbers <= 1000: " <> ToString[Count[lud, x_ /; x <= 1000]] <> "\n" <>
+  "2000th to 2005th ludic numbers: " <> StringRiffle[ToString /@ lud[[2000 ;; 2005]], " "] <> "\n" <>
+  "ludic triplets (x, x+2, x+6) below 250: " <> StringRiffle[("(" <> ToString[#] <> ", " <> ToString[# + 2] <> ", " <> ToString[# + 6] <> ")") & /@
+     Select[lud, # + 6 < 250 && KeyExistsQ[sl, # + 2] && KeyExistsQ[sl, # + 6] &], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"e5435280ad1a05d299153d9e18bbb035596ae111e48d5e69685d7b77e62f4eb3", "first 25 ludic numbers: 1 2 3 5 7 11 13 17 23 25 29 37 41 43 47 53 61 67 71 77 83 89 91 97 107\nludic numbers <= 1000: 142\n2000th to 2005th ludic numbers: 21475 21481 21487 21493 21503 21511\nludic triplets (x, x+2, x+6) below 250: (1, 3, 7) (5, 7, 11) (11, 13, 17) (23, 25, 29) (41, 43, 47) (173, 175, 179) (221, 223, 227) (233, 235, 239)\n"}

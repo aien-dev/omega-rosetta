@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/abundant-deficient-and-perfect-number-classifications/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 4eabb54cab93c76c9f863c5fd98f1dcca4cff2ccf3791c77a8713642d852ac69.
+agreement: YES
+query:
+c = Counts[Table[Sign[DivisorSigma[1, n] - 2 n], {n, 1, 20000}]];
+s = "deficient: " <> ToString[c[-1]] <> "\nperfect:   " <> ToString[c[0]] <> "\nabundant:  " <> ToString[c[1]] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"4eabb54cab93c76c9f863c5fd98f1dcca4cff2ccf3791c77a8713642d852ac69", "deficient: 15043\nperfect:   4\nabundant:  4953\n"}

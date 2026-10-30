@@ -1,0 +1,105 @@
+note Rosetta Code task "Square-free integers": https://rosettacode.org/wiki/Square-free_integers
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+text lo "square-free integers from 1 to 145:"
+text hi "square-free integers from 1000000000000 to 1000000000145:"
+text upto "square-free integers up to "
+text col ": "
+note cp marks composites below 10^6 (a prime sieve); sq n becomes 1 when some p^2 divides n, n <= 10^6;
+note wn marks the window 10^12 .. 10^12 + 145 the same way. Any square factor of a number up to
+note 10^12 + 145 has a prime p <= 10^6 + 1 (p^2 > 10^12 + 145 otherwise), and 10^6 + 1 = 101 * 9901 is composite
+global cp uchar 1000001
+global sq uchar 1000001
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn main to int
+wn = new uchar 146 0
+base = ulong 1000000000000
+p = ulong 2
+while le p 1000000 bound 999999
+if eq get cp p 0
+if le mul p p 1000000
+j = mul p p
+while le j 1000000 bound 999999
+put cp j 1
+j = add j p
+end
+end
+q = mul p p
+j = q
+while le j 1000000 bound 999999
+put sq j 1
+j = add j q
+end
+r = rem base q
+j = ulong 0
+if gt r 0
+j = sub q r
+end
+while le j 145 bound 146
+put wn j 1
+j = add j q
+end
+end
+p = add p 1
+end
+emit lo
+for i ulong 145
+if eq get sq add i 1 0
+emit sp
+emitu add i 1
+end
+end
+emit nl
+emit hi
+for i ulong 146
+if eq get wn i 0
+emit sp
+emitu add base i
+end
+end
+emit nl
+c = ulong 0
+lim = ulong 100
+for i ulong 1000000
+n = add i 1
+if eq get sq n 0
+c = add c 1
+end
+if eq n lim
+emit upto
+emitu lim
+emit col
+emitu c
+emit nl
+lim = mul lim 10
+end
+end
+ret 0
+end

@@ -1,0 +1,64 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text lq "<<<"
+text rq ">>>"
+text s1 "apples, pears # and bananas"
+text s2 "apples, pears ; and bananas"
+text s3 "  no comment here  "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note cut at the first '#' or ';', then drop whitespace (space, tab) at both ends of what is left
+fn strip a view uchar * to void
+e = len a
+for i ulong len a
+c = get a i
+if and eq e len a or eq c 35 eq c 59
+e = i
+end
+end
+s = ulong 0
+while lt s e bound 4096
+c = get a s
+if and ne c 32 ne c 9
+break
+end
+s = add s 1
+end
+while gt e s bound 4096
+c = get a sub e 1
+if and ne c 32 ne c 9
+break
+end
+e = sub e 1
+end
+emit lq
+emit part a s sub e s
+emit rq
+emit nl
+end
+fn main to int
+strip s1
+strip s2
+strip s3
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+&lt;&lt;&lt;apples, pears>>>
+&lt;&lt;&lt;apples, pears>>>
+&lt;&lt;&lt;no comment here>>>
+</pre>

@@ -1,0 +1,80 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text hdr "first 25 narcissistic decimal numbers:"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note n with k digits is narcissistic when the sum of its digits each raised to k equals n
+note pw holds d^k at 8 * d + k for digits d and lengths k up to 7
+fn narc n ulong pw view ulong 80 to bool
+k = ulong 1
+v = div n 10
+while gt v 0 bound 8
+k = add k 1
+v = div v 10
+end
+s = ulong 0
+v = n
+for i ulong k
+s = add s get pw add mul rem v 10 8 k
+v = div v 10
+end
+ret eq s n
+end
+note bound: the 25th such number, 9926315, has 7 digits, so 10^7 candidates suffice
+fn main to int
+pw = new ulong 80 0
+for d ulong 10
+x = ulong 1
+for k ulong 8
+put pw add mul d 8 k x
+x = mul x d
+end
+end
+emit hdr
+c = ulong 0
+for n ulong 10000000
+if lt c 25
+if narc n pw
+emit sp
+emitu n
+c = add c 1
+end
+end
+end
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 25 narcissistic decimal numbers: 0 1 2 3 4 5 6 7 8 9 153 370 371 407 1634 8208 9474 54748 92727 93084 548834 1741725 4210818 9800817 9926315
+</pre>

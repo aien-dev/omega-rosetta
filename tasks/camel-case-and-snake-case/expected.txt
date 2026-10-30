@@ -1,0 +1,7 @@
+snakeCase -> snake: snake_case -> camel: snakeCase
+snake_case -> snake: snake_case -> camel: snakeCase
+variable_10_case -> snake: variable_10_case -> camel: variable10Case
+variable10Case -> snake: variable10_case -> camel: variable10Case
+hurry-up-joe! -> snake: hurry_up_joe! -> camel: hurryUpJoe!
+c://my-docs/happy_Flag-Day/12.doc -> snake: c://my_docs/happy_flag_day/12.doc -> camel: c://myDocs/happyFlagDay/12.doc
+  spaces   -> snake:   spaces   -> camel:   spaces  

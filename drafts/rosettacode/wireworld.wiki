@@ -1,0 +1,133 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text tstart "tH.........|.   .      |   ...     |.   .      |Ht.. ......"
+text tgen "generation "
+global cur uchar 55
+global nxt uchar 55
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitb writes the single byte c
+fn emitb c ulong to void
+d = new uchar 1 0
+put d 0 uchar c
+emit d
+end
+note the 5 x 11 board from the task: H electron head, t tail, . conductor, space empty; a head becomes a
+note tail, a tail a conductor, and a conductor a head when 1 or 2 of its 8 neighbours are heads
+fn heads r long c long to ulong
+n = ulong 0
+for a ulong 3
+for b ulong 3
+y = sub add r long a 1
+x = sub add c long b 1
+if and and ge y 0 lt y 5 and ge x 0 lt x 11
+if eq get cur add mul ulong y 11 ulong x 72
+n = add n 1
+end
+end
+end
+end
+ret n
+end
+fn rule k ulong n ulong to uchar
+v = get cur k
+if eq v 72
+ret 116
+end
+if eq v 116
+ret 46
+end
+if and eq v 46 or eq n 1 eq n 2
+ret 72
+end
+ret v
+end
+fn step to void
+for r ulong 5
+for c ulong 11
+k = add mul r 11 c
+put nxt k rule k heads long r long c
+end
+end
+for i ulong 55
+put cur i get nxt i
+end
+end
+fn main to int
+for r ulong 5
+for c ulong 11
+put cur add mul r 11 c get tstart add mul r 12 c
+end
+end
+for g ulong 10
+emit tgen
+emitu g
+emit nl
+for i ulong 55
+emitb ulong get cur i
+if eq rem i 11 10
+emit nl
+end
+end
+step
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+generation 0
+tH.........
+.   .      
+   ...     
+.   .      
+Ht.. ......
+generation 1
+.tH........
+H   .      
+   ...     
+H   .      
+t... ......
+generation 2
+H.tH.......
+t   .      
+...
+t   .      
+.H.t ......
+generation 9
+tH.tH.tH.tH
+.   H      
+   ...     
+.   .      
+HtH. ......
+</pre>

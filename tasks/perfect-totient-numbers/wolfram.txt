@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/perfect-totient-numbers/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 5c8d7b3ea25182e410297fee9e4d703dc6d627ce0a277d404e50fe8e65ac8953.
+agreement: YES
+query:
+ptn = Select[Range[2, 6000], Total[Rest[FixedPointList[EulerPhi, #]]] - 1 == # &];
+s = "first 20 perfect totient numbers: " <> StringRiffle[ToString /@ Take[ptn, 20], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"5c8d7b3ea25182e410297fee9e4d703dc6d627ce0a277d404e50fe8e65ac8953", "first 20 perfect totient numbers: 3 9 15 27 39 81 111 183 243 255 327 363 471 729 2187 2199 3063 4359 4375 5571\n"}

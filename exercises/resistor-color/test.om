@@ -1,0 +1,93 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/resistor-color/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 4 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "black"
+text c1 "colorCode: Color codes / Black"
+text s2 "white"
+text c3 "colorCode: Color codes / White"
+text s4 "orange"
+text c5 "colorCode: Color codes / Orange"
+text e6 "black,brown,red,orange,yellow,green,blue,violet,grey,white"
+text c7 "colors: Colors"
+note canonical case 49eb31c5-10a8-4180-9f7f-fea632ab87ef
+fn tc0 to bool
+ret eq colorcode s0 0
+end
+note canonical case 0a4df94b-92da-4579-a907-65040ce0b3fc
+fn tc1 to bool
+ret eq colorcode s2 9
+end
+note canonical case 5f81608d-f36f-4190-8084-f45116b6f380
+fn tc2 to bool
+ret eq colorcode s4 3
+end
+note canonical case 581d68fa-f968-4be2-9f9d-880f2fb73cf7
+fn tc3 to bool
+o = new uchar 1024 0
+n = colors o
+ret tbeq part o 0 n e6
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+ret int get tfails 0
+end

@@ -1,0 +1,73 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text first "first 20 anti-primes:"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note divisor count by pairing d with n / d for d * d <= n
+fn ndiv n ulong to ulong
+c = ulong 0
+d = ulong 1
+while le mul d d n bound 100
+if eq rem n d 0
+c = add c 2
+if eq mul d d n
+c = sub c 1
+end
+end
+d = add d 1
+end
+ret c
+end
+note an anti-prime has more divisors than every smaller positive integer; the 20th is 7560
+fn main to int
+emit first
+best = ulong 0
+c = ulong 0
+n = ulong 1
+while lt c 20 bound 7560
+k = ndiv n
+if gt k best
+best = k
+emit sp
+emitu n
+c = add c 1
+end
+n = add n 1
+end
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 20 anti-primes: 1 2 4 6 12 24 36 48 60 120 180 240 360 720 840 1260 1680 2520 5040 7560
+</pre>

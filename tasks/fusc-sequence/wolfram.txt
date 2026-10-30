@@ -1,0 +1,17 @@
+Wolfram cross-check of tasks/fusc-sequence/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 491f6155a9d1b643790eaf49c35c9717ef9518d623852db7eec1f1dedb6a4228.
+agreement: YES
+query:
+f = ConstantArray[0, 10^6]; f[[2]] = 1;
+Do[f[[n + 1]] = If[EvenQ[n], f[[n/2 + 1]], f[[(n - 1)/2 + 1]] + f[[(n + 1)/2 + 1]]], {n, 2, 10^6 - 1}];
+len = IntegerLength[f] /. 0 -> 1;
+recs = Flatten[Position[len, #, 1, 1] & /@ Range[Max[len]]] - 1;
+s = "first 61 terms: " <> StringRiffle[ToString /@ f[[1 ;; 61]], " "] <> "\n" <>
+  "first term of each decimal length, below index 1000000:\n" <>
+  StringJoin[("fusc(" <> ToString[#] <> ") = " <> ToString[f[[# + 1]]] <> "\n") & /@ recs];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"491f6155a9d1b643790eaf49c35c9717ef9518d623852db7eec1f1dedb6a4228", "first 61 terms: 0 1 1 2 1 3 2 3 1 4 3 5 2 5 3 4 1 5 4 7 3 8 5 7 2 7 5 8 3 7 4 5 1 6 5 9 4 11 7 10 3 11 8 13 5 12 7 9 2 9 7 12 5 13 8 11 3 10 7 11 4\nfirst term of each decimal length, below index 1000000:\nfusc(0) = 0\nfusc(37) = 11\nfusc(1173) = 108\nfusc(35499) = 1076\nfusc(699051) = 10946\n"}

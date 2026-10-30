@@ -1,0 +1,65 @@
+note Rosetta Code task "Comma quibbling": https://rosettacode.org/wiki/Comma_quibbling
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text lb "{"
+text rb "}"
+text sep ", "
+text tand " and "
+text w1 "ABC"
+text w2 "ABC DEF"
+text w3 "ABC DEF G H"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note quib takes the words of a (single spaces between them): all but the last two are followed by a
+note comma, the last two are joined by "and", inside braces
+fn quib a view uchar * to void
+st = new ulong 16 0
+ln = new ulong 16 0
+k = ulong 0
+s = ulong 0
+for i ulong add len a 1
+e = eq i len a
+if not e
+e = eq get a i 32
+end
+if and e gt i s
+put st k s
+put ln k sub i s
+k = add k 1
+end
+if e
+s = add i 1
+end
+end
+emit lb
+for w ulong k
+if gt w 0
+if eq w sub k 1
+emit tand
+else
+emit sep
+end
+end
+emit part a get st w get ln w
+end
+emit rb
+emit nl
+end
+fn main to int
+note the empty list, as a slice of length 0
+quib part w1 0 0
+quib w1
+quib w2
+quib w3
+ret 0
+end

@@ -1,0 +1,12 @@
+x = 77444
+y = -12
+z = 0
+x = -12
+y = 0
+z = 77444
+x = lions, tigers, and
+y = bears, oh my!
+z = (from the "Wizard of OZ")
+x = (from the "Wizard of OZ")
+y = bears, oh my!
+z = lions, tigers, and

@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/count-in-factors/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 19e0eee14a5ef1e130bd7bdee1cab38ca82042733f08e87c90cdf788e5feae9b.
+agreement: YES
+query:
+fs[1] = "1"; fs[n_] := StringRiffle[ToString /@ Flatten[ConstantArray @@@ FactorInteger[n]], " x "];
+s = StringJoin[(ToString[#] <> " = " <> fs[#] <> "\n") & /@ Join[Range[25], Range[2144, 2156], {600851475143, 1000000000000}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"19e0eee14a5ef1e130bd7bdee1cab38ca82042733f08e87c90cdf788e5feae9b", "1 = 1\n2 = 2\n3 = 3\n4 = 2 x 2\n5 = 5\n6 = 2 x 3\n7 = 7\n8 = 2 x 2 x 2\n9 = 3 x 3\n10 = 2 x 5\n11 = 11\n12 = 2 x 2 x 3\n13 = 13\n14 = 2 x 7\n15 = 3 x 5\n16 = 2 x 2 x 2 x 2\n17 = 17\n18 = 2 x 3 x 3\n19 = 19\n20 = 2 x 2 x 5\n21 = 3 x 7\n22 = 2 x 11\n23 = 23\n24 = 2 x 2 x 2 x 3\n25 = 5 x 5\n2144 = 2 x 2 x 2 x 2 x 2 x 67\n2145 = 3 x 5 x 11 x 13\n2146 = 2 x 29 x 37\n2147 = 19 x 113\n2148 = 2 x 2 x 3 x 179\n2149 = 7 x 307\n2150 = 2 x 5 x 5 x 43\n2151 = 3 x 3 x 239\n2152 = 2 x 2 x 2 x 269\n2153 = 2153\n2154 = 2 x 3 x 359\n2155 = 5 x 431\n2156 = 2 x 2 x 7 x 7 x 11\n600851475143 = 71 x 839 x 1471 x 6857\n1000000000000 = 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 2 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5 x 5\n"}

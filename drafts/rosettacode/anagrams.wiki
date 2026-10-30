@@ -1,0 +1,133 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+note the word list (Rosetta Code reads unixdict.txt; this is a fixed sample of it), newline-terminated
+text dict "abel\nable\nbale\nbela\nelba\nalger\nglare\nlager\nlarge\nregal\nangel\nangle\ngalen\nglean\nlange\ncaret\ncarte\ncater\ncrate\ntrace\nevil\nlevi\nlive\nveil\nvile\nelan\nlane\nlean\nlena\nneal\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note key writes the letters of a sorted (insertion sort) into k; words are at most 16 letters
+fn key a view uchar * k edit uchar 16 to void
+for i ulong 16
+put k i 0
+end
+for i ulong len a
+c = get a i
+j = i
+while gt j 0 bound 16
+if le get k sub j 1 c
+break
+end
+put k j get k sub j 1
+j = sub j 1
+end
+put k j c
+end
+end
+fn same x view uchar 16 y view uchar 16 to bool
+for i ulong 16
+if ne get x i get y i
+ret false
+end
+end
+ret true
+end
+note index records each word's (start, length) and returns how many words there are
+fn index st edit ulong 64 ln edit ulong 64 to ulong
+k = ulong 0
+s = ulong 0
+for i ulong len dict
+if eq get dict i 10
+put st k s
+put ln k sub i s
+k = add k 1
+s = add i 1
+end
+end
+ret k
+end
+note count: how many words share word w's key
+fn count st view ulong 64 ln view ulong 64 n ulong w ulong to ulong
+a = new uchar 16 0
+b = new uchar 16 0
+key part dict get st w get ln w a
+c = ulong 0
+for v ulong n
+key part dict get st v get ln v b
+if same a b
+c = add c 1
+end
+end
+ret c
+end
+note first: no earlier word has word w's key
+fn first st view ulong 64 ln view ulong 64 w ulong to bool
+a = new uchar 16 0
+b = new uchar 16 0
+key part dict get st w get ln w a
+for v ulong w
+key part dict get st v get ln v b
+if same a b
+ret false
+end
+end
+ret true
+end
+note print every group of the largest size, groups by first appearance, words in list order
+fn show st view ulong 64 ln view ulong 64 n ulong best ulong to void
+a = new uchar 16 0
+b = new uchar 16 0
+for w ulong n
+if and first st ln w eq count st ln n w best
+key part dict get st w get ln w a
+f = true
+for v ulong n
+key part dict get st v get ln v b
+if same a b
+if not f
+emit sp
+end
+emit part dict get st v get ln v
+f = false
+end
+end
+emit nl
+end
+end
+end
+fn main to int
+st = new ulong 64 0
+ln = new ulong 64 0
+n = index st ln
+best = ulong 0
+for w ulong n
+c = count st ln n w
+if gt c best
+best = c
+end
+end
+show st ln n best
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+abel able bale bela elba
+alger glare lager large regal
+angel angle galen glean lange
+caret carte cater crate trace
+evil levi live veil vile
+elan lane lean lena neal
+</pre>

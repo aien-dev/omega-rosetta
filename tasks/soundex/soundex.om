@@ -1,0 +1,79 @@
+note Rosetta Code task "Soundex": https://rosettacode.org/wiki/Soundex
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sp " "
+note code of each letter a..z: 0 vowel (and y), 1..6 consonant groups, 7 h and w (ignored)
+text codes "01230127022455012623017202"
+text n0 "Robert"
+text n1 "Rupert"
+text n2 "Rubin"
+text n3 "Ashcraft"
+text n4 "Ashcroft"
+text n5 "Tymczak"
+text n6 "Pfister"
+text n7 "Honeyman"
+text n8 "Lee"
+text n9 "Gutierrez"
+text n10 "Jackson"
+text n11 "VanDeusen"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note American Soundex: keep the first letter, code the rest, drop repeats of the same code (h and w
+note do not separate them, vowels do), pad with zeros to four characters
+fn soundex a view uchar * to void
+o = new uchar 4 48
+c = get a 0
+if ge c 97
+c = sub c 32
+end
+put o 0 c
+prev = get codes sub c 65
+k = ulong 1
+for i ulong sub len a 1
+x = get a add i 1
+if ge x 97
+x = sub x 32
+end
+d = get codes sub x 65
+if eq d 48
+prev = d
+else
+if and ne d 55 ne d prev
+if lt k 4
+put o k d
+k = add k 1
+end
+prev = d
+end
+end
+end
+emit a
+emit sp
+emit o
+emit nl
+end
+fn main to int
+soundex n0
+soundex n1
+soundex n2
+soundex n3
+soundex n4
+soundex n5
+soundex n6
+soundex n7
+soundex n8
+soundex n9
+soundex n10
+soundex n11
+ret 0
+end

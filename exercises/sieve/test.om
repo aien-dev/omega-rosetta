@@ -1,0 +1,286 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/sieve/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 5 cases kept, 0 skipped
+fn tueq a view ulong * b view ulong * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text c0 "primes: no primes under two"
+text c1 "primes: find first prime"
+text c2 "primes: find primes up to 10"
+text c3 "primes: limit is prime"
+text c4 "primes: find primes up to 1000"
+note canonical case 88529125-c4ce-43cc-bb36-1eb4ddd7b44f
+fn tc0 to bool
+o = new ulong 256 0
+n = primes 1 o
+ret eq n 0
+end
+note canonical case 4afe9474-c705-4477-9923-840e1024cc2b
+fn tc1 to bool
+o = new ulong 256 0
+n = primes 2 o
+a0 = new ulong 1 0
+put a0 0 2
+ret tueq part o 0 n a0
+end
+note canonical case 974945d8-8cd9-4f00-9463-7d813c7f17b7
+fn tc2 to bool
+o = new ulong 256 0
+n = primes 10 o
+a0 = new ulong 4 0
+put a0 0 2
+put a0 1 3
+put a0 2 5
+put a0 3 7
+ret tueq part o 0 n a0
+end
+note canonical case 2e2417b7-3f3a-452a-8594-b9af08af6d82
+fn tc3 to bool
+o = new ulong 256 0
+n = primes 13 o
+a0 = new ulong 6 0
+put a0 0 2
+put a0 1 3
+put a0 2 5
+put a0 3 7
+put a0 4 11
+put a0 5 13
+ret tueq part o 0 n a0
+end
+note canonical case 92102a05-4c7c-47de-9ed0-b7d5fcd00f21
+fn tc4 to bool
+o = new ulong 256 0
+n = primes 1000 o
+a0 = new ulong 168 0
+put a0 0 2
+put a0 1 3
+put a0 2 5
+put a0 3 7
+put a0 4 11
+put a0 5 13
+put a0 6 17
+put a0 7 19
+put a0 8 23
+put a0 9 29
+put a0 10 31
+put a0 11 37
+put a0 12 41
+put a0 13 43
+put a0 14 47
+put a0 15 53
+put a0 16 59
+put a0 17 61
+put a0 18 67
+put a0 19 71
+put a0 20 73
+put a0 21 79
+put a0 22 83
+put a0 23 89
+put a0 24 97
+put a0 25 101
+put a0 26 103
+put a0 27 107
+put a0 28 109
+put a0 29 113
+put a0 30 127
+put a0 31 131
+put a0 32 137
+put a0 33 139
+put a0 34 149
+put a0 35 151
+put a0 36 157
+put a0 37 163
+put a0 38 167
+put a0 39 173
+put a0 40 179
+put a0 41 181
+put a0 42 191
+put a0 43 193
+put a0 44 197
+put a0 45 199
+put a0 46 211
+put a0 47 223
+put a0 48 227
+put a0 49 229
+put a0 50 233
+put a0 51 239
+put a0 52 241
+put a0 53 251
+put a0 54 257
+put a0 55 263
+put a0 56 269
+put a0 57 271
+put a0 58 277
+put a0 59 281
+put a0 60 283
+put a0 61 293
+put a0 62 307
+put a0 63 311
+put a0 64 313
+put a0 65 317
+put a0 66 331
+put a0 67 337
+put a0 68 347
+put a0 69 349
+put a0 70 353
+put a0 71 359
+put a0 72 367
+put a0 73 373
+put a0 74 379
+put a0 75 383
+put a0 76 389
+put a0 77 397
+put a0 78 401
+put a0 79 409
+put a0 80 419
+put a0 81 421
+put a0 82 431
+put a0 83 433
+put a0 84 439
+put a0 85 443
+put a0 86 449
+put a0 87 457
+put a0 88 461
+put a0 89 463
+put a0 90 467
+put a0 91 479
+put a0 92 487
+put a0 93 491
+put a0 94 499
+put a0 95 503
+put a0 96 509
+put a0 97 521
+put a0 98 523
+put a0 99 541
+put a0 100 547
+put a0 101 557
+put a0 102 563
+put a0 103 569
+put a0 104 571
+put a0 105 577
+put a0 106 587
+put a0 107 593
+put a0 108 599
+put a0 109 601
+put a0 110 607
+put a0 111 613
+put a0 112 617
+put a0 113 619
+put a0 114 631
+put a0 115 641
+put a0 116 643
+put a0 117 647
+put a0 118 653
+put a0 119 659
+put a0 120 661
+put a0 121 673
+put a0 122 677
+put a0 123 683
+put a0 124 691
+put a0 125 701
+put a0 126 709
+put a0 127 719
+put a0 128 727
+put a0 129 733
+put a0 130 739
+put a0 131 743
+put a0 132 751
+put a0 133 757
+put a0 134 761
+put a0 135 769
+put a0 136 773
+put a0 137 787
+put a0 138 797
+put a0 139 809
+put a0 140 811
+put a0 141 821
+put a0 142 823
+put a0 143 827
+put a0 144 829
+put a0 145 839
+put a0 146 853
+put a0 147 857
+put a0 148 859
+put a0 149 863
+put a0 150 877
+put a0 151 881
+put a0 152 883
+put a0 153 887
+put a0 154 907
+put a0 155 911
+put a0 156 919
+put a0 157 929
+put a0 158 937
+put a0 159 941
+put a0 160 947
+put a0 161 953
+put a0 162 967
+put a0 163 971
+put a0 164 977
+put a0 165 983
+put a0 166 991
+put a0 167 997
+ret tueq part o 0 n a0
+end
+fn main to int
+tcheck tc0 c0
+tcheck tc1 c1
+tcheck tc2 c2
+tcheck tc3 c3
+tcheck tc4 c4
+ret int get tfails 0
+end

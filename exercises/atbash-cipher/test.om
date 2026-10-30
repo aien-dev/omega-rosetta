@@ -1,0 +1,203 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/atbash-cipher/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 14 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "yes"
+text e1 "bvh"
+text c2 "encode: encode / encode yes"
+text s3 "no"
+text e4 "ml"
+text c5 "encode: encode / encode no"
+text s6 "OMG"
+text e7 "lnt"
+text c8 "encode: encode / encode OMG"
+text s9 "O M G"
+text e10 "lnt"
+text c11 "encode: encode / encode spaces"
+text s12 "mindblowingly"
+text e13 "nrmwy oldrm tob"
+text c14 "encode: encode / encode mindblowingly"
+text s15 "Testing,1 2 3, testing."
+text e16 "gvhgr mt123 gvhgr mt"
+text c17 "encode: encode / encode numbers"
+text s18 "Truth is fiction."
+text e19 "gifgs rhurx grlm"
+text c20 "encode: encode / encode deep thought"
+text s21 "The quick brown fox jumps over the lazy dog."
+text e22 "gsvjf rxpyi ldmul cqfnk hlevi gsvoz abwlt"
+text c23 "encode: encode / encode all the letters"
+text s24 "vcvix rhn"
+text e25 "exercism"
+text c26 "decode: decode / decode exercism"
+text s27 "zmlyh gzxov rhlug vmzhg vkkrm thglm v"
+text e28 "anobstacleisoftenasteppingstone"
+text c29 "decode: decode / decode a sentence"
+text s30 "gvhgr mt123 gvhgr mt"
+text e31 "testing123testing"
+text c32 "decode: decode / decode numbers"
+text s33 "gsvjf rxpyi ldmul cqfnk hlevi gsvoz abwlt"
+text e34 "thequickbrownfoxjumpsoverthelazydog"
+text c35 "decode: decode / decode all the letters"
+text s36 "vc vix    r hn"
+text e37 "exercism"
+text c38 "decode: decode / decode with too many spaces"
+text s39 "zmlyhgzxovrhlugvmzhgvkkrmthglmv"
+text e40 "anobstacleisoftenasteppingstone"
+text c41 "decode: decode / decode with no spaces"
+note canonical case 2f47ebe1-eab9-4d6b-b3c6-627562a31c77
+fn tc0 to bool
+o = new uchar 1024 0
+n = encode s0 o
+ret tbeq part o 0 n e1
+end
+note canonical case b4ffe781-ea81-4b74-b268-cc58ba21c739
+fn tc1 to bool
+o = new uchar 1024 0
+n = encode s3 o
+ret tbeq part o 0 n e4
+end
+note canonical case 10e48927-24ab-4c4d-9d3f-3067724ace00
+fn tc2 to bool
+o = new uchar 1024 0
+n = encode s6 o
+ret tbeq part o 0 n e7
+end
+note canonical case d59b8bc3-509a-4a9a-834c-6f501b98750b
+fn tc3 to bool
+o = new uchar 1024 0
+n = encode s9 o
+ret tbeq part o 0 n e10
+end
+note canonical case 31d44b11-81b7-4a94-8b43-4af6a2449429
+fn tc4 to bool
+o = new uchar 1024 0
+n = encode s12 o
+ret tbeq part o 0 n e13
+end
+note canonical case d503361a-1433-48c0-aae0-d41b5baa33ff
+fn tc5 to bool
+o = new uchar 1024 0
+n = encode s15 o
+ret tbeq part o 0 n e16
+end
+note canonical case 79c8a2d5-0772-42d4-b41b-531d0b5da926
+fn tc6 to bool
+o = new uchar 1024 0
+n = encode s18 o
+ret tbeq part o 0 n e19
+end
+note canonical case 9ca13d23-d32a-4967-a1fd-6100b8742bab
+fn tc7 to bool
+o = new uchar 1024 0
+n = encode s21 o
+ret tbeq part o 0 n e22
+end
+note canonical case bb50e087-7fdf-48e7-9223-284fe7e69851
+fn tc8 to bool
+o = new uchar 1024 0
+n = decode s24 o
+ret tbeq part o 0 n e25
+end
+note canonical case ac021097-cd5d-4717-8907-b0814b9e292c
+fn tc9 to bool
+o = new uchar 1024 0
+n = decode s27 o
+ret tbeq part o 0 n e28
+end
+note canonical case 18729de3-de74-49b8-b68c-025eaf77f851
+fn tc10 to bool
+o = new uchar 1024 0
+n = decode s30 o
+ret tbeq part o 0 n e31
+end
+note canonical case 0f30325f-f53b-415d-ad3e-a7a4f63de034
+fn tc11 to bool
+o = new uchar 1024 0
+n = decode s33 o
+ret tbeq part o 0 n e34
+end
+note canonical case 39640287-30c6-4c8c-9bac-9d613d1a5674
+fn tc12 to bool
+o = new uchar 1024 0
+n = decode s36 o
+ret tbeq part o 0 n e37
+end
+note canonical case b34edf13-34c0-49b5-aa21-0768928000d5
+fn tc13 to bool
+o = new uchar 1024 0
+n = decode s39 o
+ret tbeq part o 0 n e40
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c20
+tcheck tc7 c23
+tcheck tc8 c26
+tcheck tc9 c29
+tcheck tc10 c32
+tcheck tc11 c35
+tcheck tc12 c38
+tcheck tc13 c41
+ret int get tfails 0
+end

@@ -1,0 +1,11 @@
+Wolfram cross-check of tasks/almost-prime/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 7630db515363db20a870043e295985483a840ac4790e67618162f873b200d2c3.
+agreement: YES
+query:
+s = StringJoin[Table["k = " <> ToString[k] <> ":" <> StringJoin[(" " <> ToString[#]) & /@ Take[Select[Range[2, 300], PrimeOmega[#] == k &], 10]] <> "\n", {k, 1, 5}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"7630db515363db20a870043e295985483a840ac4790e67618162f873b200d2c3", "k = 1: 2 3 5 7 11 13 17 19 23 29\nk = 2: 4 6 9 10 14 15 21 22 25 26\nk = 3: 8 12 18 20 27 28 30 42 44 45\nk = 4: 16 24 36 40 54 56 60 81 84 88\nk = 5: 32 48 72 80 108 112 120 162 168 176\n"}

@@ -1,0 +1,12 @@
+Wolfram cross-check of tasks/sum-digits-of-an-integer/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 091b1b052688f0d229078e8e44edaa1bec8fb4d49daf302d0a34610f2a9d2f86.
+agreement: YES
+query:
+f[{n_, b_}] := IntegerString[n, b] <> " (base " <> ToString[b] <> "): digit sum " <> ToString[Total[IntegerDigits[n, b]]] <> "\n";
+s = StringJoin[f /@ {{1, 10}, {1234, 10}, {254, 16}, {3854, 16}, {255, 8}, {2^64 - 1, 2}, {2^64 - 1, 36}}];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"091b1b052688f0d229078e8e44edaa1bec8fb4d49daf302d0a34610f2a9d2f86", "1 (base 10): digit sum 1\n1234 (base 10): digit sum 10\nfe (base 16): digit sum 29\nf0e (base 16): digit sum 29\n377 (base 8): digit sum 17\n1111111111111111111111111111111111111111111111111111111111111111 (base 2): digit sum 64\n3w5e11264sgsf (base 36): digit sum 155\n"}

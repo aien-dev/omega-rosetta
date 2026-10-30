@@ -1,0 +1,12 @@
+note Exercism-style exercise "hello-world": https://exercism.org/tracks/python/exercises/hello-world
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note hello writes the greeting "Hello, World!" into o and returns its length in bytes.
+note Check it with: sh exercise.sh exercises/hello-world
+om2
+text hw "Hello, World!"
+fn hello o edit uchar * to ulong
+for i ulong len hw
+put o i get hw i
+end
+ret len hw
+end

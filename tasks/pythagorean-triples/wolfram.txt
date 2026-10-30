@@ -1,0 +1,13 @@
+Wolfram cross-check of tasks/pythagorean-triples/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 80386dfde3777fce64f7bf8e375099005fab8e5e2331032bac2a10a66c235ff1.
+agreement: YES
+query:
+prims = Flatten[Table[If[OddQ[m - n] && CoprimeQ[m, n] && 2 m (m + n) <= 10^7, 2 m (m + n), Nothing], {m, 2, 2236}, {n, 1, m - 1}]];
+s = StringJoin[Table[With[{l = 10^e, ps = Select[prims, # <= 10^e &]},
+     "perimeter <= " <> ToString[l] <> ": " <> ToString[Total[Quotient[l, ps]]] <> " triples, " <> ToString[Length[ps]] <> " primitive\n"], {e, 2, 7}]];
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"80386dfde3777fce64f7bf8e375099005fab8e5e2331032bac2a10a66c235ff1", "perimeter <= 100: 17 triples, 7 primitive\nperimeter <= 1000: 325 triples, 70 primitive\nperimeter <= 10000: 4858 triples, 703 primitive\nperimeter <= 100000: 64741 triples, 7026 primitive\nperimeter <= 1000000: 808950 triples, 70229 primitive\nperimeter <= 10000000: 9706567 triples, 702309 primitive\n"}

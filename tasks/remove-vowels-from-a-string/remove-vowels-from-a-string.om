@@ -1,0 +1,43 @@
+note Rosetta Code task "Remove vowels from a string": https://rosettacode.org/wiki/Remove_vowels_from_a_string
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text msg "Rosetta Code is a programming chrestomathy site, AEIOU and aeiou alike."
+text vow "aeiouAEIOU"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitc writes one byte
+fn emitc c uchar to void
+b = new uchar 1 0
+put b 0 c
+emit b
+end
+fn isvowel c uchar to bool
+for i ulong len vow
+if eq c get vow i
+ret true
+end
+end
+ret false
+end
+fn main to int
+emit msg
+emit nl
+for i ulong len msg
+c = get msg i
+if not isvowel c
+emitc c
+end
+end
+emit nl
+ret 0
+end

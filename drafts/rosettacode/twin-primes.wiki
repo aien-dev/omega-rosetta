@@ -1,0 +1,102 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text pre "twin prime pairs below "
+text colon ": "
+note odd-only bit sieve below 10^8: odd q is bit q >> 1, set when q is composite; 5 * 10^7 bits in 6250000 bytes
+global cb uchar 6250000
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+fn mark q ulong to void
+b = shr q 1
+put cb shr b 3 or get cb shr b 3 shl uchar 1 and b 7
+end
+note isp is for odd q below 10^8 only (3, 5, 7, ...)
+fn isp q ulong to bool
+b = shr q 1
+ret eq and get cb shr b 3 shl uchar 1 and b 7 0
+end
+note bound: odd p with p * p < 10^8 means p < 10^4; an odd prime p marks at most 10^8 / (2p) < 1.7 * 10^7 multiples,
+note done as up to 1000 chunks of 999990 marks each
+fn sieve to void
+mark 1
+p = ulong 3
+while lt mul p p 100000000 bound 5000
+if isp p
+s = mul p 2
+m = mul p p
+while lt m 100000000 bound 1000
+c = ulong 0
+while and lt m 100000000 lt c 999990 bound 999999
+mark m
+m = add m s
+c = add c 1
+end
+end
+end
+p = add p 2
+end
+end
+note a pair (p, p + 2) counts below lim when p + 2 < lim; p = 2j + 3 walks every odd p from 3
+fn main to int
+sieve
+lim = ulong 10
+cnt = ulong 0
+for j ulong 50000000
+p = add mul j 2 3
+while ge add p 2 lim bound 9
+emit pre
+emitu lim
+emit colon
+emitu cnt
+emit nl
+lim = mul lim 10
+end
+if gt lim 100000000
+break
+end
+if and isp p isp add p 2
+cnt = add cnt 1
+end
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+twin prime pairs below 10: 2
+twin prime pairs below 100: 8
+twin prime pairs below 1000: 35
+twin prime pairs below 10000: 205
+twin prime pairs below 100000: 1224
+twin prime pairs below 1000000: 8169
+twin prime pairs below 10000000: 58980
+twin prime pairs below 100000000: 440312
+</pre>

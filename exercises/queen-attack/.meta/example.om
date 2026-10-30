@@ -1,0 +1,33 @@
+note Exercism-style exercise "queen-attack": https://exercism.org/tracks/python/exercises/queen-attack
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note Rows and columns run 0 .. 7. create checks one queen's position: 0 valid, 1 row negative,
+note 2 row past the board, 3 column negative, 4 column past the board (row checked first).
+note canattack is true when queens at (wr, wc) and (br, bc) share a row, column or diagonal.
+note Check it with: sh exercise.sh exercises/queen-attack
+om2
+fn create row long col long to int
+if lt row 0
+ret 1
+end
+if gt row 7
+ret 2
+end
+if lt col 0
+ret 3
+end
+if gt col 7
+ret 4
+end
+ret 0
+end
+fn canattack wr long wc long br long bc long to bool
+dr = sub wr br
+dc = sub wc bc
+if lt dr 0
+dr = neg dr
+end
+if lt dc 0
+dc = neg dc
+end
+ret or or eq dr 0 eq dc 0 eq dr dc
+end

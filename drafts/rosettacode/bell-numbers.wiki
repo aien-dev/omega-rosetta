@@ -1,0 +1,132 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text tri "first 10 rows of the Bell triangle:\n"
+text first "first 15 Bell numbers:"
+text b49 "B(49), the 50th Bell number: "
+note a triangle row of up to 50 entries; entry e is 6 limbs base 10^9 at 6e..6e+5, least significant first
+note 6 limbs hold below 10^54; the largest entry needed, in row 49, is below B(50) < 2 * 10^47
+global pv ulong 300
+global cu ulong 300
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note row i of the Bell triangle starts with the last entry of row i - 1; each next entry adds the entry
+note to its left and the entry above that one. Row i - 1 sits in pv and row i is built in cu, then copied
+fn bellrow i ulong to void
+for l ulong 6
+put cu l get pv add mul sub i 1 6 l
+end
+for j ulong i
+c = ulong 0
+for l ulong 6
+o = add mul j 6 l
+s = add get cu o c
+s = add s get pv o
+put cu add o 6 rem s 1000000000
+c = div s 1000000000
+end
+end
+for t ulong mul add i 1 6
+put pv t get cu t
+end
+end
+note pv entry 0 in decimal: the top non-zero limb, then each lower limb padded to 9 digits
+fn emitb to void
+k = ulong 5
+while and gt k 0 eq get pv k 0 bound 6
+k = sub k 1
+end
+emitu get pv k
+for t ulong k
+v = get pv sub sub k 1 t
+d = ulong 100000000
+while gt d 0 bound 9
+emitu rem div v d 10
+d = div d 10
+end
+end
+end
+fn main to int
+bs = new ulong 15 0
+put pv 0 1
+put bs 0 1
+emit tri
+emitu 1
+emit nl
+i = ulong 1
+while le i 49 bound 49
+bellrow i
+if lt i 10
+for j ulong add i 1
+if gt j 0
+emit sp
+end
+emitu get pv mul j 6
+end
+emit nl
+end
+if lt i 15
+put bs i get pv 0
+end
+if lt i 49
+i = add i 1
+else
+break
+end
+end
+emit first
+for j ulong 15
+emit sp
+emitu get bs j
+end
+emit nl
+emit b49
+emitb
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 10 rows of the Bell triangle:
+1
+1 2
+2 3 5
+5 7 10 15
+15 20 27 37 52
+52 67 87 114 151 203
+203 255 322 409 523 674 877
+877 1080 1335 1657 2066 2589 3263 4140
+4140 5017 6097 7432 9089 11155 13744 17007 21147
+21147 25287 30304 36401 43833 52922 64077 77821 94828 115975
+first 15 Bell numbers: 1 1 2 5 15 52 203 877 4140 21147 115975 678570 4213597 27644437 190899322
+B(49), the 50th Bell number: 10726137154573358400342215518590002633917247281
+</pre>

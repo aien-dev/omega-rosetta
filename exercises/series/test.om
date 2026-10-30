@@ -1,0 +1,181 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/series/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 11 cases kept, 0 skipped
+fn tbeq a view uchar * b view uchar * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text s0 "1"
+text e1 "1"
+text c2 "slices: slices of one from one"
+text s3 "12"
+text e4 "1,2"
+text c5 "slices: slices of one from two"
+text s6 "35"
+text e7 "35"
+text c8 "slices: slices of two"
+text s9 "9142"
+text e10 "91,14,42"
+text c11 "slices: slices of two overlap"
+text s12 "777777"
+text e13 "777,777,777,777"
+text c14 "slices: slices can include duplicates"
+text s15 "918493904243"
+text e16 "91849,18493,84939,49390,93904,39042,90424,04243"
+text c17 "slices: slices of a long series"
+text s18 "12345"
+text c19 "slices: slice length is too large"
+text s20 "12345"
+text c21 "slices: slice length is way too large"
+text s22 "12345"
+text c23 "slices: slice length cannot be zero"
+text s24 "123"
+text c25 "slices: slice length cannot be negative"
+text z26 "z"
+text c27 "slices: empty series is invalid"
+note canonical case 7ae7a46a-d992-4c2a-9c15-a112d125ebad
+fn tc0 to bool
+o = new uchar 1024 0
+n = slices s0 1 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e1
+end
+note canonical case 3143b71d-f6a5-4221-aeae-619f906244d2
+fn tc1 to bool
+o = new uchar 1024 0
+n = slices s3 1 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e4
+end
+note canonical case dbb68ff5-76c5-4ccd-895a-93dbec6d5805
+fn tc2 to bool
+o = new uchar 1024 0
+n = slices s6 2 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e7
+end
+note canonical case 19bbea47-c987-4e11-a7d1-e103442adf86
+fn tc3 to bool
+o = new uchar 1024 0
+n = slices s9 2 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e10
+end
+note canonical case 8e17148d-ba0a-4007-a07f-d7f87015d84c
+fn tc4 to bool
+o = new uchar 1024 0
+n = slices s12 3 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e13
+end
+note canonical case bd5b085e-f612-4f81-97a8-6314258278b0
+fn tc5 to bool
+o = new uchar 1024 0
+n = slices s15 5 o
+if lt n 0
+ret false
+end
+ret tbeq part o 0 ulong n e16
+end
+note canonical case 6d235d85-46cf-4fae-9955-14b6efef27cd
+fn tc6 to bool
+o = new uchar 1024 0
+ret eq slices s18 6 o -4
+end
+note canonical case d7957455-346d-4e47-8e4b-87ed1564c6d7
+fn tc7 to bool
+o = new uchar 1024 0
+ret eq slices s20 42 o -4
+end
+note canonical case d34004ad-8765-4c09-8ba1-ada8ce776806
+fn tc8 to bool
+o = new uchar 1024 0
+ret eq slices s22 0 o -3
+end
+note canonical case 10ab822d-8410-470a-a85d-23fbeb549e54
+fn tc9 to bool
+o = new uchar 1024 0
+ret eq slices s24 -1 o -2
+end
+note canonical case c7ed0812-0e4b-4bf3-99c4-28cbbfc246a2
+fn tc10 to bool
+o = new uchar 1024 0
+ret eq slices part z26 0 0 1 o -1
+end
+fn main to int
+tcheck tc0 c2
+tcheck tc1 c5
+tcheck tc2 c8
+tcheck tc3 c11
+tcheck tc4 c14
+tcheck tc5 c17
+tcheck tc6 c19
+tcheck tc7 c21
+tcheck tc8 c23
+tcheck tc9 c25
+tcheck tc10 c27
+ret int get tfails 0
+end

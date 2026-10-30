@@ -1,0 +1,53 @@
+note Rosetta Code task "ISBN13 check digit": https://rosettacode.org/wiki/ISBN13_check_digit
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text tgood ": good\n"
+text tbad ": bad\n"
+text i1 "978-0596528126"
+text i2 "978-0596528120"
+text i3 "978-1788399081"
+text i4 "978-1788399083"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note digits weigh 1, 3, 1, 3, ... skipping hyphens; valid when there are 13 and the sum is 0 mod 10
+fn isbn a view uchar * to bool
+s = ulong 0
+k = ulong 0
+for i ulong len a
+c = get a i
+if and ge c 48 le c 57
+d = ulong sub c 48
+if eq rem k 2 1
+d = mul d 3
+end
+s = add s d
+k = add k 1
+end
+end
+ret and eq k 13 eq rem s 10 0
+end
+fn show a view uchar * to void
+emit a
+if isbn a
+emit tgood
+else
+emit tbad
+end
+end
+fn main to int
+show i1
+show i2
+show i3
+show i4
+ret 0
+end

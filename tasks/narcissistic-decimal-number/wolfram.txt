@@ -1,0 +1,15 @@
+Wolfram cross-check of tasks/narcissistic-decimal-number/expected.txt
+tool: WolframLanguageEvaluator (Wolfram MCP, https://agenttools.wolfram.com/mcp), 2026-10-27
+The query builds the task's whole output text from Wolfram built-ins, independently of omc and
+of oracle.py, and returns {SHA-256 of that text, the text}. It agrees when that SHA-256 equals
+sha256(expected.txt) = 5bf03cc0ba2aeace6f5ccb3354dec8108519c606158020666debd32efa4b147b.
+agreement: YES
+query:
+found = Union[{0}, Flatten[Table[
+     (Total[#^k] &) /@ Select[(Subtract[#, Range[0, k - 1]] &) /@ Subsets[Range[0, 9 + k - 1], {k}],
+       With[{s = Total[#^k]}, IntegerLength[s] == k && Sort[IntegerDigits[s]] == #] &],
+     {k, 1, 7}]]];
+s = "first 25 narcissistic decimal numbers: " <> StringRiffle[ToString /@ Take[found, 25], " "] <> "\n";
+{Hash[s, "SHA256", "HexString"], s}
+result:
+Out[1]= {"5bf03cc0ba2aeace6f5ccb3354dec8108519c606158020666debd32efa4b147b", "first 25 narcissistic decimal numbers: 0 1 2 3 4 5 6 7 8 9 153 370 371 407 1634 8208 9474 54748 92727 93084 548834 1741725 4210818 9800817 9926315\n"}

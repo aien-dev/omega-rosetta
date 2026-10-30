@@ -1,0 +1,43 @@
+note Rosetta Code task "Loops/For with a specified step": https://rosettacode.org/wiki/Loops/For_with_a_specified_step
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+om2
+text nl "\n"
+text sep ", "
+text tail "who do we appreciate?\n"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note from 2 to 8 in steps of 2
+fn main to int
+i = ulong 2
+while le i 8 bound 10
+emitu i
+emit sep
+i = add i 2
+end
+emit tail
+ret 0
+end

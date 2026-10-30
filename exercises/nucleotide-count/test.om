@@ -1,0 +1,139 @@
+note ---- test harness (appended after the solution by exercise.sh) ----
+text tok "ok "
+text tnok "not ok "
+text tsep " - "
+text tnl "\n"
+global tfails ulong 1
+global tnum ulong 1
+fn temit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 2
+end
+o = add o ulong k
+end
+end
+fn temitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+temit part d i sub 20 i
+end
+note one TAP-style line per case; main returns the number of failed cases
+fn tcheck c bool what view uchar * to void
+put tnum 0 add get tnum 0 1
+if c
+temit tok
+else
+temit tnok
+put tfails 0 add get tfails 0 1
+end
+temitu get tnum 0
+temit tsep
+temit what
+temit tnl
+end
+note cases: exercism/problem-specifications exercises/nucleotide-count/canonical-data.json at
+note commit 650bebeb39ad40439175288042aece982b0a90a9 (2026-10-19), MIT licence,
+note https://github.com/exercism/problem-specifications
+note 5 cases kept, 0 skipped
+fn tueq a view ulong * b view ulong * to bool
+if ne len a len b
+ret false
+end
+for i ulong len a
+if ne get a i get b i
+ret false
+end
+end
+ret true
+end
+text z0 "z"
+text c1 "nucleotideCounts: empty strand"
+text s2 "G"
+text c3 "nucleotideCounts: can count one nucleotide in single-character input"
+text s4 "GGGGGGG"
+text c5 "nucleotideCounts: strand with repeated nucleotide"
+text s6 "AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC"
+text c7 "nucleotideCounts: strand with multiple nucleotides"
+text s8 "AGXXACT"
+text c9 "nucleotideCounts: strand with invalid nucleotides"
+note canonical case 3e5c30a8-87e2-4845-a815-a49671ade970
+fn tc0 to bool
+o = new ulong 4 0
+a0 = new ulong 4 0
+put a0 0 0
+put a0 1 0
+put a0 2 0
+put a0 3 0
+ok = nucleotidecounts part z0 0 0 o
+if not ok
+ret false
+end
+ret tueq o a0
+end
+note canonical case a0ea42a6-06d9-4ac6-828c-7ccaccf98fec
+fn tc1 to bool
+o = new ulong 4 0
+a0 = new ulong 4 0
+put a0 0 0
+put a0 1 0
+put a0 2 1
+put a0 3 0
+ok = nucleotidecounts s2 o
+if not ok
+ret false
+end
+ret tueq o a0
+end
+note canonical case eca0d565-ed8c-43e7-9033-6cefbf5115b5
+fn tc2 to bool
+o = new ulong 4 0
+a0 = new ulong 4 0
+put a0 0 0
+put a0 1 0
+put a0 2 7
+put a0 3 0
+ok = nucleotidecounts s4 o
+if not ok
+ret false
+end
+ret tueq o a0
+end
+note canonical case 40a45eac-c83f-4740-901a-20b22d15a39f
+fn tc3 to bool
+o = new ulong 4 0
+a0 = new ulong 4 0
+put a0 0 20
+put a0 1 12
+put a0 2 17
+put a0 3 21
+ok = nucleotidecounts s6 o
+if not ok
+ret false
+end
+ret tueq o a0
+end
+note canonical case b4c47851-ee9e-4b0a-be70-a86e343bd851
+fn tc4 to bool
+o = new ulong 4 0
+ret not nucleotidecounts s8 o
+end
+fn main to int
+tcheck tc0 c1
+tcheck tc1 c3
+tcheck tc2 c5
+tcheck tc3 c7
+tcheck tc4 c9
+ret int get tfails 0
+end

@@ -1,0 +1,120 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text data "34 2 -17 9 9 0 51 -3 28 6"
+global vals long 16
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emiti writes a signed n; the magnitude is taken as a ulong so the minimum long cannot overflow
+fn emiti n long to void
+if lt n 0
+emit minus
+emitu add bitcast ulong not n 1
+else
+emitu ulong n
+end
+end
+note parse reads the decimal numbers in s (separated by spaces, an optional - sign) into vals and
+note returns how many; one pass over s, so the loop is bounded by len s
+fn parse s view uchar * to ulong
+n = ulong 0
+v = long 0
+sg = long 1
+dig = false
+for i ulong len s
+c = get s i
+if eq c 45
+sg = long -1
+else
+if and ge c 48 le c 57
+v = add mul v 10 long sub c 48
+dig = true
+else
+if dig
+put vals n mul sg v
+n = add n 1
+end
+v = long 0
+sg = long 1
+dig = false
+end
+end
+end
+if dig
+put vals n mul sg v
+n = add n 1
+end
+ret n
+end
+note show writes vals[0..n-1] separated by spaces, then a newline
+fn show n ulong to void
+for i ulong n
+if gt i 0
+emit sp
+end
+emiti get vals i
+end
+emit nl
+end
+note gnsort walks forward over ordered pairs and steps back after each swap (and is put back to 1 at 0);
+note a pass moves forward, removes one inversion or leaves 0, so fewer than 3*(n + n*(n-1)/2) passes
+note suffice: 165 for n = 10, bound 300; and/or evaluate both sides, so i = 0 is tested on its own
+fn gnsort n ulong to void
+i = ulong 1
+while lt i n bound 300
+if eq i 0
+i = 1
+continue
+end
+if le get vals sub i 1 get vals i
+i = add i 1
+else
+t = get vals i
+put vals i get vals sub i 1
+put vals sub i 1 t
+i = sub i 1
+end
+end
+end
+fn main to int
+n = parse data
+show n
+gnsort n
+show n
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+34 2 -17 9 9 0 51 -3 28 6
+-17 -3 0 2 6 9 9 28 34 51
+</pre>

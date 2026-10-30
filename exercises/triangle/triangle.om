@@ -1,0 +1,19 @@
+note Exercism-style exercise "triangle": https://exercism.org/tracks/python/exercises/triangle
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note The sides a b c form a triangle when each is greater than 0 and the sum of any two is at least
+note the third. equilateral: a triangle with all three sides equal; isosceles: a triangle with at
+note least two sides equal; scalene: a triangle with all sides different.
+note Check it with: sh exercise.sh exercises/triangle
+om2
+fn equilateral a f64 b f64 c f64 to bool
+note replace this line with your solution
+trap 13
+end
+fn isosceles a f64 b f64 c f64 to bool
+note replace this line with your solution
+trap 13
+end
+fn scalene a f64 b f64 c f64 to bool
+note replace this line with your solution
+trap 13
+end

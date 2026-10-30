@@ -1,0 +1,90 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text a1 "kitten"
+text b1 "sitting"
+text a2 "rosettacode"
+text b2 "raisethysword"
+text a3 "saturday"
+text b3 "sunday"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note two-row dynamic programme; strings up to 63 bytes (longer traps 3)
+fn lev a view uchar * b view uchar * to ulong
+p = new ulong 64 0
+q = new ulong 64 0
+for j ulong add len b 1
+put p j j
+end
+for i ulong len a
+put q 0 add i 1
+for j ulong len b
+c = add get p j 1
+if eq get a i get b j
+c = get p j
+end
+x = add get p add j 1 1
+if lt x c
+c = x
+end
+x = add get q j 1
+if lt x c
+c = x
+end
+put q add j 1 c
+end
+for j ulong add len b 1
+put p j get q j
+end
+end
+ret get p len b
+end
+fn show a view uchar * b view uchar * to void
+emit a
+emit sp
+emit b
+emit sp
+emitu lev a b
+emit nl
+end
+fn main to int
+show a1 b1
+show a2 b2
+show a3 b3
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+kitten sitting 3
+rosettacode raisethysword 8
+saturday sunday 3
+</pre>

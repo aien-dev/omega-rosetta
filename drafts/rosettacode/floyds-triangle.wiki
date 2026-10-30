@@ -1,0 +1,107 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note emitw writes n right-aligned in w columns (w at most 20; a wider number is not cut)
+fn emitw n ulong w ulong to void
+d = new uchar 20 32
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+if gt w sub 20 i
+i = sub 20 w
+end
+emit part d i sub 20 i
+end
+note row r (from 0) holds r+1 consecutive numbers; column j is as wide as the last row's entry in
+note column j, which is the widest in that column
+fn digits v ulong to ulong
+d = ulong 1
+while ge v 10 bound 20
+v = div v 10
+d = add d 1
+end
+ret d
+end
+fn floyd n ulong to void
+last = add div mul sub n 1 n 2 1
+k = ulong 1
+for r ulong n
+for j ulong add r 1
+w = digits add last j
+if gt j 0
+emit sp
+end
+emitw k w
+k = add k 1
+end
+emit nl
+end
+end
+fn main to int
+floyd 5
+emit nl
+floyd 14
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+ 1
+ 2  3
+ 4  5  6
+ 7  8  9 10
+11 12 13 14 15
+
+ 1
+ 2  3
+ 4  5  6
+ 7  8  9 10
+11 12 13 14 15
+16 17 18 19 20 21
+22 23 24 25 26 27 28
+29 30 31 32 33 34 35 36
+37 38 39 40 41 42 43 44  45
+46 47 48 49 50 51 52 53  54  55
+56 57 58 59 60 61 62 63  64  65  66
+67 68 69 70 71 72 73 74  75  76  77  78
+79 80 81 82 83 84 85 86  87  88  89  90  91
+92 93 94 95 96 97 98 99 100 101 102 103 104 105
+</pre>

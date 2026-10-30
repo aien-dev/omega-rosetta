@@ -1,0 +1,10 @@
+note Exercism-style exercise "binary-search": https://exercism.org/tracks/python/exercises/binary-search
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note find is the index of v in the ascending array a, found by binary search, or -1 when v is not
+note in a.
+note Check it with: sh exercise.sh exercises/binary-search
+om2
+fn find a view ulong * v ulong to long
+note replace this line with your solution
+trap 13
+end

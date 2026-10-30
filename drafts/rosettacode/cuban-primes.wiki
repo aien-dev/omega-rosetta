@@ -1,0 +1,165 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text first "first 200 cuban primes:\n"
+text th "the 100000th cuban prime: "
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note cuban primes here are the primes (n+1)^3 - n^3 = 3n^2 + 3n + 1; the 100000th, 1792617147127, is below 2^41
+note mulm is a * b mod m for m < 2^42: b splits into 21-bit halves so each product stays below 2^63
+fn mulm a ulong b ulong m ulong to ulong
+h = mul a shr b 21
+h = rem h m
+h = rem shl h 21 m
+l = rem mul a and b 0x1fffff m
+r = add h l
+if ge r m
+r = sub r m
+end
+ret r
+end
+fn powm b ulong e ulong m ulong to ulong
+r = ulong 1
+x = rem b m
+v = e
+while gt v 0 bound 64
+if eq and v 1 1
+r = mulm r x m
+end
+x = mulm x x m
+v = shr v 1
+end
+ret r
+end
+fn sprp n ulong a ulong to bool
+d = sub n 1
+s = ulong 0
+while eq and d 1 0 bound 64
+d = shr d 1
+s = add s 1
+end
+x = powm a d n
+if or eq x 1 eq x sub n 1
+ret true
+end
+for i ulong sub s 1
+x = mulm x x n
+if eq x sub n 1
+ret true
+end
+end
+ret false
+end
+note trial division by 2..49 first, then Miller-Rabin to bases 2, 3, 5, 7, 11, 13, which is exact below 3.47 * 10^12
+fn isprime n ulong to bool
+p = ulong 2
+while lt p 50 bound 50
+if eq rem n p 0
+ret eq n p
+end
+p = add p 1
+end
+for k ulong 6
+a = ulong 13
+if eq k 0
+a = 2
+end
+if eq k 1
+a = 3
+end
+if eq k 2
+a = 5
+end
+if eq k 3
+a = 7
+end
+if eq k 4
+a = 11
+end
+if not sprp n a
+ret false
+end
+end
+ret true
+end
+note bound: the 100000th cuban prime is reached at n = 773019
+fn main to int
+emit first
+c = ulong 0
+n = ulong 1
+while lt c 100000 bound 999999
+v = add mul mul 3 n add n 1 1
+if isprime v
+c = add c 1
+if le c 200
+emitu v
+if eq rem c 10 0
+emit nl
+else
+emit sp
+end
+end
+if eq c 100000
+emit th
+emitu v
+emit nl
+end
+end
+n = add n 1
+end
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+first 200 cuban primes:
+7 19 37 61 127 271 331 397 547 631
+919 1657 1801 1951 2269 2437 2791 3169 3571 4219
+4447 5167 5419 6211 7057 7351 8269 9241 10267 11719
+12097 13267 13669 16651 19441 19927 22447 23497 24571 25117
+26227 27361 33391 35317 42841 45757 47251 49537 50311 55897
+59221 60919 65269 70687 73477 74419 75367 81181 82171 87211
+88237 89269 92401 96661 102121 103231 104347 110017 112327 114661
+115837 126691 129169 131671 135469 140617 144541 145861 151201 155269
+163567 169219 170647 176419 180811 189757 200467 202021 213067 231019
+234361 241117 246247 251431 260191 263737 267307 276337 279991 283669
+285517 292969 296731 298621 310087 329677 333667 337681 347821 351919
+360187 368551 372769 374887 377011 383419 387721 398581 407377 423001
+436627 452797 459817 476407 478801 493291 522919 527941 553411 574219
+584767 590077 592741 595411 603457 608851 611557 619711 627919 650071
+658477 666937 689761 692641 698419 707131 733591 742519 760537 769627
+772669 784897 791047 812761 825301 837937 847477 863497 879667 886177
+895987 909151 915769 925741 929077 932419 939121 952597 972991 976411
+986707 990151 997057 1021417 1024921 1035469 1074607 1085407 1110817 1114471
+1125469 1155061 1177507 1181269 1215397 1253887 1281187 1285111 1324681 1328671
+1372957 1409731 1422097 1426231 1442827 1451161 1480519 1484737 1527247 1570357
+the 100000th cuban prime: 1792617147127
+</pre>

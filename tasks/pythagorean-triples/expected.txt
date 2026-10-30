@@ -1,0 +1,6 @@
+perimeter <= 100: 17 triples, 7 primitive
+perimeter <= 1000: 325 triples, 70 primitive
+perimeter <= 10000: 4858 triples, 703 primitive
+perimeter <= 100000: 64741 triples, 7026 primitive
+perimeter <= 1000000: 808950 triples, 70229 primitive
+perimeter <= 10000000: 9706567 triples, 702309 primitive

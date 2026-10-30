@@ -1,0 +1,15 @@
+note Exercism-style exercise "resistor-color": https://exercism.org/tracks/python/exercises/resistor-color
+note SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+note The band colors in value order are black brown red orange yellow green blue violet grey white
+note (0 .. 9). colorcode is the value of color (10 when it is not a band color); colors writes all
+note the band colors in value order, joined by commas, into o and returns the number of bytes written.
+note Check it with: sh exercise.sh exercises/resistor-color
+om2
+fn colorcode color view uchar * to ulong
+note replace this line with your solution
+trap 13
+end
+fn colors o edit uchar * to ulong
+note replace this line with your solution
+trap 13
+end

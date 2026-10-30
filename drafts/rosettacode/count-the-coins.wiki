@@ -1,0 +1,79 @@
+=={{header|Omegese}}==
+{{works with|omc|sha256 2c824805, aien-dev/omega-mv e5b32567, Linux AArch64}}
+Omega has no imports, so the small output helpers (<code>emit</code> and friends) are part of the program.
+<syntaxhighlight lang="text">
+om2
+text nl "\n"
+text sp " "
+text minus "-"
+text t1 "ways to make 100 cents from 1, 5, 10, 25: "
+text t2 "ways to make 100000 cents from 1, 5, 10, 25, 50, 100: "
+global ways ulong 100001
+global coins ulong 6
+note emit writes every byte of a to stdout; a short write is retried, an error exits 1
+fn emit a view uchar * to void
+o = ulong 0
+while lt o len a bound 4096
+k = write 1 a o sub len a o
+if le k 0
+exit 1
+end
+o = add o ulong k
+end
+end
+note emitu writes n in decimal; 20 digits hold every ulong
+fn emitu n ulong to void
+d = new uchar 20 0
+i = ulong 20
+v = n
+while true bound 20
+i = sub i 1
+put d i uchar add rem v 10 48
+v = div v 10
+if eq v 0
+break
+end
+end
+emit part d i sub 20 i
+end
+note addcoin lets every amount from c up to amt also end with a coin c
+fn addcoin amt ulong c ulong to void
+for x ulong add sub amt c 1
+y = add x c
+w = add get ways y get ways x
+put ways y w
+end
+end
+note count is the classic change-making dynamic program: ways[a] counts the multisets of the first k
+note coins that sum to a; adding coin c lets every amount a >= c also end with a c
+fn count amt ulong k ulong to ulong
+for a ulong add amt 1
+put ways a 0
+end
+put ways 0 1
+for i ulong k
+addcoin amt get coins i
+end
+ret get ways amt
+end
+fn main to int
+put coins 0 1
+put coins 1 5
+put coins 2 10
+put coins 3 25
+put coins 4 50
+put coins 5 100
+emit t1
+emitu count 100 4
+emit nl
+emit t2
+emitu count 100000 6
+emit nl
+ret 0
+end
+</syntaxhighlight>
+{{out}}
+<pre>
+ways to make 100 cents from 1, 5, 10, 25: 242
+ways to make 100000 cents from 1, 5, 10, 25, 50, 100: 13398445413854501
+</pre>
